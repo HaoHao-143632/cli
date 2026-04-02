@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小五全课辅导 — Grade 5 Tutoring</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">📚</span>
+          <span class="logo-text">小五全课辅导</span>
+        </div>
+        <div class="header-stats">
+          <span class="stat-badge" id="total-score">总积分：<strong id="score-val">0</strong></span>
+          <span class="stat-badge" id="streak-badge">连续：<strong id="streak-val">0</strong> 天</span>
+        </div>
+        <nav class="nav">
+          <button class="nav-btn active" data-page="home">首页</button>
+          <button class="nav-btn" data-page="subjects">课程</button>
+          <button class="nav-btn" data-page="quiz">练习</button>
+          <button class="nav-btn" data-page="progress">进度</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Pages -->
+    <main class="main">
+      <!-- Home Page -->
+      <div id="page-home" class="page active">
+        <div class="hero">
+          <h1>欢迎回来，同学！<span class="wave">👋</span></h1>
+          <p class="hero-sub">今天学什么呢？选择你的科目，开始学习吧！</p>
+          <div class="hero-progress">
+            <span>今日进度</span>
+            <div class="progress-bar"><div class="progress-fill" id="daily-progress" style="width:0%"></div></div>
+            <span id="daily-label">0 / 5 题</span>
+          </div>
+        </div>
+
+        <div class="subject-grid" id="home-subjects"></div>
+
+        <section class="section">
+          <h2 class="section-title">每日一题</h2>
+          <div id="daily-question-card" class="daily-card"></div>
+        </section>
+      </div>
+
+      <!-- Subjects Page -->
+      <div id="page-subjects" class="page">
+        <h2 class="page-title">所有课程</h2>
+        <div class="subject-grid" id="all-subjects"></div>
+      </div>
+
+      <!-- Subject Detail Page -->
+      <div id="page-subject-detail" class="page">
+        <button class="back-btn" id="back-from-detail">← 返回课程</button>
+        <div id="subject-detail-content"></div>
+      </div>
+
+      <!-- Quiz Page -->
+      <div id="page-quiz" class="page">
+        <h2 class="page-title">综合练习</h2>
+        <div id="quiz-selector" class="quiz-selector">
+          <label>选择科目：
+            <select id="quiz-subject-select" class="select-input">
+              <option value="all">全部科目</option>
+            </select>
+          </label>
+          <label>题目数量：
+            <select id="quiz-count-select" class="select-input">
+              <option value="5">5 题</option>
+              <option value="10" selected>10 题</option>
+              <option value="20">20 题</option>
+            </select>
+          </label>
+          <button class="btn btn-primary" id="start-quiz-btn">开始练习</button>
+        </div>
+        <div id="quiz-container" class="quiz-container hidden"></div>
+        <div id="quiz-result" class="quiz-result hidden"></div>
+      </div>
+
+      <!-- Progress Page -->
+      <div id="page-progress" class="page">
+        <h2 class="page-title">我的进度</h2>
+        <div id="progress-overview" class="progress-overview"></div>
+        <div id="subject-progress-list" class="subject-progress-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="src/data.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
