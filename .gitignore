@@ -28,5 +28,6 @@ vendor/
 #test
 test_scripts/
 tests/mail/reports/
+cmd/api/download.bin
 
 /log/
