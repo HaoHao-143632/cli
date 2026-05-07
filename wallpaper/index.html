@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>国风动态壁纸 · 月下独立</title>
+<style>
+  :root {
+    --ink: #0a0612;
+    --plum: #2a1230;
+    --rose: #e07b5a;
+    --silk: #f6c2a0;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #050308;
+    font-family: "STKaiti", "KaiTi", "Songti SC", "SimSun", serif;
+    color: #e9d6c2;
+  }
+
+  .stage {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 25%, rgba(224, 123, 90, 0.18) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 30%, #2a1830 0%, #120a1a 55%, #050308 100%);
+  }
+
+  /* 远星 */
+  .stars {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, #fff8, transparent 50%),
+      radial-gradient(1px 1px at 28% 9%, #fff6, transparent 50%),
+      radial-gradient(1px 1px at 47% 22%, #fff5, transparent 50%),
+      radial-gradient(1px 1px at 63% 14%, #fff7, transparent 50%),
+      radial-gradient(1px 1px at 88% 30%, #fff5, transparent 50%),
+      radial-gradient(1px 1px at 8% 40%, #fff4, transparent 50%),
+      radial-gradient(1px 1px at 92% 50%, #fff4, transparent 50%);
+    animation: twinkle 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.55; }
+    to   { opacity: 1;    }
+  }
+
+  /* 圆月 */
+  .moon {
+    position: absolute;
+    top: 8%;
+    right: 12%;
+    width: 16vmin;
+    height: 16vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--silk), var(--rose) 55%, #7a2330 95%);
+    box-shadow:
+      0 0 6vmin rgba(224, 123, 90, 0.45),
+      0 0 14vmin rgba(224, 123, 90, 0.18);
+  }
+  .moon::after {
+    content: "";
+    position: absolute;
+    inset: 18% 28% 60% 22%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.18), transparent 70%);
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+
+  /* 远山剪影 */
+  .mountains {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 38%;
+    pointer-events: none;
+  }
+  .mountains svg { width: 100%; height: 100%; display: block; }
+
+  /* 中央人物舞台 */
+  .figure-wrap {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 92%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .figure-wrap svg {
+    width: min(70vmin, 720px);
+    height: auto;
+    filter: drop-shadow(0 8px 30px rgba(0,0,0,0.55));
+    animation: breathe 5s ease-in-out infinite;
+    transform-origin: 50% 95%;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-4px) scale(1.005); }
+  }
+
+  /* 飘落花瓣 */
+  .petal {
+    position: absolute;
+    top: -5vh;
+    width: 14px;
+    height: 10px;
+    background: radial-gradient(ellipse at 30% 30%, #ffd6d8, #f49aa6 70%, #c45a6e);
+    border-radius: 60% 40% 60% 40% / 70% 30% 70% 30%;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 4px rgba(244, 154, 166, 0.45));
+    animation: fall linear infinite, sway ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  @keyframes fall {
+    from { transform: translate3d(0, -10vh, 0) rotate(0deg); }
+    to   { transform: translate3d(0, 110vh, 0) rotate(720deg); }
+  }
+  @keyframes sway {
+    from { margin-left: -2vw; }
+    to   { margin-left:  2vw; }
+  }
+
+  /* 题字 */
+  .poem {
+    position: absolute;
+    top: 14%;
+    left: 7%;
+    writing-mode: vertical-rl;
+    font-size: clamp(14px, 1.8vmin, 20px);
+    letter-spacing: 0.6em;
+    color: rgba(233, 214, 194, 0.78);
+    text-shadow: 0 0 12px rgba(224, 123, 90, 0.3);
+    line-height: 1.8;
+    user-select: none;
+  }
+  .poem .small {
+    font-size: 0.7em;
+    letter-spacing: 0.3em;
+    opacity: 0.7;
+  }
+
+  .seal {
+    position: absolute;
+    bottom: 6%;
+    left: 8%;
+    width: 36px; height: 36px;
+    border: 2px solid #b03a3a;
+    color: #b03a3a;
+    background: rgba(176, 58, 58, 0.05);
+    display: grid; place-items: center;
+    font-size: 16px;
+    border-radius: 4px;
+    transform: rotate(-3deg);
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="stars"></div>
+    <div class="moon"></div>
+
+    <!-- 远山 -->
+    <div class="mountains">
+      <svg viewBox="0 0 1200 400" preserveAspectRatio="none">
+        <path d="M0 400 L0 260 L90 220 L180 270 L300 200 L420 260 L540 180 L660 250 L780 210 L900 270 L1020 220 L1120 260 L1200 240 L1200 400 Z"
+              fill="#1a0f24" opacity="0.85"/>
+        <path d="M0 400 L0 320 L120 290 L240 330 L360 280 L480 330 L600 270 L720 320 L840 290 L960 330 L1080 300 L1200 320 L1200 400 Z"
+              fill="#0c0716" opacity="0.95"/>
+      </svg>
+    </div>
+
+    <!-- 题诗 -->
+    <div class="poem">
+      落花人独立<br/>
+      微雨燕双飞<br/>
+      <span class="small">— 临江仙</span>
+    </div>
+
+    <!-- 印章 -->
+    <div class="seal">月</div>
+
+    <!-- 人物 -->
+    <div class="figure-wrap">
+      <svg viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rim" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#e07b5a" stop-opacity="0.55"/>
+            <stop offset="40%" stop-color="#e07b5a" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#e07b5a" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="dress" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#1a0f24"/>
+            <stop offset="60%" stop-color="#0d0815"/>
+            <stop offset="100%" stop-color="#070410"/>
+          </linearGradient>
+          <linearGradient id="sash" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stop-color="rgba(255,200,200,0.0)"/>
+            <stop offset="20%"  stop-color="rgba(255,180,190,0.55)"/>
+            <stop offset="60%"  stop-color="rgba(244,154,166,0.45)"/>
+            <stop offset="100%" stop-color="rgba(244,154,166,0.0)"/>
+          </linearGradient>
+          <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(224,123,90,0.45)"/>
+            <stop offset="100%" stop-color="rgba(224,123,90,0)"/>
+          </radialGradient>
+        </defs>
+
+        <!-- ==================== 后方长发 ==================== -->
+        <path fill="#06030c" opacity="0.95"
+              d="M345 300 Q 270 520 290 720 Q 310 880 360 970 L 470 970 Q 510 870 500 700 Q 510 510 455 300 Z">
+          <animate attributeName="d" dur="6.5s" repeatCount="indefinite"
+            values="
+              M345 300 Q 270 520 290 720 Q 310 880 360 970 L 470 970 Q 510 870 500 700 Q 510 510 455 300 Z;
+              M345 300 Q 250 510 270 710 Q 320 890 380 980 L 490 970 Q 520 880 510 690 Q 530 500 455 300 Z;
+              M345 300 Q 290 530 310 730 Q 300 870 350 960 L 460 970 Q 500 860 490 710 Q 490 520 455 300 Z;
+              M345 300 Q 270 520 290 720 Q 310 880 360 970 L 470 970 Q 510 870 500 700 Q 510 510 455 300 Z"/>
+        </path>
+
+        <!-- 长发末端飘带 -->
+        <path fill="none" stroke="#06030c" stroke-width="14" stroke-linecap="round" opacity="0.85"
+              d="M310 700 Q 240 820 230 950">
+          <animate attributeName="d" dur="5s" repeatCount="indefinite"
+            values="
+              M310 700 Q 240 820 230 950;
+              M310 700 Q 200 830 210 970;
+              M310 700 Q 270 810 260 940;
+              M310 700 Q 240 820 230 950"/>
+        </path>
+        <path fill="none" stroke="#06030c" stroke-width="12" stroke-linecap="round" opacity="0.85"
+              d="M495 700 Q 560 820 575 950">
+          <animate attributeName="d" dur="5.6s" repeatCount="indefinite"
+            values="
+              M495 700 Q 560 820 575 950;
+              M495 700 Q 600 830 590 970;
+              M495 700 Q 530 810 545 940;
+              M495 700 Q 560 820 575 950"/>
+        </path>
+
+        <!-- ==================== 飘逸披帛（左袖）==================== -->
+        <path fill="url(#sash)"
+              d="M260 540 Q 140 600 90 720 Q 60 820 110 900 Q 140 850 180 800 Q 230 720 290 660 Q 320 610 290 560 Z"
+              opacity="0.9">
+          <animate attributeName="d" dur="7s" repeatCount="indefinite"
+            values="
+              M260 540 Q 140 600 90 720 Q 60 820 110 900 Q 140 850 180 800 Q 230 720 290 660 Q 320 610 290 560 Z;
+              M260 540 Q 120 590 70 700 Q 50 830 130 920 Q 150 860 200 810 Q 250 730 300 670 Q 320 610 290 560 Z;
+              M260 540 Q 160 610 110 730 Q 80 810 130 880 Q 150 840 190 790 Q 240 720 290 660 Q 320 610 290 560 Z;
+              M260 540 Q 140 600 90 720 Q 60 820 110 900 Q 140 850 180 800 Q 230 720 290 660 Q 320 610 290 560 Z"/>
+        </path>
+
+        <!-- ==================== 飘逸披帛（右袖）==================== -->
+        <path fill="url(#sash)"
+              d="M540 540 Q 660 600 720 700 Q 760 820 700 900 Q 660 850 620 800 Q 570 720 510 660 Q 480 610 510 560 Z"
+              opacity="0.9">
+          <animate attributeName="d" dur="6.4s" repeatCount="indefinite"
+            values="
+              M540 540 Q 660 600 720 700 Q 760 820 700 900 Q 660 850 620 800 Q 570 720 510 660 Q 480 610 510 560 Z;
+              M540 540 Q 680 590 740 720 Q 770 830 690 920 Q 650 870 610 810 Q 560 730 510 670 Q 480 610 510 560 Z;
+              M540 540 Q 640 610 700 730 Q 740 800 690 880 Q 660 840 620 790 Q 570 720 510 660 Q 480 610 510 560 Z;
+              M540 540 Q 660 600 720 700 Q 760 820 700 900 Q 660 850 620 800 Q 570 720 510 660 Q 480 610 510 560 Z"/>
+        </path>
+
+        <!-- ==================== 上身 / 衣领 ==================== -->
+        <path fill="url(#dress)"
+              d="M335 380
+                 Q 320 420 330 470
+                 L 320 540
+                 Q 360 555 400 555
+                 Q 440 555 480 540
+                 L 470 470
+                 Q 480 420 465 380
+                 Q 430 360 400 360
+                 Q 370 360 335 380 Z"/>
+        <!-- 衣襟交领 -->
+        <path fill="#1a0f24" opacity="0.9"
+              d="M340 395 Q 400 430 460 395 L 455 425 Q 400 460 345 425 Z"/>
+        <path fill="rgba(255,200,180,0.18)"
+              d="M345 425 Q 400 460 455 425 L 450 445 Q 400 475 350 445 Z"/>
+
+        <!-- ==================== 下裙（带飘动裙摆）==================== -->
+        <path fill="url(#dress)"
+              d="M320 540
+                 L 270 880
+                 Q 290 950 330 970
+                 L 470 970
+                 Q 510 950 530 880
+                 L 480 540
+                 Z">
+          <animate attributeName="d" dur="7.2s" repeatCount="indefinite"
+            values="
+              M320 540 L 270 880 Q 290 950 330 970 L 470 970 Q 510 950 530 880 L 480 540 Z;
+              M320 540 L 250 870 Q 285 965 335 975 L 480 970 Q 520 940 545 880 L 480 540 Z;
+              M320 540 L 285 890 Q 295 945 325 965 L 460 975 Q 505 955 520 875 L 480 540 Z;
+              M320 540 L 270 880 Q 290 950 330 970 L 470 970 Q 510 950 530 880 L 480 540 Z"/>
+        </path>
+
+        <!-- 裙摆轻纱外层（半透明）-->
+        <path fill="rgba(244,154,166,0.18)"
+              d="M330 600
+                 L 260 920
+                 Q 320 970 400 970
+                 Q 480 970 540 920
+                 L 470 600 Z">
+          <animate attributeName="d" dur="6.8s" repeatCount="indefinite"
+            values="
+              M330 600 L 260 920 Q 320 970 400 970 Q 480 970 540 920 L 470 600 Z;
+              M330 600 L 240 910 Q 320 980 400 970 Q 490 980 555 915 L 470 600 Z;
+              M330 600 L 275 925 Q 325 965 400 970 Q 475 965 525 925 L 470 600 Z;
+              M330 600 L 260 920 Q 320 970 400 970 Q 480 970 540 920 L 470 600 Z"/>
+        </path>
+
+        <!-- 腰带 -->
+        <path fill="#b03a3a" opacity="0.85"
+              d="M315 535 Q 400 555 485 535 L 488 565 Q 400 588 312 565 Z"/>
+        <path fill="#7a2330" opacity="0.6"
+              d="M390 565 L 410 565 L 415 640 L 385 640 Z"/>
+
+        <!-- ==================== 颈与肩 ==================== -->
+        <path fill="#1a0f24" d="M380 320 Q 380 360 360 380 L 440 380 Q 420 360 420 320 Z"/>
+
+        <!-- ==================== 头部 ==================== -->
+        <ellipse cx="400" cy="280" rx="44" ry="56" fill="#1a0f24"/>
+        <!-- 鬓发 -->
+        <path fill="#06030c" d="M358 250 Q 345 300 360 340 Q 370 310 378 280 Z"/>
+        <path fill="#06030c" d="M442 250 Q 455 300 440 340 Q 430 310 422 280 Z"/>
+
+        <!-- 发髻 -->
+        <ellipse cx="400" cy="232" rx="42" ry="26" fill="#06030c"/>
+        <ellipse cx="400" cy="222" rx="28" ry="14" fill="#0a0612"/>
+        <!-- 发簪 -->
+        <rect x="397" y="200" width="6" height="34" rx="3" fill="#c9a35a"/>
+        <circle cx="400" cy="198" r="6" fill="#e6c780"/>
+        <circle cx="400" cy="198" r="2.5" fill="#fff5d8"/>
+        <!-- 发饰流苏 -->
+        <path fill="none" stroke="#c45a6e" stroke-width="2.2" stroke-linecap="round"
+              d="M400 204 Q 412 224 414 250">
+          <animate attributeName="d" dur="3.2s" repeatCount="indefinite"
+            values="
+              M400 204 Q 412 224 414 250;
+              M400 204 Q 416 226 420 252;
+              M400 204 Q 408 222 410 248;
+              M400 204 Q 412 224 414 250"/>
+        </path>
+        <circle cx="414" cy="252" r="3" fill="#c45a6e">
+          <animate attributeName="cx" dur="3.2s" repeatCount="indefinite"
+                   values="414;420;410;414"/>
+          <animate attributeName="cy" dur="3.2s" repeatCount="indefinite"
+                   values="252;254;250;252"/>
+        </circle>
+
+        <!-- 五官（简洁古典）-->
+        <ellipse cx="383" cy="285" rx="3" ry="2" fill="#0a0612"/>
+        <ellipse cx="417" cy="285" rx="3" ry="2" fill="#0a0612"/>
+        <path fill="#b03a3a" opacity="0.9" d="M395 308 Q 400 312 405 308 Q 402 314 398 314 Z"/>
+        <ellipse cx="380" cy="298" rx="9" ry="5" fill="url(#cheek)"/>
+        <ellipse cx="420" cy="298" rx="9" ry="5" fill="url(#cheek)"/>
+        <!-- 眉 -->
+        <path fill="none" stroke="#06030c" stroke-width="1.8" stroke-linecap="round"
+              d="M372 270 Q 383 266 392 271"/>
+        <path fill="none" stroke="#06030c" stroke-width="1.8" stroke-linecap="round"
+              d="M408 271 Q 417 266 428 270"/>
+
+        <!-- ==================== 月光轮廓（暖光从右上洒下）==================== -->
+        <path fill="url(#rim)" opacity="0.55"
+              d="M455 300 Q 510 460 510 660 Q 520 850 470 970 L 530 970 Q 560 870 555 700 Q 555 480 480 280 Z"/>
+
+        <!-- 前额碎发飘动 -->
+        <path fill="none" stroke="#06030c" stroke-width="3" stroke-linecap="round" opacity="0.9"
+              d="M373 240 Q 360 270 358 305">
+          <animate attributeName="d" dur="3s" repeatCount="indefinite"
+            values="
+              M373 240 Q 360 270 358 305;
+              M373 240 Q 354 272 350 308;
+              M373 240 Q 364 268 362 302;
+              M373 240 Q 360 270 358 305"/>
+        </path>
+        <path fill="none" stroke="#06030c" stroke-width="3" stroke-linecap="round" opacity="0.9"
+              d="M427 240 Q 440 270 442 305">
+          <animate attributeName="d" dur="3.4s" repeatCount="indefinite"
+            values="
+              M427 240 Q 440 270 442 305;
+              M427 240 Q 446 272 450 308;
+              M427 240 Q 436 268 438 302;
+              M427 240 Q 440 270 442 305"/>
+        </path>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    // 生成飘落花瓣
+    (function spawnPetals() {
+      const stage = document.querySelector('.stage');
+      const count = 28;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'petal';
+        const left = Math.random() * 100;
+        const size = 8 + Math.random() * 12;
+        const dur  = 9 + Math.random() * 10;
+        const swayDur = 2 + Math.random() * 3;
+        const delay = -Math.random() * dur;
+        const hue = 340 + Math.random() * 20;
+        p.style.left = left + 'vw';
+        p.style.width = size + 'px';
+        p.style.height = (size * 0.72) + 'px';
+        p.style.background =
+          `radial-gradient(ellipse at 30% 30%, hsl(${hue} 80% 88%), hsl(${hue} 60% 70%) 70%, hsl(${hue} 55% 50%))`;
+        p.style.opacity = (0.55 + Math.random() * 0.4).toFixed(2);
+        p.style.animationDuration = `${dur}s, ${swayDur}s`;
+        p.style.animationDelay = `${delay}s, ${(-Math.random()*swayDur).toFixed(2)}s`;
+        stage.appendChild(p);
+      }
+    })();
+  </script>
+</body>
+</html>
