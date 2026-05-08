@@ -171,6 +171,15 @@ func TestFlashcardList_FilterAndJSON(t *testing.T) {
 	}
 }
 
+func TestFlashcardList_RejectsInvalidFormat(t *testing.T) {
+	withTempStore(t)
+	f, _, _, _ := cmdutil.TestFactory(t, nil)
+	err := runFlashcardList(f, &listOptions{Format: "yaml"})
+	if err == nil || !strings.Contains(err.Error(), "invalid --format") {
+		t.Errorf("expected invalid --format error, got %v", err)
+	}
+}
+
 func TestFlashcardDelete_NotFound(t *testing.T) {
 	withTempStore(t)
 	f, _, _, _ := cmdutil.TestFactory(t, nil)

@@ -33,7 +33,6 @@ The timer stops cleanly on Ctrl-C; partial elapsed time is reported.`,
 			return runStudy(cmd.Context(), f.IOStreams.Out, opts)
 		},
 	}
-	cmdutil.DisableAuthCheck(cmd)
 	cmd.Flags().IntVarP(&opts.Minutes, "minutes", "m", 25, "study session length in minutes")
 	cmd.Flags().StringVarP(&opts.Label, "label", "l", "", "optional session label")
 	cmd.Flags().BoolVar(&opts.NoTick, "no-tick", false, "disable per-minute tick output")
@@ -60,10 +59,11 @@ func runStudy(ctx context.Context, out io.Writer, opts *studyOptions) error {
 	if opts.NoTick {
 		select {
 		case <-ctx.Done():
-			return reportStudy(out, label, opts.Minutes, time.Since(start), false)
+			reportInterrupted(out, label, time.Since(start))
 		case <-time.After(total):
-			return reportStudy(out, label, opts.Minutes, total, true)
+			reportComplete(out, label, opts.Minutes)
 		}
+		return nil
 	}
 
 	tick := time.NewTicker(time.Minute)
@@ -71,31 +71,29 @@ func runStudy(ctx context.Context, out io.Writer, opts *studyOptions) error {
 	deadline := time.NewTimer(total)
 	defer deadline.Stop()
 
-	elapsedMin := 0
-	for {
+	for elapsed := 0; ; {
 		select {
 		case <-ctx.Done():
-			return reportStudy(out, label, opts.Minutes, time.Since(start), false)
+			reportInterrupted(out, label, time.Since(start))
+			return nil
 		case <-tick.C:
-			elapsedMin++
-			if elapsedMin >= opts.Minutes {
-				continue
+			elapsed++
+			if elapsed < opts.Minutes {
+				fmt.Fprintf(out, "··  %d/%d min\n", elapsed, opts.Minutes)
 			}
-			fmt.Fprintf(out, "··  %d/%d min\n", elapsedMin, opts.Minutes)
 		case <-deadline.C:
-			return reportStudy(out, label, opts.Minutes, total, true)
+			reportComplete(out, label, opts.Minutes)
+			return nil
 		}
 	}
 }
 
-func reportStudy(out io.Writer, label string, planned int, actual time.Duration, completed bool) error {
-	mins := actual.Minutes()
-	if completed {
-		fmt.Fprintf(out, "✓  %s complete — %d min\n", label, planned)
-	} else {
-		fmt.Fprintf(out, "✗  %s interrupted at %.1f min\n", label, mins)
-	}
-	return nil
+func reportComplete(out io.Writer, label string, planned int) {
+	fmt.Fprintf(out, "✓  %s complete — %d min\n", label, planned)
+}
+
+func reportInterrupted(out io.Writer, label string, actual time.Duration) {
+	fmt.Fprintf(out, "✗  %s interrupted at %.1f min\n", label, actual.Minutes())
 }
 
 // ── stats ────────────────────────────────────────────────────────────────
@@ -108,7 +106,6 @@ func newCmdStats(f *cmdutil.Factory) *cobra.Command {
 			return runStats(f)
 		},
 	}
-	cmdutil.DisableAuthCheck(cmd)
 	return cmd
 }
 

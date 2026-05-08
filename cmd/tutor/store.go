@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 	"time"
 
@@ -58,13 +57,13 @@ func LoadStore() (*Store, error) {
 	return s, nil
 }
 
-// Save writes the store atomically (write+rename) with 0600 permissions.
+// Save writes the store atomically (write+rename). os.CreateTemp creates
+// the temp file with mode 0600 on Unix, so no explicit chmod is needed.
 func (s *Store) Save() error {
 	dir := core.GetConfigDir()
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return err
 	}
-	path := StorePath()
 	tmp, err := os.CreateTemp(dir, "tutor-*.json")
 	if err != nil {
 		return err
@@ -81,10 +80,7 @@ func (s *Store) Save() error {
 	if err := tmp.Close(); err != nil {
 		return err
 	}
-	if err := os.Chmod(tmpName, 0600); err != nil {
-		return err
-	}
-	return os.Rename(tmpName, path)
+	return os.Rename(tmpName, StorePath())
 }
 
 // Add appends a new card and returns the assigned ID.
@@ -140,18 +136,3 @@ func (s *Store) Filter(subject string) []Flashcard {
 	return out
 }
 
-// Subjects returns the sorted, distinct subjects present in the store.
-func (s *Store) Subjects() []string {
-	seen := make(map[string]struct{})
-	for _, c := range s.Cards {
-		if c.Subject != "" {
-			seen[c.Subject] = struct{}{}
-		}
-	}
-	out := make([]string, 0, len(seen))
-	for k := range seen {
-		out = append(out, k)
-	}
-	sort.Strings(out)
-	return out
-}

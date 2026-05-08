@@ -7,7 +7,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"math/rand"
+	"math/rand/v2"
 	"strconv"
 	"strings"
 	"time"
@@ -18,18 +18,21 @@ import (
 	"github.com/larksuite/cli/internal/output"
 )
 
+// listFormats are the accepted values for `flashcard list --format`.
+var listFormats = map[string]bool{"json": true, "table": true}
+
 func newCmdFlashcard(f *cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "flashcard",
 		Aliases: []string{"card", "fc"},
 		Short:   "Manage flashcards (add, list, delete, review)",
 	}
-	cmdutil.DisableAuthCheck(cmd)
-
-	cmd.AddCommand(newCmdFlashcardAdd(f))
-	cmd.AddCommand(newCmdFlashcardList(f))
-	cmd.AddCommand(newCmdFlashcardDelete(f))
-	cmd.AddCommand(newCmdFlashcardReview(f))
+	cmd.AddCommand(
+		newCmdFlashcardAdd(f),
+		newCmdFlashcardList(f),
+		newCmdFlashcardDelete(f),
+		newCmdFlashcardReview(f),
+	)
 	return cmd
 }
 
@@ -51,8 +54,6 @@ func newCmdFlashcardAdd(f *cmdutil.Factory) *cobra.Command {
 			return runFlashcardAdd(f, opts)
 		},
 	}
-	cmdutil.DisableAuthCheck(cmd)
-
 	cmd.Flags().StringVarP(&opts.Question, "question", "q", "", "question text (required)")
 	cmd.Flags().StringVarP(&opts.Answer, "answer", "a", "", "answer text (required)")
 	cmd.Flags().StringVarP(&opts.Subject, "subject", "s", "", "subject/category, e.g. math, english")
@@ -104,13 +105,15 @@ func newCmdFlashcardList(f *cmdutil.Factory) *cobra.Command {
 			return runFlashcardList(f, opts)
 		},
 	}
-	cmdutil.DisableAuthCheck(cmd)
 	cmd.Flags().StringVarP(&opts.Subject, "subject", "s", "", "filter by subject (case-insensitive)")
 	cmd.Flags().StringVar(&opts.Format, "format", "json", "output format: json | table")
 	return cmd
 }
 
 func runFlashcardList(f *cmdutil.Factory, opts *listOptions) error {
+	if !listFormats[opts.Format] {
+		return fmt.Errorf("invalid --format %q: expected one of json, table", opts.Format)
+	}
 	store, err := LoadStore()
 	if err != nil {
 		return err
@@ -155,7 +158,6 @@ func newCmdFlashcardDelete(f *cmdutil.Factory) *cobra.Command {
 			return runFlashcardDelete(f, id)
 		},
 	}
-	cmdutil.DisableAuthCheck(cmd)
 	return cmd
 }
 
@@ -182,7 +184,7 @@ func runFlashcardDelete(f *cmdutil.Factory, id int) error {
 type reviewOptions struct {
 	Subject string
 	Limit   int
-	Seed    int64 // for deterministic tests; 0 = use time
+	Seed    uint64 // 0 = non-deterministic; non-zero = deterministic shuffle (tests)
 }
 
 func newCmdFlashcardReview(f *cmdutil.Factory) *cobra.Command {
@@ -199,15 +201,17 @@ Review stats are persisted to the store.`,
 			return runFlashcardReview(f, opts)
 		},
 	}
-	cmdutil.DisableAuthCheck(cmd)
 	cmd.Flags().StringVarP(&opts.Subject, "subject", "s", "", "filter by subject")
 	cmd.Flags().IntVarP(&opts.Limit, "limit", "n", 0, "max cards to review (0 = all)")
-	cmd.Flags().Int64Var(&opts.Seed, "seed", 0, "random seed (0 = time-based)")
+	cmd.Flags().Uint64Var(&opts.Seed, "seed", 0, "random seed (0 = non-deterministic)")
 	_ = cmd.Flags().MarkHidden("seed")
 	return cmd
 }
 
 func runFlashcardReview(f *cmdutil.Factory, opts *reviewOptions) error {
+	if f.IOStreams.In == nil {
+		return fmt.Errorf("review requires an input stream (stdin)")
+	}
 	store, err := LoadStore()
 	if err != nil {
 		return err
@@ -218,49 +222,21 @@ func runFlashcardReview(f *cmdutil.Factory, opts *reviewOptions) error {
 		return nil
 	}
 
-	seed := opts.Seed
-	if seed == 0 {
-		seed = time.Now().UnixNano()
+	shuffleCards(cards, opts.Seed)
+	if opts.Limit > 0 && opts.Limit < len(cards) {
+		cards = cards[:opts.Limit]
 	}
-	r := rand.New(rand.NewSource(seed))
-	r.Shuffle(len(cards), func(i, j int) { cards[i], cards[j] = cards[j], cards[i] })
-
-	limit := opts.Limit
-	if limit <= 0 || limit > len(cards) {
-		limit = len(cards)
-	}
-	cards = cards[:limit]
 
 	out := f.IOStreams.Out
-	in := f.IOStreams.In
-	if in == nil {
-		return fmt.Errorf("review requires an input stream (stdin)")
-	}
-	scanner := bufio.NewScanner(in)
+	scanner := bufio.NewScanner(f.IOStreams.In)
 
-	correct := 0
-	answered := 0
+	correct, answered := 0, 0
 	for i, c := range cards {
-		fmt.Fprintf(out, "\n[%d/%d] %s\n", i+1, len(cards), prettySubject(c.Subject))
-		fmt.Fprintf(out, "Q: %s\n", c.Question)
-		fmt.Fprint(out, "Press Enter to show answer (or type 'q' to quit): ")
-		if !scanner.Scan() {
-			break
-		}
-		if strings.TrimSpace(strings.ToLower(scanner.Text())) == "q" {
-			break
-		}
-		fmt.Fprintf(out, "A: %s\n", c.Answer)
-		fmt.Fprint(out, "Got it right? [y/N/q]: ")
-		if !scanner.Scan() {
-			break
-		}
-		resp := strings.TrimSpace(strings.ToLower(scanner.Text()))
-		if resp == "q" {
+		got, ok := promptCard(out, scanner, i+1, len(cards), c)
+		if !ok {
 			break
 		}
 		answered++
-		got := resp == "y" || resp == "yes"
 		if got {
 			correct++
 		}
@@ -277,10 +253,48 @@ func runFlashcardReview(f *cmdutil.Factory, opts *reviewOptions) error {
 	if err := store.Save(); err != nil {
 		return err
 	}
-
 	writeReviewSummary(out, answered, correct, len(cards))
 	return nil
 }
+
+// shuffleCards shuffles cards in place. seed=0 uses the package's
+// non-deterministic global source; non-zero seeds yield a deterministic order.
+func shuffleCards(cards []Flashcard, seed uint64) {
+	swap := func(i, j int) { cards[i], cards[j] = cards[j], cards[i] }
+	if seed == 0 {
+		rand.Shuffle(len(cards), swap)
+		return
+	}
+	rng := rand.New(rand.NewPCG(seed, 0x9E3779B97F4A7C15))
+	rng.Shuffle(len(cards), swap)
+}
+
+// promptCard runs one Q&A interaction. Returns (correct, continue) — when
+// continue is false the caller stops the review (EOF or 'q').
+func promptCard(out io.Writer, scanner *bufio.Scanner, n, total int, c Flashcard) (correct, cont bool) {
+	subj := "(no subject)"
+	if c.Subject != "" {
+		subj = "subject: " + c.Subject
+	}
+	fmt.Fprintf(out, "\n[%d/%d] %s\n", n, total, subj)
+	fmt.Fprintf(out, "Q: %s\n", c.Question)
+	fmt.Fprint(out, "Press Enter to show answer (or type 'q' to quit): ")
+	if !scanner.Scan() || normalize(scanner.Text()) == "q" {
+		return false, false
+	}
+	fmt.Fprintf(out, "A: %s\n", c.Answer)
+	fmt.Fprint(out, "Got it right? [y/N/q]: ")
+	if !scanner.Scan() {
+		return false, false
+	}
+	resp := normalize(scanner.Text())
+	if resp == "q" {
+		return false, false
+	}
+	return resp == "y" || resp == "yes", true
+}
+
+func normalize(s string) string { return strings.TrimSpace(strings.ToLower(s)) }
 
 func writeReviewSummary(w io.Writer, answered, correct, total int) {
 	fmt.Fprintln(w)
@@ -290,11 +304,4 @@ func writeReviewSummary(w io.Writer, answered, correct, total int) {
 		pct := float64(correct) / float64(answered) * 100
 		fmt.Fprintf(w, "correct:  %d / %d (%.0f%%)\n", correct, answered, pct)
 	}
-}
-
-func prettySubject(s string) string {
-	if s == "" {
-		return "(no subject)"
-	}
-	return "subject: " + s
 }
