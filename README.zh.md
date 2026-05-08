@@ -256,6 +256,32 @@ lark-cli schema calendar.events.instance_view
 lark-cli schema im.messages.delete
 ```
 
+### 学习辅导（离线，tutor）
+
+`lark-cli tutor` 是一个完全离线的学习辅导小工具，不依赖 Lark 鉴权和网络。
+它用一份 JSON 文件管理闪卡（Q&A），并提供番茄钟计时。数据保存在配置目录下的
+`tutor.json`（默认 `~/.lark-cli/`，可用 `$LARKSUITE_CLI_CONFIG_DIR` 覆盖）。
+
+```bash
+# 添加闪卡
+lark-cli tutor flashcard add -q "HTTP 是什么的缩写？" -a "HyperText Transfer Protocol" -s networking
+
+# 列出（按学科筛选，表格输出）
+lark-cli tutor flashcard list --subject networking --format table
+
+# 交互式随机复习，自动记录正确率
+lark-cli tutor flashcard review --subject networking --limit 10
+
+# 按 id 删除
+lark-cli tutor flashcard delete 3
+
+# 25 分钟番茄钟
+lark-cli tutor study --minutes 25
+
+# 按学科查看学习统计
+lark-cli tutor stats
+```
+
 ## 安全与风险提示（使用前必读）
 
 本工具可供 AI Agent 调用以自动化操作飞书/Lark 开放平台，存在模型幻觉、执行不可控、提示词注入等固有风险；授权飞书权限后，AI Agent 将以您的用户身份在授权范围内执行操作，可能导致敏感数据泄露、越权操作等高风险后果，请您谨慎操作和使用。

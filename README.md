@@ -255,6 +255,33 @@ lark-cli schema calendar.events.instance_view
 lark-cli schema im.messages.delete
 ```
 
+### Tutor (offline learning helper)
+
+`lark-cli tutor` is a small, offline learning helper that does not require Lark
+authentication or network access. It manages a JSON-backed flashcard deck and
+provides a study (pomodoro) timer. Data is stored in `tutor.json` under the
+config directory (default `~/.lark-cli/`, or `$LARKSUITE_CLI_CONFIG_DIR`).
+
+```bash
+# Add a flashcard
+lark-cli tutor flashcard add -q "What does HTTP stand for?" -a "HyperText Transfer Protocol" -s networking
+
+# List (filter by subject, table format)
+lark-cli tutor flashcard list --subject networking --format table
+
+# Interactive review in random order, recording correctness
+lark-cli tutor flashcard review --subject networking --limit 10
+
+# Delete by id
+lark-cli tutor flashcard delete 3
+
+# 25-minute pomodoro
+lark-cli tutor study --minutes 25
+
+# Study stats by subject
+lark-cli tutor stats
+```
+
 ## Security & Risk Warnings (Read Before Use)
 
 This tool can be invoked by AI Agents to automate operations on the Lark/Feishu Open Platform, and carries inherent risks such as model hallucinations, unpredictable execution, and prompt injection. After you authorize Lark/Feishu permissions, the AI Agent will act under your user identity within the authorized scope, which may lead to high-risk consequences such as leakage of sensitive data or unauthorized operations. Please use with caution.
