@@ -18,6 +18,7 @@ import (
 	"github.com/larksuite/cli/cmd/doctor"
 	"github.com/larksuite/cli/cmd/schema"
 	"github.com/larksuite/cli/cmd/service"
+	"github.com/larksuite/cli/cmd/tutor"
 	internalauth "github.com/larksuite/cli/internal/auth"
 	"github.com/larksuite/cli/internal/build"
 	"github.com/larksuite/cli/internal/cmdutil"
@@ -102,6 +103,7 @@ func Execute() int {
 	rootCmd.AddCommand(api.NewCmdApi(f, nil))
 	rootCmd.AddCommand(schema.NewCmdSchema(f, nil))
 	rootCmd.AddCommand(completion.NewCmdCompletion(f))
+	rootCmd.AddCommand(tutor.NewCmdTutor(f))
 	service.RegisterServiceCommands(rootCmd, f)
 	shortcuts.RegisterShortcuts(rootCmd, f)
 
