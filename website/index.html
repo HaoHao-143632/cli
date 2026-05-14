@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小学英语乐园 - English Fun Land</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="#home" class="logo" data-nav="home">
+                <span class="logo-emoji">🌈</span>
+                <span class="logo-text">小学英语乐园</span>
+            </a>
+            <nav class="main-nav">
+                <a href="#home" data-nav="home" class="nav-link active">首页 Home</a>
+                <a href="#grades" data-nav="grades" class="nav-link">年级 Grades</a>
+                <a href="#vocab" data-nav="vocab" class="nav-link">单词 Words</a>
+                <a href="#quiz" data-nav="quiz" class="nav-link">测验 Quiz</a>
+                <a href="#games" data-nav="games" class="nav-link">游戏 Games</a>
+                <a href="#progress" data-nav="progress" class="nav-link">进度 Progress</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- HOME -->
+        <section id="home" class="page active">
+            <div class="hero">
+                <h1>欢迎来到 <span class="rainbow">小学英语乐园</span> 🎈</h1>
+                <p class="hero-sub">Hello! Let's learn English together! 一起学英语，快乐又简单！</p>
+                <div class="hero-actions">
+                    <button class="btn-primary big" data-go="grades">开始学习 Start Learning →</button>
+                    <button class="btn-ghost big" data-go="games">玩游戏 Play Games 🎮</button>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feat-icon">📚</div>
+                    <h3>分年级课程</h3>
+                    <p>从一年级到六年级，循序渐进，适合每个小朋友。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-icon">🔊</div>
+                    <h3>标准发音</h3>
+                    <p>点击单词就能听到标准英语发音，跟着读一读！</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-icon">🎯</div>
+                    <h3>有趣测验</h3>
+                    <p>小测验帮助记忆单词，闯关解锁更多内容。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-icon">🎮</div>
+                    <h3>趣味游戏</h3>
+                    <p>记忆配对、单词拼写，玩中学，学中乐！</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-icon">⭐</div>
+                    <h3>学习进度</h3>
+                    <p>记录学习星星，看到自己的进步！</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-icon">🌟</div>
+                    <h3>简单友好</h3>
+                    <p>色彩明快，操作简单，小朋友也能轻松使用。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRADES -->
+        <section id="grades" class="page">
+            <h2 class="page-title">选择你的年级 Pick Your Grade 🎒</h2>
+            <div class="grade-grid" id="grade-grid"></div>
+
+            <div id="lesson-view" class="hidden">
+                <button class="btn-ghost" id="back-to-grades">← 返回年级列表</button>
+                <h2 id="lesson-grade-title"></h2>
+                <div id="lesson-list"></div>
+            </div>
+
+            <div id="word-view" class="hidden">
+                <button class="btn-ghost" id="back-to-lessons">← 返回课程列表</button>
+                <h2 id="word-lesson-title"></h2>
+                <p class="hint">点击单词卡片可以听发音 🔊</p>
+                <div id="word-cards" class="word-cards"></div>
+                <div class="lesson-actions">
+                    <button class="btn-primary" id="mark-lesson-done">完成这一课 ⭐</button>
+                    <button class="btn-secondary" id="quiz-this-lesson">考一考 Take Quiz</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VOCAB -->
+        <section id="vocab" class="page">
+            <h2 class="page-title">所有单词 All Words 📖</h2>
+            <div class="vocab-controls">
+                <input type="text" id="vocab-search" placeholder="搜索单词或中文 Search...">
+                <select id="vocab-filter">
+                    <option value="all">全部年级</option>
+                    <option value="1">一年级</option>
+                    <option value="2">二年级</option>
+                    <option value="3">三年级</option>
+                    <option value="4">四年级</option>
+                    <option value="5">五年级</option>
+                    <option value="6">六年级</option>
+                </select>
+            </div>
+            <div id="vocab-list" class="word-cards"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section id="quiz" class="page">
+            <h2 class="page-title">单词测验 Word Quiz 🎯</h2>
+            <div id="quiz-setup">
+                <p>选择年级开始测验，每次 10 题：</p>
+                <div class="quiz-grade-buttons" id="quiz-grade-buttons"></div>
+            </div>
+            <div id="quiz-game" class="hidden">
+                <div class="quiz-header">
+                    <span id="quiz-progress">第 1 题 / 共 10 题</span>
+                    <span id="quiz-score">得分: 0</span>
+                </div>
+                <div id="quiz-question" class="quiz-question"></div>
+                <div id="quiz-options" class="quiz-options"></div>
+                <div id="quiz-feedback" class="quiz-feedback"></div>
+                <button class="btn-primary hidden" id="quiz-next">下一题 →</button>
+            </div>
+            <div id="quiz-result" class="hidden">
+                <h3 id="quiz-result-title"></h3>
+                <p id="quiz-result-text"></p>
+                <button class="btn-primary" id="quiz-restart">再来一次</button>
+                <button class="btn-ghost" id="quiz-back">返回</button>
+            </div>
+        </section>
+
+        <!-- GAMES -->
+        <section id="games" class="page">
+            <h2 class="page-title">英语游戏 English Games 🎮</h2>
+            <div class="game-menu">
+                <div class="game-card" data-game="match">
+                    <div class="game-icon">🧩</div>
+                    <h3>记忆配对</h3>
+                    <p>把英文单词和中文意思配对起来！</p>
+                </div>
+                <div class="game-card" data-game="spell">
+                    <div class="game-icon">🔤</div>
+                    <h3>单词拼写</h3>
+                    <p>看图片，听发音，把字母按顺序排好！</p>
+                </div>
+                <div class="game-card" data-game="listen">
+                    <div class="game-icon">👂</div>
+                    <h3>听音选词</h3>
+                    <p>仔细听发音，选出正确的单词！</p>
+                </div>
+            </div>
+
+            <div id="game-area" class="hidden">
+                <button class="btn-ghost" id="back-to-games">← 返回游戏列表</button>
+                <div id="game-content"></div>
+            </div>
+        </section>
+
+        <!-- PROGRESS -->
+        <section id="progress" class="page">
+            <h2 class="page-title">我的学习进度 My Progress ⭐</h2>
+            <div class="progress-overview">
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-stars">0</div>
+                    <div class="stat-label">总星星 Stars</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-words">0</div>
+                    <div class="stat-label">学过的单词</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-lessons">0</div>
+                    <div class="stat-label">完成的课程</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-quiz">0</div>
+                    <div class="stat-label">最高分 Best</div>
+                </div>
+            </div>
+            <h3>各年级进度</h3>
+            <div id="grade-progress"></div>
+            <div class="reset-area">
+                <button class="btn-ghost" id="reset-progress">清空进度 Reset</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>🌈 小学英语乐园 English Fun Land · 让英语学习变得简单有趣</p>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
