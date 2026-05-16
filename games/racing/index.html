@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>极品飞车 · Need for Speed Clone</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: #050510;
+    color: #fff;
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  #wrap {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at 50% 0%, #1a1a3a 0%, #050510 70%);
+  }
+  canvas {
+    background: #0a0a18;
+    box-shadow: 0 0 80px rgba(255, 60, 30, 0.35), 0 0 30px rgba(0, 200, 255, 0.25);
+    border: 1px solid #2a2a48;
+    image-rendering: pixelated;
+  }
+  #hud {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 28px;
+    pointer-events: none;
+    text-shadow: 0 0 8px rgba(0,0,0,0.9);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .stat {
+    background: rgba(10, 10, 30, 0.55);
+    border: 1px solid rgba(255, 80, 40, 0.5);
+    padding: 8px 16px;
+    border-radius: 6px;
+    min-width: 110px;
+    text-align: center;
+    backdrop-filter: blur(6px);
+  }
+  .stat .label {
+    font-size: 11px;
+    color: #ff7a4d;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+  .stat .value {
+    font-size: 22px;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+  #nitroBar {
+    margin-top: 4px;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  #nitroFill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #00d4ff, #00ffaa);
+    transition: width 0.1s linear;
+  }
+  #overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 5, 16, 0.78);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+  }
+  #overlay.hidden { display: none; }
+  #overlay h1 {
+    font-size: 64px;
+    background: linear-gradient(90deg, #ff3c1e, #ffaa00, #ff3c1e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(255, 60, 30, 0.5);
+    margin-bottom: 8px;
+    letter-spacing: 4px;
+  }
+  #overlay h2 {
+    font-size: 18px;
+    color: #aab;
+    margin-bottom: 36px;
+    letter-spacing: 6px;
+    font-weight: 400;
+  }
+  #overlay p { color: #ccd; margin: 6px 0; font-size: 14px; }
+  #overlay .keys { margin: 24px 0; color: #8ab; font-size: 13px; line-height: 1.9; }
+  #overlay .keys kbd {
+    display: inline-block;
+    background: #1a1a30;
+    border: 1px solid #3a3a55;
+    border-bottom-width: 2px;
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 4px;
+    margin: 0 2px;
+    font-family: inherit;
+    font-size: 12px;
+  }
+  #startBtn {
+    margin-top: 18px;
+    background: linear-gradient(135deg, #ff3c1e, #ff7a00);
+    color: #fff;
+    border: none;
+    padding: 14px 48px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 24px rgba(255, 60, 30, 0.5);
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  #startBtn:hover { transform: scale(1.04); box-shadow: 0 0 36px rgba(255, 60, 30, 0.8); }
+  #startBtn:active { transform: scale(0.98); }
+  #finalScore { font-size: 22px; color: #ffaa00; margin: 8px 0 4px; }
+  .crashed h1 { background: linear-gradient(90deg, #ff1e3c, #ff006a); -webkit-background-clip: text; background-clip: text; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game" width="480" height="720"></canvas>
+
+  <div id="hud">
+    <div class="stat">
+      <div class="label">SPEED</div>
+      <div class="value"><span id="speed">0</span> km/h</div>
+    </div>
+    <div class="stat">
+      <div class="label">SCORE</div>
+      <div class="value" id="score">0</div>
+    </div>
+    <div class="stat">
+      <div class="label">BEST</div>
+      <div class="value" id="best">0</div>
+    </div>
+    <div class="stat">
+      <div class="label">NITRO</div>
+      <div class="value" style="font-size:14px"><span id="nitroPct">100</span>%</div>
+      <div id="nitroBar"><div id="nitroFill"></div></div>
+    </div>
+  </div>
+
+  <div id="overlay">
+    <h1>极品飞车</h1>
+    <h2>NEED FOR SPEED</h2>
+    <div id="finalScore" style="display:none"></div>
+    <p id="subtitle">夜幕降临，城市赛道为你而生</p>
+    <div class="keys">
+      <div><kbd>←</kbd> <kbd>→</kbd> 或 <kbd>A</kbd> <kbd>D</kbd> &nbsp;变道</div>
+      <div><kbd>↑</kbd> 或 <kbd>W</kbd> 加速 &nbsp;·&nbsp; <kbd>↓</kbd> 或 <kbd>S</kbd> 刹车</div>
+      <div><kbd>Shift</kbd> 或 <kbd>空格</kbd> 氮气加速</div>
+      <div><kbd>P</kbd> 暂停 &nbsp;·&nbsp; <kbd>R</kbd> 重开</div>
+    </div>
+    <button id="startBtn">点火启动 START</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
