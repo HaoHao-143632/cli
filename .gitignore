@@ -21,7 +21,10 @@ Thumbs.db
 
 # Go
 docs/ref
-docs/
+docs/*
+!docs/racing/
+!docs/racing/**
+!docs/index.html
 vendor/
 
 
