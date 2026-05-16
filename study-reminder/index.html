@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习时间提醒</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>📚 学习时间提醒</h1>
+            <p class="subtitle">专注学习，劳逸结合</p>
+        </header>
+
+        <main class="main">
+            <section class="timer-card">
+                <div class="mode-tabs">
+                    <button class="tab active" data-mode="focus">专注</button>
+                    <button class="tab" data-mode="shortBreak">短休息</button>
+                    <button class="tab" data-mode="longBreak">长休息</button>
+                </div>
+
+                <div class="subject-input">
+                    <label for="subject">当前学习内容</label>
+                    <input type="text" id="subject" placeholder="例如：高数 - 微积分" maxlength="40">
+                </div>
+
+                <div class="timer-display">
+                    <svg class="progress-ring" viewBox="0 0 200 200">
+                        <circle class="ring-bg" cx="100" cy="100" r="90"></circle>
+                        <circle class="ring-fg" cx="100" cy="100" r="90"></circle>
+                    </svg>
+                    <div class="time-text">
+                        <span id="timeDisplay">25:00</span>
+                        <span class="mode-label" id="modeLabel">专注时段</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="startBtn" class="btn btn-primary">开始</button>
+                    <button id="pauseBtn" class="btn btn-secondary" disabled>暂停</button>
+                    <button id="resetBtn" class="btn btn-ghost">重置</button>
+                </div>
+
+                <div class="round-info">
+                    第 <span id="roundCount">1</span> 轮 · 今日已完成 <span id="completedCount">0</span> 个专注时段
+                </div>
+            </section>
+
+            <section class="side-panel">
+                <div class="panel-card">
+                    <h2>⚙️ 时长设置（分钟）</h2>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="focusDuration">专注</label>
+                            <input type="number" id="focusDuration" value="25" min="1" max="120">
+                        </div>
+                        <div class="setting-item">
+                            <label for="shortBreakDuration">短休息</label>
+                            <input type="number" id="shortBreakDuration" value="5" min="1" max="30">
+                        </div>
+                        <div class="setting-item">
+                            <label for="longBreakDuration">长休息</label>
+                            <input type="number" id="longBreakDuration" value="15" min="1" max="60">
+                        </div>
+                        <div class="setting-item">
+                            <label for="roundsBeforeLongBreak">长休息间隔</label>
+                            <input type="number" id="roundsBeforeLongBreak" value="4" min="2" max="10">
+                        </div>
+                    </div>
+                    <div class="toggle-row">
+                        <label class="toggle">
+                            <input type="checkbox" id="autoStart" checked>
+                            <span>自动开始下一时段</span>
+                        </label>
+                        <label class="toggle">
+                            <input type="checkbox" id="soundEnabled" checked>
+                            <span>声音提醒</span>
+                        </label>
+                        <label class="toggle">
+                            <input type="checkbox" id="notifyEnabled" checked>
+                            <span>桌面通知</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <h2>📊 今日学习记录</h2>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value" id="totalMinutes">0</div>
+                            <div class="stat-label">总分钟数</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="totalSessions">0</div>
+                            <div class="stat-label">完成时段</div>
+                        </div>
+                    </div>
+                    <ul class="history-list" id="historyList">
+                        <li class="empty">今天还没有学习记录，开始第一个专注时段吧！</li>
+                    </ul>
+                    <button id="clearHistoryBtn" class="btn btn-ghost btn-small">清空今日记录</button>
+                </div>
+            </section>
+        </main>
+
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
