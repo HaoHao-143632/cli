@@ -89,6 +89,38 @@
   });
   window.addEventListener('keyup', (e) => { keys[e.code] = false; });
 
+  // Touch controls (virtual D-pad / buttons)
+  const touchLayer = document.getElementById('touch');
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) ||
+                        window.matchMedia('(pointer: coarse)').matches;
+  if (isTouchDevice) touchLayer.classList.add('show');
+
+  function bindTouchButton(el) {
+    const code = el.dataset.key;
+    const press = (e) => {
+      e.preventDefault();
+      keys[code] = true;
+      el.classList.add('active');
+      ensureAudio();
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    };
+    const release = (e) => {
+      e.preventDefault();
+      keys[code] = false;
+      el.classList.remove('active');
+    };
+    el.addEventListener('touchstart', press, { passive: false });
+    el.addEventListener('touchend', release, { passive: false });
+    el.addEventListener('touchcancel', release, { passive: false });
+    el.addEventListener('mousedown', press);
+    el.addEventListener('mouseup', release);
+    el.addEventListener('mouseleave', release);
+  }
+  document.querySelectorAll('.tbtn').forEach(bindTouchButton);
+
+  // Reveal the touch layer on first touch even if media query missed it
+  window.addEventListener('touchstart', () => touchLayer.classList.add('show'), { once: true, passive: true });
+
   function left()  { return keys['ArrowLeft']  || keys['KeyA']; }
   function right() { return keys['ArrowRight'] || keys['KeyD']; }
   function up()    { return keys['ArrowUp']    || keys['KeyW']; }
