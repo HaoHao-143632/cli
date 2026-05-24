@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌈 小小学习管家 - 每天进步一点点</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>" />
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部标题栏 -->
+    <header class="header">
+      <h1>🌈 小小学习管家</h1>
+      <div class="user-info">
+        <span id="greeting">你好,小朋友!</span>
+        <span class="stars">⭐ <span id="totalStars">0</span></span>
+      </div>
+    </header>
+
+    <!-- 导航标签 -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="today">📅 今日学习</button>
+      <button class="tab" data-tab="timer">🍅 专注番茄钟</button>
+      <button class="tab" data-tab="plan">📚 我的计划</button>
+      <button class="tab" data-tab="reward">🏆 我的奖励</button>
+      <button class="tab" data-tab="settings">⚙️ 设置</button>
+    </nav>
+
+    <!-- 今日学习 -->
+    <section class="page active" id="page-today">
+      <div class="card welcome-card">
+        <h2 id="currentDate"></h2>
+        <p class="quote" id="dailyQuote">📖 今天的努力,是明天的实力!</p>
+      </div>
+
+      <div class="card">
+        <h3>⏰ 今天的学习任务</h3>
+        <div id="todayTasks" class="task-list">
+          <p class="empty-tip">还没有添加任务哦,去"我的计划"添加吧!</p>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+          <span id="progressText">0 / 0 完成</span>
+        </div>
+      </div>
+
+      <div class="card next-reminder" id="nextReminderCard" style="display:none;">
+        <h3>🔔 下一个提醒</h3>
+        <p id="nextReminderText"></p>
+        <p class="countdown" id="countdownText"></p>
+      </div>
+    </section>
+
+    <!-- 番茄钟 -->
+    <section class="page" id="page-timer">
+      <div class="card timer-card">
+        <h2 id="timerMode">📚 专注学习时间</h2>
+        <div class="timer-display" id="timerDisplay">25:00</div>
+        <div class="timer-status" id="timerStatus">点击开始,开启你的专注之旅 🚀</div>
+        <div class="timer-buttons">
+          <button class="btn btn-big btn-primary" id="btnStart">▶️ 开始</button>
+          <button class="btn btn-big btn-warning" id="btnPause" disabled>⏸️ 暂停</button>
+          <button class="btn btn-big btn-danger" id="btnReset">🔄 重置</button>
+        </div>
+        <div class="timer-settings">
+          <label>专注时长(分钟):<input type="number" id="focusMinutes" value="25" min="1" max="60" /></label>
+          <label>休息时长(分钟):<input type="number" id="breakMinutes" value="5" min="1" max="30" /></label>
+        </div>
+        <div class="pomodoro-count">
+          今天完成番茄数:<span id="pomodoroCount">0</span> 🍅
+        </div>
+      </div>
+    </section>
+
+    <!-- 我的计划 -->
+    <section class="page" id="page-plan">
+      <div class="card">
+        <h3>➕ 添加学习任务</h3>
+        <form id="addTaskForm" class="form-row">
+          <input type="text" id="taskSubject" placeholder="科目(如:语文)" required />
+          <input type="time" id="taskTime" required />
+          <input type="number" id="taskDuration" placeholder="时长(分钟)" min="5" max="180" value="30" required />
+          <button class="btn btn-primary" type="submit">添加</button>
+        </form>
+        <p class="tip">💡 小贴士:每天放学回家后,先休息一会儿再开始学习哦!</p>
+      </div>
+
+      <div class="card">
+        <h3>📋 我的学习计划</h3>
+        <div id="planList" class="task-list">
+          <p class="empty-tip">还没有计划,快来添加吧!</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🎯 推荐时间表</h3>
+        <div class="suggestion">
+          <button class="btn btn-secondary" id="loadSuggestion">📥 一键加载推荐计划</button>
+          <ul>
+            <li>16:30 - 休息 + 吃点心 🍪</li>
+            <li>17:00 - 语文作业(30分钟)📖</li>
+            <li>17:30 - 数学作业(30分钟)➕</li>
+            <li>18:00 - 晚饭时间 🍚</li>
+            <li>19:00 - 英语阅读(20分钟)🌍</li>
+            <li>19:30 - 课外阅读(30分钟)📚</li>
+            <li>20:00 - 整理书包、准备明天 🎒</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 我的奖励 -->
+    <section class="page" id="page-reward">
+      <div class="card">
+        <h3>🏆 我的成就</h3>
+        <div class="achievements">
+          <div class="achievement-item">
+            <div class="big-number" id="totalStarsBig">0</div>
+            <div>⭐ 总星星数</div>
+          </div>
+          <div class="achievement-item">
+            <div class="big-number" id="totalDays">0</div>
+            <div>📅 学习天数</div>
+          </div>
+          <div class="achievement-item">
+            <div class="big-number" id="totalPomodoros">0</div>
+            <div>🍅 总番茄数</div>
+          </div>
+          <div class="achievement-item">
+            <div class="big-number" id="streakDays">0</div>
+            <div>🔥 连续打卡</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🎖️ 勋章墙</h3>
+        <div id="badges" class="badges">
+          <div class="badge locked" data-badge="first">
+            <div class="badge-icon">🌱</div>
+            <div class="badge-name">初次尝试</div>
+            <div class="badge-desc">完成第一个番茄钟</div>
+          </div>
+          <div class="badge locked" data-badge="five">
+            <div class="badge-icon">🌟</div>
+            <div class="badge-name">小小学霸</div>
+            <div class="badge-desc">累计 5 个番茄</div>
+          </div>
+          <div class="badge locked" data-badge="ten">
+            <div class="badge-icon">🚀</div>
+            <div class="badge-name">学习达人</div>
+            <div class="badge-desc">累计 10 个番茄</div>
+          </div>
+          <div class="badge locked" data-badge="streak3">
+            <div class="badge-icon">🔥</div>
+            <div class="badge-name">三日坚持</div>
+            <div class="badge-desc">连续 3 天打卡</div>
+          </div>
+          <div class="badge locked" data-badge="streak7">
+            <div class="badge-icon">💎</div>
+            <div class="badge-name">一周不掉线</div>
+            <div class="badge-desc">连续 7 天打卡</div>
+          </div>
+          <div class="badge locked" data-badge="stars50">
+            <div class="badge-icon">👑</div>
+            <div class="badge-name">星星之王</div>
+            <div class="badge-desc">收集 50 颗星星</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📊 最近 7 天学习记录</h3>
+        <div id="weekStats" class="week-stats"></div>
+      </div>
+    </section>
+
+    <!-- 设置 -->
+    <section class="page" id="page-settings">
+      <div class="card">
+        <h3>👤 个人设置</h3>
+        <label class="setting-row">
+          昵称:<input type="text" id="nicknameInput" placeholder="小朋友" />
+        </label>
+        <button class="btn btn-primary" id="saveNickname">保存昵称</button>
+      </div>
+
+      <div class="card">
+        <h3>🔔 提醒设置</h3>
+        <label class="setting-row">
+          <input type="checkbox" id="enableNotify" /> 开启浏览器通知
+        </label>
+        <label class="setting-row">
+          <input type="checkbox" id="enableSound" checked /> 开启提示音
+        </label>
+        <p class="tip">💡 首次开启通知时,浏览器会询问是否允许。请点击"允许"哦!</p>
+      </div>
+
+      <div class="card">
+        <h3>🗑️ 数据管理</h3>
+        <button class="btn btn-danger" id="clearAllData">清空所有数据</button>
+        <p class="tip">⚠️ 清空后无法恢复,请谨慎操作!</p>
+      </div>
+
+      <div class="card about">
+        <h3>关于</h3>
+        <p>🌈 小小学习管家 v1.0</p>
+        <p>专为小学生设计的学习时间管理助手 💕</p>
+        <p>愿你每天都有进步,每天都开心!</p>
+      </div>
+    </section>
+
+    <!-- 庆祝弹窗 -->
+    <div class="modal" id="celebrationModal" style="display:none;">
+      <div class="modal-content">
+        <div class="celebration-emoji">🎉</div>
+        <h2 id="celebrationTitle">太棒了!</h2>
+        <p id="celebrationText"></p>
+        <button class="btn btn-primary" id="celebrationOk">继续加油!</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="dingSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+  </audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
