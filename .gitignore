@@ -25,6 +25,8 @@ docs/*
 !docs/racing/
 !docs/racing/**
 !docs/index.html
+!docs/video-creation-reference/
+!docs/video-creation-reference/**
 vendor/
 
 
