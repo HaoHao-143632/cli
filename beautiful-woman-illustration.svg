@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="650" viewBox="0 0 500 650" font-family="sans-serif">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde2e4"/>
+      <stop offset="55%" stop-color="#fad2e1"/>
+      <stop offset="100%" stop-color="#e2c2f0"/>
+    </linearGradient>
+    <!-- Skin gradient -->
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe0c7"/>
+      <stop offset="100%" stop-color="#f6c6a3"/>
+    </linearGradient>
+    <!-- Hair gradient -->
+    <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a2c2a"/>
+      <stop offset="60%" stop-color="#6b3f2e"/>
+      <stop offset="100%" stop-color="#8a5a3c"/>
+    </linearGradient>
+    <!-- Dress gradient -->
+    <linearGradient id="dress" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c1466b"/>
+      <stop offset="100%" stop-color="#7b2d54"/>
+    </linearGradient>
+    <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff9fb0" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#ff9fb0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="650" fill="url(#bg)"/>
+  <circle cx="250" cy="240" r="220" fill="url(#glow)"/>
+
+  <!-- Decorative sparkles -->
+  <g fill="#ffffff" opacity="0.8">
+    <path d="M70 110 l6 14 14 6 -14 6 -6 14 -6 -14 -14 -6 14 -6 z"/>
+    <path d="M430 80 l5 11 11 5 -11 5 -5 11 -5 -11 -11 -5 11 -5 z"/>
+    <path d="M60 430 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4 z"/>
+    <path d="M440 400 l5 11 11 5 -11 5 -5 11 -5 -11 -11 -5 11 -5 z"/>
+  </g>
+
+  <!-- Hair back layer -->
+  <path d="M160 250
+           C140 150 200 75 250 75
+           C300 75 360 150 340 250
+           C355 330 350 430 330 520
+           C310 470 300 430 300 410
+           C320 470 250 500 250 500
+           C250 500 180 470 200 410
+           C200 430 190 470 170 520
+           C150 430 145 330 160 250 Z" fill="url(#hair)"/>
+
+  <!-- Neck -->
+  <rect x="228" y="300" width="44" height="70" rx="20" fill="url(#skin)"/>
+  <path d="M228 320 q22 28 44 0 v20 q-22 24 -44 0 z" fill="#e8a982" opacity="0.5"/>
+
+  <!-- Shoulders / dress -->
+  <path d="M150 640
+           C150 500 200 360 250 360
+           C300 360 350 500 350 640 Z" fill="url(#dress)"/>
+  <path d="M250 360 C235 410 235 470 250 520 C265 470 265 410 250 360 Z" fill="#ffffff" opacity="0.12"/>
+  <!-- Dress neckline -->
+  <path d="M210 372 q40 46 80 0 q-40 26 -80 0 z" fill="#9c3a60"/>
+
+  <!-- Face -->
+  <path d="M250 130
+           C198 130 182 180 184 222
+           C186 262 210 308 250 312
+           C290 308 314 262 316 222
+           C318 180 302 130 250 130 Z" fill="url(#skin)"/>
+
+  <!-- Ears -->
+  <ellipse cx="186" cy="232" rx="12" ry="18" fill="url(#skin)"/>
+  <ellipse cx="314" cy="232" rx="12" ry="18" fill="url(#skin)"/>
+  <circle cx="186" cy="250" r="4" fill="#ffd9a8"/>
+  <circle cx="314" cy="250" r="4" fill="#ffd9a8"/>
+
+  <!-- Cheeks blush -->
+  <ellipse cx="212" cy="248" rx="20" ry="13" fill="url(#cheek)"/>
+  <ellipse cx="288" cy="248" rx="20" ry="13" fill="url(#cheek)"/>
+
+  <!-- Eyebrows -->
+  <path d="M200 198 q22 -12 44 2" fill="none" stroke="#5a3826" stroke-width="4" stroke-linecap="round"/>
+  <path d="M256 200 q22 -14 44 -2" fill="none" stroke="#5a3826" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Eyes -->
+  <g>
+    <!-- left eye -->
+    <path d="M198 222 q22 -18 44 0 q-22 16 -44 0 z" fill="#ffffff"/>
+    <circle cx="220" cy="222" r="11" fill="#5b3a29"/>
+    <circle cx="220" cy="222" r="5" fill="#2b1a12"/>
+    <circle cx="224" cy="218" r="3" fill="#ffffff"/>
+    <path d="M198 222 q22 -18 44 0" fill="none" stroke="#3a2418" stroke-width="3" stroke-linecap="round"/>
+    <!-- lashes -->
+    <path d="M242 216 l9 -5 M240 222 l9 -1" stroke="#2b1a12" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- right eye -->
+    <path d="M258 222 q22 -18 44 0 q-22 16 -44 0 z" fill="#ffffff"/>
+    <circle cx="280" cy="222" r="11" fill="#5b3a29"/>
+    <circle cx="280" cy="222" r="5" fill="#2b1a12"/>
+    <circle cx="284" cy="218" r="3" fill="#ffffff"/>
+    <path d="M258 222 q22 -18 44 0" fill="none" stroke="#3a2418" stroke-width="3" stroke-linecap="round"/>
+    <path d="M258 216 l-9 -5 M260 222 l-9 -1" stroke="#2b1a12" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Nose -->
+  <path d="M250 232 q-6 18 -8 26 q4 6 16 0" fill="none" stroke="#e0a071" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Lips -->
+  <path d="M232 280 q18 -10 36 0 q-18 18 -36 0 z" fill="#d24f6e"/>
+  <path d="M232 280 q18 8 36 0" fill="none" stroke="#a83552" stroke-width="1.5"/>
+  <path d="M240 277 q10 -6 20 0" fill="none" stroke="#e98aa0" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Hair front layer / bangs -->
+  <path d="M250 75
+           C300 75 360 150 340 250
+           C338 215 330 195 322 188
+           C320 210 314 222 308 230
+           C310 200 304 178 296 170
+           C290 198 280 214 268 222
+           C276 188 268 160 256 152
+           C254 186 244 208 232 218
+           C236 184 226 162 214 156
+           C212 188 202 210 192 226
+           C186 210 180 200 178 192
+           C170 220 162 235 160 250
+           C140 150 200 75 250 75 Z" fill="url(#hair)"/>
+  <!-- Hair highlight -->
+  <path d="M250 90 C290 95 320 140 322 188 C310 145 285 110 250 105 Z" fill="#9c6a45" opacity="0.5"/>
+
+  <!-- Flower hair accessory -->
+  <g transform="translate(312,170)">
+    <g fill="#ff7aa0">
+      <ellipse cx="0" cy="-12" rx="8" ry="12"/>
+      <ellipse cx="11" cy="-4" rx="8" ry="12" transform="rotate(72)"/>
+      <ellipse cx="7" cy="9" rx="8" ry="12" transform="rotate(144)"/>
+      <ellipse cx="-7" cy="9" rx="8" ry="12" transform="rotate(216)"/>
+      <ellipse cx="-11" cy="-4" rx="8" ry="12" transform="rotate(288)"/>
+    </g>
+    <circle cx="0" cy="0" r="6" fill="#ffd84d"/>
+  </g>
+
+  <!-- Earrings -->
+  <circle cx="186" cy="270" r="5" fill="#ffd84d"/>
+  <circle cx="314" cy="270" r="5" fill="#ffd84d"/>
+
+  <!-- Title -->
+  <text x="250" y="615" text-anchor="middle" font-size="26" fill="#ffffff" font-weight="bold" opacity="0.9" letter-spacing="2">美 人 图</text>
+</svg>
