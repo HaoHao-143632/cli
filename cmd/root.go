@@ -16,6 +16,7 @@ import (
 	"github.com/larksuite/cli/cmd/completion"
 	cmdconfig "github.com/larksuite/cli/cmd/config"
 	"github.com/larksuite/cli/cmd/doctor"
+	"github.com/larksuite/cli/cmd/health"
 	"github.com/larksuite/cli/cmd/schema"
 	"github.com/larksuite/cli/cmd/service"
 	internalauth "github.com/larksuite/cli/internal/auth"
@@ -99,6 +100,7 @@ func Execute() int {
 	rootCmd.AddCommand(cmdconfig.NewCmdConfig(f))
 	rootCmd.AddCommand(auth.NewCmdAuth(f))
 	rootCmd.AddCommand(doctor.NewCmdDoctor(f))
+	rootCmd.AddCommand(health.NewCmdHealth(f))
 	rootCmd.AddCommand(api.NewCmdApi(f, nil))
 	rootCmd.AddCommand(schema.NewCmdSchema(f, nil))
 	rootCmd.AddCommand(completion.NewCmdCompletion(f))
