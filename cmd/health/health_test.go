@@ -4,6 +4,7 @@
 package health
 
 import (
+	"context"
 	"encoding/json"
 	"runtime"
 	"testing"
@@ -17,7 +18,7 @@ func TestHealthRun_EmitsSnapshot(t *testing.T) {
 		AppID: "test-app", AppSecret: "test-secret", Brand: core.BrandFeishu,
 	})
 
-	opts := &HealthOptions{Factory: f, Ctx: t.Context()}
+	opts := &HealthOptions{Factory: f, Ctx: context.Background()}
 	if err := healthRun(opts); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -48,7 +49,7 @@ func TestHealthRun_NeverFailsWithoutConfig(t *testing.T) {
 	// A factory whose Config() errors must still yield a successful snapshot.
 	f, stdout, _, _ := cmdutil.TestFactory(t, nil)
 
-	opts := &HealthOptions{Factory: f, Ctx: t.Context()}
+	opts := &HealthOptions{Factory: f, Ctx: context.Background()}
 	if err := healthRun(opts); err != nil {
 		t.Fatalf("expected nil error without config, got %v", err)
 	}
