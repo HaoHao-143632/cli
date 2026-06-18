@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>我的世界 · Mini Craft</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #87ceeb; font-family: "Segoe UI", "Microsoft YaHei", sans-serif; }
+  #game { display: block; width: 100%; height: 100%; cursor: crosshair; }
+
+  /* 准星 */
+  #crosshair {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 22px; height: 22px; pointer-events: none; z-index: 10; mix-blend-mode: difference;
+  }
+  #crosshair::before, #crosshair::after {
+    content: ""; position: absolute; background: #fff;
+  }
+  #crosshair::before { left: 50%; top: 0; width: 2px; height: 100%; transform: translateX(-50%); }
+  #crosshair::after  { top: 50%; left: 0; height: 2px; width: 100%; transform: translateY(-50%); }
+
+  /* 物品栏 */
+  #hotbar {
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    display: flex; gap: 6px; padding: 6px; background: rgba(0,0,0,0.35);
+    border-radius: 8px; z-index: 10; user-select: none;
+  }
+  .slot {
+    width: 52px; height: 52px; border: 3px solid rgba(255,255,255,0.25);
+    border-radius: 6px; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; color: #fff; font-size: 11px; position: relative;
+    background: rgba(255,255,255,0.06);
+  }
+  .slot .swatch { width: 30px; height: 30px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.3); }
+  .slot .key { position: absolute; top: 2px; left: 4px; font-size: 10px; opacity: 0.7; }
+  .slot .name { margin-top: 2px; font-size: 9px; opacity: 0.85; }
+  .slot.active { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+
+  /* 信息面板 */
+  #hud {
+    position: fixed; top: 10px; left: 10px; color: #fff; z-index: 10;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); font-size: 13px; line-height: 1.5;
+    pointer-events: none;
+  }
+
+  /* 开始遮罩 */
+  #overlay {
+    position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px; color: #fff; text-align: center;
+    background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.7));
+  }
+  #overlay h1 { font-size: 46px; letter-spacing: 2px; text-shadow: 3px 3px 0 #3a5; }
+  #overlay p { font-size: 15px; opacity: 0.9; max-width: 520px; line-height: 1.8; }
+  #overlay .keys { background: rgba(0,0,0,0.35); padding: 14px 22px; border-radius: 10px; font-size: 14px; }
+  #overlay kbd {
+    background: #fff; color: #222; border-radius: 4px; padding: 1px 7px; font-weight: bold;
+    box-shadow: 0 2px 0 #aaa; margin: 0 2px;
+  }
+  #startBtn {
+    font-size: 20px; padding: 12px 38px; border: none; border-radius: 8px; cursor: pointer;
+    background: #4caf50; color: #fff; font-weight: bold; box-shadow: 0 4px 0 #357a38;
+    transition: transform .05s;
+  }
+  #startBtn:active { transform: translateY(3px); box-shadow: 0 1px 0 #357a38; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="crosshair"></div>
+
+<div id="hud">
+  <div>坐标: <span id="pos">-</span></div>
+  <div>朝向: <span id="dir">-</span></div>
+  <div>已加载方块: <span id="blocks">-</span></div>
+  <div>FPS: <span id="fps">-</span></div>
+</div>
+
+<div id="hotbar"></div>
+
+<div id="overlay">
+  <h1>我的世界 · Mini Craft</h1>
+  <p>一个用 Three.js 打造的体素小游戏。自由探索程序生成的世界，破坏与放置方块，建造属于你的天地。</p>
+  <div class="keys">
+    <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 ·
+         <kbd>空格</kbd> 跳跃 · <kbd>Shift</kbd> 下蹲/下降</div>
+    <div style="margin-top:8px"><kbd>鼠标</kbd> 视角 ·
+         <kbd>左键</kbd> 破坏方块 · <kbd>右键</kbd> 放置方块</div>
+    <div style="margin-top:8px"><kbd>1</kbd>~<kbd>8</kbd> 或 <kbd>滚轮</kbd> 选择方块 ·
+         <kbd>F</kbd> 切换飞行 · <kbd>ESC</kbd> 释放鼠标</div>
+  </div>
+  <button id="startBtn">点击开始游戏</button>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module" src="./game.js"></script>
+</body>
+</html>
