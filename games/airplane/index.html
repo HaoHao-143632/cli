@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>飞机大战</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0e27;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  h1 { margin-bottom: 12px; font-size: 22px; letter-spacing: 2px; }
+  #hud {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  #hud span { color: #ffd166; }
+  canvas {
+    background: linear-gradient(180deg, #0a0e27 0%, #1a2151 100%);
+    border: 2px solid #ffd166;
+    border-radius: 6px;
+    box-shadow: 0 0 40px rgba(255, 209, 102, 0.3);
+    display: block;
+  }
+  #tips {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #aab;
+    text-align: center;
+    line-height: 1.7;
+  }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 14, 39, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 10;
+  }
+  #overlay.show { display: flex; }
+  #overlay h2 { font-size: 36px; color: #ff6b6b; }
+  #overlay p { font-size: 16px; }
+  #overlay button {
+    padding: 10px 28px;
+    font-size: 15px;
+    background: #ffd166;
+    color: #0a0e27;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #overlay button:hover { background: #ffe199; }
+</style>
+</head>
+<body>
+  <h1>✈ 飞机大战</h1>
+  <div id="hud">
+    <div>得分：<span id="score">0</span></div>
+    <div>生命：<span id="lives">3</span></div>
+    <div>关卡：<span id="level">1</span></div>
+  </div>
+  <canvas id="game" width="480" height="640"></canvas>
+  <div id="tips">
+    方向键 / WASD 移动 &nbsp;·&nbsp; 空格 射击 &nbsp;·&nbsp; P 暂停
+  </div>
+  <div id="overlay">
+    <h2 id="overlay-title">游戏结束</h2>
+    <p id="overlay-msg">最终得分：0</p>
+    <button id="restart">重新开始</button>
+  </div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const scoreEl = document.getElementById('score');
+  const livesEl = document.getElementById('lives');
+  const levelEl = document.getElementById('level');
+  const overlay = document.getElementById('overlay');
+  const overlayTitle = document.getElementById('overlay-title');
+  const overlayMsg = document.getElementById('overlay-msg');
+  const restartBtn = document.getElementById('restart');
+
+  const keys = {};
+  window.addEventListener('keydown', e => {
+    keys[e.key.toLowerCase()] = true;
+    if (e.key === ' ') e.preventDefault();
+    if (e.key.toLowerCase() === 'p') paused = !paused;
+  });
+  window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+
+  let player, bullets, enemies, particles, stars;
+  let score, lives, level, frame, enemyTimer, fireCooldown, paused, gameOver;
+
+  function reset() {
+    player = { x: W / 2, y: H - 60, w: 36, h: 36, speed: 4.5, invuln: 0 };
+    bullets = [];
+    enemies = [];
+    particles = [];
+    stars = Array.from({ length: 80 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      v: 0.5 + Math.random() * 1.5,
+      r: Math.random() * 1.2 + 0.3,
+    }));
+    score = 0;
+    lives = 3;
+    level = 1;
+    frame = 0;
+    enemyTimer = 0;
+    fireCooldown = 0;
+    paused = false;
+    gameOver = false;
+    overlay.classList.remove('show');
+    updateHUD();
+  }
+
+  function updateHUD() {
+    scoreEl.textContent = score;
+    livesEl.textContent = lives;
+    levelEl.textContent = level;
+  }
+
+  function spawnEnemy() {
+    const size = 28 + Math.random() * 10;
+    enemies.push({
+      x: Math.random() * (W - size) + size / 2,
+      y: -size,
+      w: size,
+      h: size,
+      vy: 1.2 + Math.random() * 1.2 + level * 0.25,
+      vx: (Math.random() - 0.5) * 1.2,
+      hp: Math.random() < 0.15 + level * 0.04 ? 2 : 1,
+    });
+  }
+
+  function emit(x, y, color, count = 12) {
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = 1 + Math.random() * 3;
+      particles.push({
+        x, y,
+        vx: Math.cos(a) * s,
+        vy: Math.sin(a) * s,
+        life: 30 + Math.random() * 20,
+        color,
+      });
+    }
+  }
+
+  function hit(a, b) {
+    return Math.abs(a.x - b.x) < (a.w + b.w) / 2 &&
+           Math.abs(a.y - b.y) < (a.h + b.h) / 2;
+  }
+
+  function update() {
+    if (paused || gameOver) return;
+    frame++;
+
+    for (const s of stars) {
+      s.y += s.v;
+      if (s.y > H) { s.y = 0; s.x = Math.random() * W; }
+    }
+
+    let dx = 0, dy = 0;
+    if (keys['arrowleft'] || keys['a']) dx -= 1;
+    if (keys['arrowright'] || keys['d']) dx += 1;
+    if (keys['arrowup'] || keys['w']) dy -= 1;
+    if (keys['arrowdown'] || keys['s']) dy += 1;
+    if (dx && dy) { dx *= 0.707; dy *= 0.707; }
+    player.x = Math.max(player.w / 2, Math.min(W - player.w / 2, player.x + dx * player.speed));
+    player.y = Math.max(player.h / 2, Math.min(H - player.h / 2, player.y + dy * player.speed));
+    if (player.invuln > 0) player.invuln--;
+
+    if (fireCooldown > 0) fireCooldown--;
+    if (keys[' '] && fireCooldown === 0) {
+      bullets.push({ x: player.x - 8, y: player.y - 16, w: 4, h: 12, vy: -8 });
+      bullets.push({ x: player.x + 8, y: player.y - 16, w: 4, h: 12, vy: -8 });
+      fireCooldown = 8;
+    }
+
+    for (const b of bullets) b.y += b.vy;
+    bullets = bullets.filter(b => b.y > -20);
+
+    enemyTimer++;
+    const spawnRate = Math.max(20, 60 - level * 4);
+    if (enemyTimer >= spawnRate) {
+      spawnEnemy();
+      enemyTimer = 0;
+    }
+
+    for (const e of enemies) {
+      e.y += e.vy;
+      e.x += e.vx;
+      if (e.x < e.w / 2 || e.x > W - e.w / 2) e.vx *= -1;
+    }
+
+    for (const b of bullets) {
+      for (const e of enemies) {
+        if (e.hp > 0 && hit(b, e)) {
+          e.hp--;
+          b.y = -100;
+          if (e.hp <= 0) {
+            score += 10;
+            emit(e.x, e.y, '#ff6b6b', 14);
+          } else {
+            emit(e.x, e.y, '#ffd166', 4);
+          }
+        }
+      }
+    }
+    enemies = enemies.filter(e => e.hp > 0 && e.y < H + 40);
+
+    if (player.invuln === 0) {
+      for (const e of enemies) {
+        if (hit(player, e)) {
+          lives--;
+          emit(player.x, player.y, '#4cc9f0', 20);
+          e.hp = 0;
+          player.invuln = 90;
+          if (lives <= 0) {
+            gameOver = true;
+            overlayTitle.textContent = '游戏结束';
+            overlayMsg.textContent = '最终得分：' + score;
+            overlay.classList.add('show');
+          }
+          break;
+        }
+      }
+    }
+
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.96;
+      p.vy *= 0.96;
+      p.life--;
+    }
+    particles = particles.filter(p => p.life > 0);
+
+    const newLevel = Math.floor(score / 200) + 1;
+    if (newLevel !== level) level = newLevel;
+
+    updateHUD();
+  }
+
+  function drawPlane(x, y, w, h, color, flip = false) {
+    ctx.save();
+    ctx.translate(x, y);
+    if (flip) ctx.scale(1, -1);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(0, -h / 2);
+    ctx.lineTo(w / 2, h / 2);
+    ctx.lineTo(0, h / 3);
+    ctx.lineTo(-w / 2, h / 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.beginPath();
+    ctx.arc(0, 0, w / 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.fillStyle = '#fff';
+    for (const s of stars) {
+      ctx.globalAlpha = 0.3 + s.r * 0.5;
+      ctx.fillRect(s.x, s.y, s.r, s.r);
+    }
+    ctx.globalAlpha = 1;
+
+    for (const p of particles) {
+      ctx.globalAlpha = Math.min(1, p.life / 30);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x - 1.5, p.y - 1.5, 3, 3);
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = '#ffd166';
+    for (const b of bullets) ctx.fillRect(b.x - b.w / 2, b.y - b.h / 2, b.w, b.h);
+
+    for (const e of enemies) {
+      drawPlane(e.x, e.y, e.w, e.h, e.hp > 1 ? '#a663cc' : '#ff6b6b', true);
+    }
+
+    if (player.invuln === 0 || frame % 8 < 4) {
+      drawPlane(player.x, player.y, player.w, player.h, '#4cc9f0');
+    }
+
+    if (paused && !gameOver) {
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 32px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('已暂停', W / 2, H / 2);
+      ctx.font = '14px sans-serif';
+      ctx.fillText('按 P 继续', W / 2, H / 2 + 30);
+    }
+  }
+
+  function loop() {
+    update();
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  restartBtn.addEventListener('click', reset);
+
+  reset();
+  loop();
+})();
+</script>
+</body>
+</html>
