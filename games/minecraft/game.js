@@ -252,10 +252,31 @@ document.addEventListener('wheel', (e) => {
   updateHotbar();
 });
 
+// ---------- 触屏控制状态 ----------
+const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+if (isTouch) {
+  const hint = document.getElementById('touchHint');
+  if (hint) hint.style.display = 'block';
+}
+const touch = {
+  move: { x: 0, z: 0 },  // 摇杆方向（strafe, forward）
+  jump: false,
+  active: false,         // 游戏是否已开始（移动端用，替代指针锁定）
+};
+
 // 指针锁定 + 视角
 const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('startBtn');
-startBtn.addEventListener('click', () => canvas.requestPointerLock());
+startBtn.addEventListener('click', () => {
+  if (isTouch) {
+    // 移动端：无需指针锁定，直接进入并显示触屏按钮
+    overlay.classList.add('hidden');
+    document.getElementById('touch').classList.add('on');
+    touch.active = true;
+  } else {
+    canvas.requestPointerLock();
+  }
+});
 document.addEventListener('pointerlockchange', () => {
   overlay.classList.toggle('hidden', document.pointerLockElement === canvas);
 });
@@ -267,23 +288,93 @@ document.addEventListener('mousemove', (e) => {
   player.pitch = Math.max(-lim, Math.min(lim, player.pitch));
 });
 
-// 破坏 / 放置
-canvas.addEventListener('mousedown', (e) => {
-  if (document.pointerLockElement !== canvas) return;
-  const hit = raycastVoxel();
-  if (!hit) return;
-  if (e.button === 0) {
-    // 破坏
-    world.set(hit.x, hit.y, hit.z, 0);
-    rebuildMesh();
-  } else if (e.button === 2) {
-    // 放置在命中面的外侧
-    const px = hit.x + hit.nx, py = hit.y + hit.ny, pz = hit.z + hit.nz;
-    if (!intersectsPlayer(px, py, pz)) {
-      world.set(px, py, pz, HOTBAR[selected]);
-      rebuildMesh();
+// ---------- 触屏：摇杆 + 拖拽转视角 ----------
+const joyEl = document.getElementById('joy');
+const knobEl = document.getElementById('joyKnob');
+let joyId = null, joyCx = 0, joyCy = 0;          // 摇杆触点
+let lookId = null, lookX = 0, lookY = 0;         // 视角触点
+
+function setKnob(dx, dy) {
+  knobEl.style.transform = `translate(${dx}px, ${dy}px)`;
+}
+
+joyEl.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  const t = e.changedTouches[0];
+  joyId = t.identifier;
+  const r = joyEl.getBoundingClientRect();
+  joyCx = r.left + r.width / 2;
+  joyCy = r.top + r.height / 2;
+}, { passive: false });
+
+// 视角拖拽：触点起始于 canvas（即非 UI 区域）时生效
+canvas.addEventListener('touchstart', (e) => {
+  if (!touch.active) return;
+  for (const t of e.changedTouches) {
+    if (lookId === null) { lookId = t.identifier; lookX = t.clientX; lookY = t.clientY; }
+  }
+}, { passive: false });
+
+function onTouchMove(e) {
+  for (const t of e.changedTouches) {
+    if (t.identifier === joyId) {
+      let dx = t.clientX - joyCx, dy = t.clientY - joyCy;
+      const max = 50, len = Math.hypot(dx, dy);
+      if (len > max) { dx = dx / len * max; dy = dy / len * max; }
+      setKnob(dx, dy);
+      touch.move.x = dx / max;      // 右为正 → 右移
+      touch.move.z = -dy / max;     // 上为正 → 前进
+    } else if (t.identifier === lookId) {
+      player.yaw -= (t.clientX - lookX) * 0.005;
+      player.pitch -= (t.clientY - lookY) * 0.005;
+      const lim = Math.PI / 2 - 0.01;
+      player.pitch = Math.max(-lim, Math.min(lim, player.pitch));
+      lookX = t.clientX; lookY = t.clientY;
     }
   }
+}
+function onTouchEnd(e) {
+  for (const t of e.changedTouches) {
+    if (t.identifier === joyId) { joyId = null; setKnob(0, 0); touch.move.x = touch.move.z = 0; }
+    if (t.identifier === lookId) { lookId = null; }
+  }
+}
+document.addEventListener('touchmove', onTouchMove, { passive: false });
+document.addEventListener('touchend', onTouchEnd);
+document.addEventListener('touchcancel', onTouchEnd);
+
+// 动作按钮
+function bindBtn(id, onDown, onUp) {
+  const el = document.getElementById(id);
+  el.addEventListener('touchstart', (e) => { e.preventDefault(); onDown && onDown(); }, { passive: false });
+  el.addEventListener('touchend',   (e) => { e.preventDefault(); onUp && onUp(); }, { passive: false });
+}
+bindBtn('btnBreak', () => breakBlock());
+bindBtn('btnPlace', () => placeBlock());
+bindBtn('btnJump',  () => { touch.jump = true; }, () => { touch.jump = false; });
+bindBtn('btnFly',   () => { player.flying = !player.flying; });
+
+// 破坏 / 放置（鼠标与触屏共用）
+function breakBlock() {
+  const hit = raycastVoxel();
+  if (!hit) return;
+  world.set(hit.x, hit.y, hit.z, 0);
+  rebuildMesh();
+}
+function placeBlock() {
+  const hit = raycastVoxel();
+  if (!hit) return;
+  const px = hit.x + hit.nx, py = hit.y + hit.ny, pz = hit.z + hit.nz;
+  if (!intersectsPlayer(px, py, pz)) {
+    world.set(px, py, pz, HOTBAR[selected]);
+    rebuildMesh();
+  }
+}
+
+canvas.addEventListener('mousedown', (e) => {
+  if (document.pointerLockElement !== canvas) return;
+  if (e.button === 0) breakBlock();
+  else if (e.button === 2) placeBlock();
 });
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
@@ -348,17 +439,22 @@ function updatePhysics(dt) {
   if (keys['KeyS']) move.sub(forward);
   if (keys['KeyD']) move.add(right);
   if (keys['KeyA']) move.sub(right);
+  // 触屏摇杆（forward = -z 屏幕向上，strafe = x）
+  if (touch.move.x !== 0 || touch.move.z !== 0) {
+    move.add(forward.clone().multiplyScalar(touch.move.z));
+    move.add(right.clone().multiplyScalar(touch.move.x));
+  }
   if (move.lengthSq() > 0) move.normalize().multiplyScalar(speed);
 
   if (player.flying) {
     player.vel.x = move.x; player.vel.z = move.z;
     player.vel.y = 0;
-    if (keys['Space']) player.vel.y = speed;
+    if (keys['Space'] || touch.jump) player.vel.y = speed;
     if (keys['ShiftLeft']) player.vel.y = -speed;
   } else {
     player.vel.x = move.x; player.vel.z = move.z;
     player.vel.y -= 24 * dt; // 重力
-    if (keys['Space'] && player.onGround) { player.vel.y = 8.5; player.onGround = false; }
+    if ((keys['Space'] || touch.jump) && player.onGround) { player.vel.y = 8.5; player.onGround = false; }
   }
 
   // 分轴移动 + 碰撞

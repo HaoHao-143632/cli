@@ -1,0 +1,47 @@
+name: Deploy Mini Craft to GitHub Pages
+
+# 把 games/minecraft 作为站点根目录发布到 GitHub Pages，
+# 这样在手机浏览器打开链接即可直接游玩。
+#
+# 首次使用需在仓库 Settings → Pages → Build and deployment →
+# Source 选择 "GitHub Actions" 启用一次。
+
+on:
+  push:
+    branches: [main, claude/minecraft-game-creation-hcsfu5]
+    paths:
+      - 'games/minecraft/**'
+      - '.github/workflows/deploy-game.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只保留一次部署
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload game as site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: games/minecraft
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

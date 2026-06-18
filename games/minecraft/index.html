@@ -2,12 +2,15 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
 <title>我的世界 · Mini Craft</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #87ceeb; font-family: "Segoe UI", "Microsoft YaHei", sans-serif; }
-  #game { display: block; width: 100%; height: 100%; cursor: crosshair; }
+  html, body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+  #game { display: block; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
 
   /* 准星 */
   #crosshair {
@@ -64,6 +67,41 @@
   }
   #startBtn:active { transform: translateY(3px); box-shadow: 0 1px 0 #357a38; }
   .hidden { display: none !important; }
+
+  /* ---------- 触屏操控（仅移动端显示）---------- */
+  #touch { position: fixed; inset: 0; z-index: 12; pointer-events: none; display: none; }
+  #touch.on { display: block; }
+
+  /* 左下虚拟摇杆 */
+  #joy {
+    position: absolute; left: 26px; bottom: 26px; width: 130px; height: 130px;
+    border-radius: 50%; background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.3); pointer-events: auto;
+  }
+  #joyKnob {
+    position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px;
+    border-radius: 50%; background: rgba(255,255,255,0.45); border: 2px solid rgba(255,255,255,0.6);
+  }
+
+  /* 右下动作按钮 */
+  #btns { position: absolute; right: 18px; bottom: 26px; display: grid; gap: 12px;
+    grid-template-columns: 72px 72px; pointer-events: none; }
+  .tbtn {
+    width: 72px; height: 72px; border-radius: 50%; pointer-events: auto;
+    background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.4); color: #fff;
+    font-size: 13px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+    text-align: center; line-height: 1.1;
+  }
+  .tbtn:active { background: rgba(255,255,255,0.45); }
+  #btnFly { grid-column: 1 / span 2; width: auto; height: 40px; border-radius: 20px; }
+
+  @media (max-width: 820px) {
+    #overlay h1 { font-size: 34px; }
+    #overlay p { font-size: 13px; padding: 0 16px; }
+    #hud { font-size: 11px; }
+    .slot { width: 44px; height: 44px; }
+    .slot .swatch { width: 26px; height: 26px; }
+  }
 </style>
 </head>
 <body>
@@ -80,6 +118,17 @@
 
 <div id="hotbar"></div>
 
+<!-- 触屏操控（移动端） -->
+<div id="touch">
+  <div id="joy"><div id="joyKnob"></div></div>
+  <div id="btns">
+    <div class="tbtn" id="btnBreak">破坏<br>⛏</div>
+    <div class="tbtn" id="btnPlace">放置<br>🧱</div>
+    <div class="tbtn" id="btnJump">跳跃<br>⤴</div>
+    <div class="tbtn" id="btnFly">✈ 飞行</div>
+  </div>
+</div>
+
 <div id="overlay">
   <h1>我的世界 · Mini Craft</h1>
   <p>一个用 Three.js 打造的体素小游戏。自由探索程序生成的世界，破坏与放置方块，建造属于你的天地。</p>
@@ -90,6 +139,10 @@
          <kbd>左键</kbd> 破坏方块 · <kbd>右键</kbd> 放置方块</div>
     <div style="margin-top:8px"><kbd>1</kbd>~<kbd>8</kbd> 或 <kbd>滚轮</kbd> 选择方块 ·
          <kbd>F</kbd> 切换飞行 · <kbd>ESC</kbd> 释放鼠标</div>
+    <div id="touchHint" style="margin-top:10px; display:none">
+      📱 手机操作：<b>左下摇杆</b>移动 · <b>右侧屏幕拖动</b>转视角 ·
+      右下按钮 <b>破坏/放置/跳跃/飞行</b> · 底部点选方块
+    </div>
   </div>
   <button id="startBtn">点击开始游戏</button>
 </div>
