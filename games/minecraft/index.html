@@ -68,6 +68,14 @@
   #startBtn:active { transform: translateY(3px); box-shadow: 0 1px 0 #357a38; }
   .hidden { display: none !important; }
 
+  /* 静音按钮 */
+  #muteBtn {
+    position: fixed; top: 10px; right: 10px; z-index: 11; width: 40px; height: 40px;
+    border-radius: 8px; border: 2px solid rgba(255,255,255,0.4); cursor: pointer;
+    background: rgba(0,0,0,0.4); color: #fff; font-size: 18px;
+  }
+  #muteBtn:active { background: rgba(255,255,255,0.4); }
+
   /* ---------- 触屏操控（仅移动端显示）---------- */
   #touch { position: fixed; inset: 0; z-index: 12; pointer-events: none; display: none; }
   #touch.on { display: block; }
@@ -115,6 +123,8 @@
   <div>已加载方块: <span id="blocks">-</span></div>
   <div>FPS: <span id="fps">-</span></div>
 </div>
+
+<button id="muteBtn" title="静音 (M)">🔊</button>
 
 <div id="hotbar"></div>
 

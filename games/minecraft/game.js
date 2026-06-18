@@ -240,6 +240,7 @@ const keys = {};
 document.addEventListener('keydown', (e) => {
   keys[e.code] = true;
   if (e.code === 'KeyF') player.flying = !player.flying;
+  if (e.code === 'KeyM') { SFX.enabled = !SFX.enabled; updateMuteBtn(); }
   if (e.code.startsWith('Digit')) {
     const n = parseInt(e.code.slice(5), 10);
     if (n >= 1 && n <= HOTBAR.length) { selected = n - 1; updateHotbar(); }
@@ -258,6 +259,60 @@ if (isTouch) {
   const hint = document.getElementById('touchHint');
   if (hint) hint.style.display = 'block';
 }
+
+// ---------- 音效（Web Audio 合成，无需音频文件）----------
+const SFX = {
+  ctx: null,
+  enabled: true,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) this.ctx = new AC();
+  },
+  // 带包络的振荡器音
+  tone(freq, dur, type = 'square', gain = 0.18, slide = 0) {
+    if (!this.enabled || !this.ctx) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    if (slide) osc.frequency.exponentialRampToValueAtTime(Math.max(40, freq + slide), t + dur);
+    g.gain.setValueAtTime(gain, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    osc.connect(g).connect(this.ctx.destination);
+    osc.start(t); osc.stop(t + dur);
+  },
+  // 滤波噪声（破坏、脚步）
+  noise(dur, freq, gain = 0.25) {
+    if (!this.enabled || !this.ctx) return;
+    const t = this.ctx.currentTime;
+    const n = Math.floor(this.ctx.sampleRate * dur);
+    const buf = this.ctx.createBuffer(1, n, this.ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const src = this.ctx.createBufferSource(); src.buffer = buf;
+    const filt = this.ctx.createBiquadFilter(); filt.type = 'bandpass';
+    filt.frequency.value = freq; filt.Q.value = 0.8;
+    const g = this.ctx.createGain(); g.gain.value = gain;
+    src.connect(filt).connect(g).connect(this.ctx.destination);
+    src.start(t);
+  },
+  break()  { this.noise(0.18, 240, 0.3); this.tone(160, 0.12, 'square', 0.08, -60); },
+  place()  { this.tone(220, 0.09, 'square', 0.16, 80); },
+  jump()   { this.tone(330, 0.14, 'triangle', 0.14, 220); },
+  step()   { this.noise(0.06, 180, 0.12); },
+};
+
+// 静音按钮
+const muteBtn = document.getElementById('muteBtn');
+function updateMuteBtn() { muteBtn.textContent = SFX.enabled ? '🔊' : '🔇'; }
+muteBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  SFX.init();
+  SFX.enabled = !SFX.enabled;
+  updateMuteBtn();
+});
 const touch = {
   move: { x: 0, z: 0 },  // 摇杆方向（strafe, forward）
   jump: false,
@@ -268,6 +323,7 @@ const touch = {
 const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('startBtn');
 startBtn.addEventListener('click', () => {
+  SFX.init();  // 用户手势中初始化/恢复音频
   if (isTouch) {
     // 移动端：无需指针锁定，直接进入并显示触屏按钮
     overlay.classList.add('hidden');
@@ -360,6 +416,7 @@ function breakBlock() {
   if (!hit) return;
   world.set(hit.x, hit.y, hit.z, 0);
   rebuildMesh();
+  SFX.break();
 }
 function placeBlock() {
   const hit = raycastVoxel();
@@ -368,6 +425,7 @@ function placeBlock() {
   if (!intersectsPlayer(px, py, pz)) {
     world.set(px, py, pz, HOTBAR[selected]);
     rebuildMesh();
+    SFX.place();
   }
 }
 
@@ -454,7 +512,7 @@ function updatePhysics(dt) {
   } else {
     player.vel.x = move.x; player.vel.z = move.z;
     player.vel.y -= 24 * dt; // 重力
-    if ((keys['Space'] || touch.jump) && player.onGround) { player.vel.y = 8.5; player.onGround = false; }
+    if ((keys['Space'] || touch.jump) && player.onGround) { player.vel.y = 8.5; player.onGround = false; SFX.jump(); }
   }
 
   // 分轴移动 + 碰撞
@@ -482,6 +540,15 @@ function updatePhysics(dt) {
     tryAxis('y'); tryAxis('x'); tryAxis('z');
   }
   player.pos.copy(np);
+
+  // 脚步声：在地面行走时按距离触发
+  if (player.onGround && !player.flying) {
+    const moved = Math.hypot(player.vel.x, player.vel.z) * dt;
+    player.stepDist = (player.stepDist || 0) + moved;
+    if (player.stepDist > 1.6) { SFX.step(); player.stepDist = 0; }
+  } else {
+    player.stepDist = 0;
+  }
 
   // 跌出世界则重生
   if (player.pos.y < -10) {
