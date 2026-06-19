@@ -1,0 +1,53 @@
+name: Deploy Airplane Shooter to Pages
+
+# 把 games/airplane-shooter 发布到 GitHub Pages，
+# 部署后可直接在浏览器访问游玩（无需手动改仓库设置）。
+
+on:
+  push:
+    branches:
+      - claude/airplane-shooter-game-u0ghmz
+      - main
+    paths:
+      - 'games/airplane-shooter/**'
+      - '.github/workflows/deploy-game.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare site (put game at site root)
+        run: |
+          mkdir -p _site
+          cp games/airplane-shooter/index.html _site/index.html
+          cp games/airplane-shooter/game.js _site/game.js
+
+      - name: Configure Pages (auto-enable)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
