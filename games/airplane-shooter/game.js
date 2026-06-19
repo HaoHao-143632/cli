@@ -90,6 +90,9 @@
     life()   { this.blip(659, 0.1, 'triangle', 0.28); setTimeout(() => this.blip(988, 0.18, 'triangle', 0.28), 100); },
     hurt()   { this.noise(0.25, 0.4, 600); this.blip(150, 0.35, 'sawtooth', 0.3, 45); },
     over()   { this.blip(440, 0.2, 'sawtooth', 0.22, 330); setTimeout(() => this.blip(330, 0.25, 'sawtooth', 0.22, 247), 190); setTimeout(() => this.blip(220, 0.5, 'sawtooth', 0.22, 110), 400); },
+    bomb()   { this.noise(0.6, 0.5, 2200); this.blip(120, 0.55, 'sawtooth', 0.3, 40); this.blip(300, 0.4, 'square', 0.18, 60); },
+    bossWarn(){ this.blip(330, 0.18, 'square', 0.25); setTimeout(() => this.blip(330, 0.18, 'square', 0.25), 260); setTimeout(() => this.blip(440, 0.3, 'square', 0.25), 520); },
+    bossDown(){ this.noise(0.9, 0.5, 1600); this.blip(200, 0.8, 'sawtooth', 0.25, 50); setTimeout(() => this.blip(150, 0.7, 'sawtooth', 0.22, 40), 250); setTimeout(() => this.blip(100, 0.9, 'sawtooth', 0.2, 30), 500); },
     // 背景音乐：A 小调循环琶音 + 低音
     bass(freq, dur) {
       if (!this.ctx || this.muted) return;
@@ -145,6 +148,13 @@
   let particles = [];
   let stars = [];
 
+  // Boss 战 & 炸弹
+  let boss = null;              // 当前 Boss（无则 null）
+  let bossLevel = 0;            // 已出场 Boss 次数（越多越强）
+  let nextBossScore = 800;      // 下一次触发 Boss 的分数门槛
+  let bossWarnTimer = 0;        // Boss 出现前的警告倒计时（帧）
+  let flash = 0;                // 屏幕白闪强度 0~1（炸弹/Boss 死亡）
+
   // ---------- 星空背景 ----------
   function initStars() {
     stars = [];
@@ -185,6 +195,7 @@
       speed: 5,
       lives: 3,
       power: 1,            // 火力等级 1~5
+      bombs: 2,            // 清屏炸弹数量
       fireCooldown: 0,
       fireRate: 9,         // 越小越快
       invincible: 0,       // 受伤后无敌帧
@@ -201,6 +212,7 @@
     keys[e.key.toLowerCase()] = true;
     if (e.key.toLowerCase() === 'p') togglePause();
     if (e.key.toLowerCase() === 'm') setMute(Sound.toggleMute());
+    if (e.key.toLowerCase() === 'b' || e.key === ' ') useBomb();
   });
   window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
 
@@ -257,6 +269,115 @@
 
   function enemyShoot(e) {
     enemyBullets.push({ x: e.x, y: e.y + e.h / 2, vx: 0, vy: 4.2, r: 5 });
+  }
+
+  // ---------- Boss ----------
+  function spawnBoss() {
+    const hp = 120 + bossLevel * 60;   // 随出场次数变强
+    boss = {
+      x: VW / 2, y: -90,
+      w: 150, h: 95,
+      hp, maxHp: hp,
+      vx: 1.6,
+      entering: true,
+      hitFlash: 0,
+      shootTimer: 60,
+      pattern: 0,           // 当前弹幕模式
+      patternTimer: 0,
+      wob: 0,
+    };
+  }
+
+  // Boss 弹幕：扇形 / 瞄准 / 环形
+  function bossShoot(b) {
+    const cx = b.x, cy = b.y + b.h / 2;
+    if (b.pattern === 0) {
+      // 扇形 5 发
+      for (let i = -2; i <= 2; i++) {
+        const a = Math.PI / 2 + i * 0.22;
+        enemyBullets.push({ x: cx, y: cy, vx: Math.cos(a) * 3.6, vy: Math.sin(a) * 3.6, r: 6, boss: true });
+      }
+    } else if (b.pattern === 1) {
+      // 瞄准玩家 3 连
+      const ang = Math.atan2(player.y - cy, player.x - cx);
+      for (let i = -1; i <= 1; i++) {
+        const a = ang + i * 0.14;
+        enemyBullets.push({ x: cx, y: cy, vx: Math.cos(a) * 4.4, vy: Math.sin(a) * 4.4, r: 6, boss: true });
+      }
+    } else {
+      // 环形弹幕
+      const n = 14;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2;
+        enemyBullets.push({ x: cx, y: cy, vx: Math.cos(a) * 2.8, vy: Math.sin(a) * 2.8, r: 5, boss: true });
+      }
+    }
+  }
+
+  function updateBoss() {
+    const b = boss;
+    b.wob += 0.03;
+    b.hitFlash = Math.max(0, b.hitFlash - 1);
+
+    if (b.entering) {
+      b.y += 1.6;
+      if (b.y >= 110) { b.y = 110; b.entering = false; }
+      return; // 入场时不开火、不结算
+    }
+
+    // 左右移动
+    b.x += b.vx;
+    if (b.x < b.w / 2 + 6) { b.x = b.w / 2 + 6; b.vx *= -1; }
+    if (b.x > VW - b.w / 2 - 6) { b.x = VW - b.w / 2 - 6; b.vx *= -1; }
+
+    // 切换弹幕模式
+    b.patternTimer++;
+    if (b.patternTimer > 300) { b.patternTimer = 0; b.pattern = (b.pattern + 1) % 3; }
+
+    // 开火（血量越低越密）
+    b.shootTimer--;
+    const fireGap = 26 + Math.floor((b.hp / b.maxHp) * 24);
+    if (b.shootTimer <= 0) { bossShoot(b); b.shootTimer = fireGap; }
+
+    // 与玩家子弹碰撞
+    for (let j = bullets.length - 1; j >= 0; j--) {
+      const bl = bullets[j];
+      if (Math.abs(bl.x - b.x) < b.w / 2 && Math.abs(bl.y - b.y) < b.h / 2) {
+        b.hp -= bl.dmg;
+        b.hitFlash = 3;
+        bullets.splice(j, 1);
+        explode(bl.x, bl.y, '#fff', 3);
+        if (b.hp <= 0) { killBoss(); return; }
+      }
+    }
+
+    // 撞到玩家
+    if (player.invincible === 0 &&
+        Math.abs(player.x - b.x) < (player.w + b.w) / 2.6 &&
+        Math.abs(player.y - b.y) < (player.h + b.h) / 2.6) {
+      hurtPlayer();
+    }
+  }
+
+  function killBoss() {
+    const bx = boss.x, by = boss.y;
+    score += 500;
+    flash = 1;
+    shake = 22;
+    Sound.bossDown();
+    explode(bx, by, '#ffd36a', 60);
+    // 连环爆炸（围绕 Boss 残骸）
+    for (let i = 0; i < 20; i++) {
+      setTimeout(() => explode(rand(bx - 70, bx + 70), rand(by - 40, by + 40), '#ffb24d', 12), i * 35);
+    }
+    // 掉落奖励：道具 + 1 颗炸弹
+    spawnPowerup(bx - 30, by);
+    spawnPowerup(bx + 30, by);
+    player.bombs = Math.min(5, player.bombs + 1);
+    boss = null;
+    bossLevel++;
+    nextBossScore = score + 1200 + bossLevel * 400;
+    spawnTimer = 0;
   }
 
   // ---------- 道具 ----------
@@ -336,11 +457,25 @@
       spawnInterval -= 4;
     }
 
-    // --- 生成敌人 ---
-    spawnTimer++;
-    if (spawnTimer >= spawnInterval) {
-      spawnTimer = 0;
-      spawnEnemy();
+    // --- Boss 触发 / 更新 ---
+    if (!boss && bossWarnTimer <= 0 && score >= nextBossScore) {
+      bossWarnTimer = 120;       // 2 秒警告
+      Sound.bossWarn();
+    }
+    if (bossWarnTimer > 0) {
+      bossWarnTimer--;
+      if (bossWarnTimer === 0) spawnBoss();
+    }
+    if (boss) updateBoss();
+
+    // --- 生成敌人（Boss 出现或警告期间不刷小怪）---
+    const spawningPaused = boss || bossWarnTimer > 0;
+    if (!spawningPaused) {
+      spawnTimer++;
+      if (spawnTimer >= spawnInterval) {
+        spawnTimer = 0;
+        spawnEnemy();
+      }
     }
 
     // --- 玩家子弹 ---
@@ -408,7 +543,7 @@
     for (let i = enemyBullets.length - 1; i >= 0; i--) {
       const b = enemyBullets[i];
       b.x += b.vx; b.y += b.vy;
-      if (b.y > VH + 10) { enemyBullets.splice(i, 1); continue; }
+      if (b.y > VH + 12 || b.y < -12 || b.x < -12 || b.x > VW + 12) { enemyBullets.splice(i, 1); continue; }
       if (p.invincible === 0 && dist2(b.x, b.y, p.x, p.y) < (b.r + p.w / 3) ** 2) {
         enemyBullets.splice(i, 1);
         explode(p.x, p.y, '#9bf', 10);
@@ -437,6 +572,31 @@
       pt.vx *= 0.94; pt.vy *= 0.94;
       pt.life--;
       if (pt.life <= 0) particles.splice(i, 1);
+    }
+  }
+
+  // 清屏炸弹：清空敌方子弹、秒杀小怪、对 Boss 造成大额伤害
+  function useBomb() {
+    if (state !== State.PLAY || !player || player.bombs <= 0) return;
+    player.bombs--;
+    flash = 1;
+    shake = 18;
+    Sound.bomb();
+    // 清空所有敌方子弹
+    for (const b of enemyBullets) explode(b.x, b.y, '#9bd6ff', 4);
+    enemyBullets = [];
+    // 秒杀所有普通敌机并计分
+    for (const e of enemies) {
+      score += e.score;
+      explode(e.x, e.y, e.color, 16);
+    }
+    enemies = [];
+    // 对 Boss 造成大额伤害
+    if (boss && !boss.entering) {
+      boss.hp -= Math.ceil(boss.maxHp * 0.18);
+      boss.hitFlash = 4;
+      explode(boss.x, boss.y, '#ffd36a', 24);
+      if (boss.hp <= 0) killBoss();
     }
   }
 
@@ -475,9 +635,9 @@
     // 道具
     for (const u of powerups) drawPowerup(u);
 
-    // 敌方子弹
-    ctx.fillStyle = '#ff5d7a';
+    // 敌方子弹（Boss 子弹用橙色区分）
     for (const b of enemyBullets) {
+      ctx.fillStyle = b.boss ? '#ffb13d' : '#ff5d7a';
       ctx.beginPath();
       ctx.arc(b.x, b.y, b.r, 0, 6.283);
       ctx.fill();
@@ -485,6 +645,9 @@
 
     // 敌机
     for (const e of enemies) drawEnemy(e);
+
+    // Boss
+    if (boss) drawBoss();
 
     // 玩家子弹
     for (const b of bullets) {
@@ -510,8 +673,57 @@
 
     ctx.restore();
 
+    // 屏幕白闪（炸弹 / Boss 死亡）
+    if (flash > 0) {
+      ctx.fillStyle = 'rgba(255,255,255,' + (flash * 0.6) + ')';
+      ctx.fillRect(0, 0, VW, VH);
+      flash *= 0.88;
+      if (flash < 0.02) flash = 0;
+    }
+
+    // Boss 出场警告
+    if (bossWarnTimer > 0 && Math.floor(bossWarnTimer / 12) % 2 === 0) {
+      ctx.save();
+      ctx.fillStyle = '#ff5566';
+      ctx.font = 'bold 34px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('⚠ BOSS 来袭 ⚠', VW / 2, VH / 2);
+      ctx.restore();
+    }
+
     // HUD
     drawHUD();
+  }
+
+  function drawBoss() {
+    const b = boss;
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    const c = b.hitFlash > 0 ? '#ffffff' : '#d24b8c';
+
+    // 机身（菱形战舰）
+    ctx.fillStyle = c;
+    ctx.beginPath();
+    ctx.moveTo(0, b.h / 2);
+    ctx.lineTo(b.w / 2, 0);
+    ctx.lineTo(b.w / 4, -b.h / 2);
+    ctx.lineTo(-b.w / 4, -b.h / 2);
+    ctx.lineTo(-b.w / 2, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // 装甲细节
+    ctx.fillStyle = 'rgba(20,10,30,0.45)';
+    ctx.beginPath();
+    ctx.ellipse(0, -2, b.w * 0.18, b.h * 0.22, 0, 0, 6.283);
+    ctx.fill();
+    ctx.fillStyle = '#ff86c0';
+    ctx.beginPath();
+    ctx.arc(0, 2, 7 + Math.sin(b.wob * 4) * 2, 0, 6.283); // 核心
+    ctx.fill();
+
+    ctx.restore();
   }
 
   function drawPlayer() {
@@ -653,6 +865,26 @@
     ctx.font = '13px "Segoe UI", sans-serif';
     ctx.fillText('火力 Lv.' + player.power, VW - 14, 40);
 
+    // 炸弹数（右上，火力下方）
+    ctx.fillStyle = '#ffd36a';
+    ctx.fillText('💣 ×' + player.bombs, VW - 14, 58);
+
+    // Boss 血条（顶部横贯）
+    if (boss && !boss.entering) {
+      const bw = VW - 120, bx = 60, by = 64;
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(bx, by, bw, 8);
+      ctx.fillStyle = '#ff4d6d';
+      ctx.fillRect(bx, by, bw * Math.max(0, boss.hp / boss.maxHp), 8);
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(bx, by, bw, 8);
+      ctx.fillStyle = '#ffd0da';
+      ctx.font = 'bold 11px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('BOSS', VW / 2, by - 12);
+    }
+
     ctx.restore();
   }
 
@@ -688,6 +920,11 @@
     powerups = [];
     particles = [];
     shake = 0;
+    boss = null;
+    bossLevel = 0;
+    nextBossScore = 800;
+    bossWarnTimer = 0;
+    flash = 0;
     player = createPlayer();
     initStars();
   }
@@ -744,6 +981,16 @@
       e.stopPropagation();
       Sound.init();           // 首次点击也可初始化
       setMute(Sound.toggleMute());
+    });
+  }
+
+  // 炸弹按钮（手机用）
+  const bombBtn = document.getElementById('bombBtn');
+  if (bombBtn) {
+    bombBtn.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      useBomb();
     });
   }
 
