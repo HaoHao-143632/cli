@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>豆豆学习监督台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部栏 -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">🌱</span>
+        <div>
+          <h1>豆豆学习监督台</h1>
+          <p class="subtitle">陪豆豆每天进步一点点</p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="streak-chip" title="连续打卡天数">
+          🔥 <span id="streakCount">0</span> 天
+        </div>
+        <div class="points-chip" title="当前积分">
+          ⭐ <span id="pointsCount">0</span> 分
+        </div>
+        <button class="icon-btn" id="resetBtn" title="重置全部数据">⚙️</button>
+      </div>
+    </header>
+
+    <!-- 导航 -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="dashboard">📊 仪表盘</button>
+      <button class="tab" data-tab="tasks">✅ 作业任务</button>
+      <button class="tab" data-tab="focus">⏱️ 番茄钟</button>
+      <button class="tab" data-tab="plan">📅 周计划</button>
+      <button class="tab" data-tab="mistakes">📕 错题本</button>
+      <button class="tab" data-tab="rewards">🎁 积分奖励</button>
+      <button class="tab" data-tab="stats">📈 学习统计</button>
+    </nav>
+
+    <main id="views">
+      <!-- 仪表盘 -->
+      <section class="view active" id="view-dashboard">
+        <div class="grid-3">
+          <div class="card stat-card">
+            <div class="stat-label">今日任务完成</div>
+            <div class="stat-value"><span id="todayDone">0</span>/<span id="todayTotal">0</span></div>
+            <div class="progress"><div class="progress-bar" id="todayProgress"></div></div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">今日学习时长</div>
+            <div class="stat-value"><span id="todayMinutes">0</span> <small>分钟</small></div>
+            <div class="stat-hint">目标 <span id="dailyGoal">60</span> 分钟</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">本周累计专注</div>
+            <div class="stat-value"><span id="weekMinutes">0</span> <small>分钟</small></div>
+            <div class="stat-hint">坚持就是胜利 💪</div>
+          </div>
+        </div>
+
+        <div class="card checkin-card">
+          <div>
+            <h3>今日打卡</h3>
+            <p class="muted" id="checkinHint">打卡记录豆豆每天的努力,连续打卡有额外积分奖励!</p>
+          </div>
+          <button class="btn-primary" id="checkinBtn">立即打卡 +5⭐</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <h3>今日待办</h3>
+              <span class="muted" id="dashDateLabel"></span>
+            </div>
+            <ul class="mini-list" id="dashTodayTasks"></ul>
+          </div>
+          <div class="card">
+            <h3>鼓励小贴士</h3>
+            <p class="quote" id="dailyQuote"></p>
+            <div class="encourage-row">
+              <button class="chip-btn" data-praise="豆豆真棒,今天很专注!">👍 表扬</button>
+              <button class="chip-btn" data-praise="再加把劲,你可以的!">💪 加油</button>
+              <button class="chip-btn" data-praise="休息一下,劳逸结合更高效。">☕ 休息</button>
+            </div>
+            <p class="praise-feedback" id="praiseFeedback"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 作业任务 -->
+      <section class="view" id="view-tasks">
+        <div class="card">
+          <h3>添加学习任务</h3>
+          <form class="task-form" id="taskForm">
+            <input type="text" id="taskTitle" placeholder="任务内容,例如:完成数学口算 20 题" required />
+            <select id="taskSubject">
+              <option value="语文">语文</option>
+              <option value="数学">数学</option>
+              <option value="英语">英语</option>
+              <option value="科学">科学</option>
+              <option value="阅读">阅读</option>
+              <option value="其它">其它</option>
+            </select>
+            <select id="taskPoints">
+              <option value="5">奖励 5 分</option>
+              <option value="10" selected>奖励 10 分</option>
+              <option value="15">奖励 15 分</option>
+              <option value="20">奖励 20 分</option>
+            </select>
+            <button class="btn-primary" type="submit">添加</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>任务清单</h3>
+            <div class="filter-row" id="subjectFilter">
+              <button class="chip-btn active" data-filter="全部">全部</button>
+              <button class="chip-btn" data-filter="语文">语文</button>
+              <button class="chip-btn" data-filter="数学">数学</button>
+              <button class="chip-btn" data-filter="英语">英语</button>
+              <button class="chip-btn" data-filter="科学">科学</button>
+              <button class="chip-btn" data-filter="阅读">阅读</button>
+            </div>
+          </div>
+          <ul class="task-list" id="taskList"></ul>
+          <p class="empty-hint" id="taskEmpty">还没有任务,先给豆豆安排今天的学习吧!</p>
+        </div>
+      </section>
+
+      <!-- 番茄钟 -->
+      <section class="view" id="view-focus">
+        <div class="card focus-card">
+          <h3>专注番茄钟</h3>
+          <p class="muted">每专注 25 分钟,奖励 8 积分。学习时把手机放一边哦!</p>
+          <div class="timer-display" id="timerDisplay">25:00</div>
+          <div class="timer-presets">
+            <button class="chip-btn" data-min="15">15 分钟</button>
+            <button class="chip-btn active" data-min="25">25 分钟</button>
+            <button class="chip-btn" data-min="40">40 分钟</button>
+          </div>
+          <div class="timer-controls">
+            <button class="btn-primary" id="startTimer">开始</button>
+            <button class="btn-ghost" id="pauseTimer" disabled>暂停</button>
+            <button class="btn-ghost" id="resetTimer">重置</button>
+          </div>
+          <input type="text" id="focusSubject" class="focus-subject" placeholder="这一轮在学什么?(可选)" />
+        </div>
+        <div class="card">
+          <h3>今日专注记录</h3>
+          <ul class="mini-list" id="focusLog"></ul>
+          <p class="empty-hint" id="focusEmpty">今天还没有专注记录,开始第一个番茄钟吧!</p>
+        </div>
+      </section>
+
+      <!-- 周计划 -->
+      <section class="view" id="view-plan">
+        <div class="card">
+          <h3>每周学习计划表</h3>
+          <p class="muted">点击任意格子填写当天的学习安排,自动保存。</p>
+          <div class="plan-table-wrap">
+            <table class="plan-table" id="planTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 错题本 -->
+      <section class="view" id="view-mistakes">
+        <div class="card">
+          <h3>记录错题</h3>
+          <form class="mistake-form" id="mistakeForm">
+            <div class="form-row">
+              <select id="mistakeSubject">
+                <option value="语文">语文</option>
+                <option value="数学">数学</option>
+                <option value="英语">英语</option>
+                <option value="科学">科学</option>
+                <option value="其它">其它</option>
+              </select>
+              <input type="text" id="mistakeTopic" placeholder="知识点,例如:进位加法" />
+            </div>
+            <textarea id="mistakeContent" placeholder="错题内容 / 错在哪里" rows="2" required></textarea>
+            <textarea id="mistakeNote" placeholder="正确解法 / 订正笔记" rows="2"></textarea>
+            <button class="btn-primary" type="submit">保存错题</button>
+          </form>
+        </div>
+        <div class="card">
+          <h3>错题列表</h3>
+          <div class="mistake-list" id="mistakeList"></div>
+          <p class="empty-hint" id="mistakeEmpty">还没有错题,把不会的题记下来反复练习吧!</p>
+        </div>
+      </section>
+
+      <!-- 积分奖励 -->
+      <section class="view" id="view-rewards">
+        <div class="grid-2">
+          <div class="card">
+            <h3>积分余额</h3>
+            <div class="big-points">⭐ <span id="rewardPoints">0</span></div>
+            <p class="muted">完成任务、打卡和番茄钟都能赚积分,攒够了就能兑换奖励!</p>
+            <form class="reward-form" id="rewardForm">
+              <input type="text" id="rewardName" placeholder="奖励名称,例如:看 30 分钟动画片" required />
+              <input type="number" id="rewardCost" placeholder="所需积分" min="1" required />
+              <button class="btn-primary" type="submit">添加奖励</button>
+            </form>
+          </div>
+          <div class="card">
+            <h3>奖励商店</h3>
+            <div class="reward-list" id="rewardList"></div>
+            <p class="empty-hint" id="rewardEmpty">还没有奖励项目,和豆豆约定一个小目标吧!</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>积分流水</h3>
+          <ul class="mini-list" id="pointLog"></ul>
+          <p class="empty-hint" id="pointLogEmpty">暂无积分记录。</p>
+        </div>
+      </section>
+
+      <!-- 学习统计 -->
+      <section class="view" id="view-stats">
+        <div class="card">
+          <h3>最近 7 天学习时长(分钟)</h3>
+          <div class="bar-chart" id="minutesChart"></div>
+        </div>
+        <div class="grid-3">
+          <div class="card stat-card">
+            <div class="stat-label">累计完成任务</div>
+            <div class="stat-value" id="totalTasksDone">0</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">累计专注番茄</div>
+            <div class="stat-value" id="totalPomodoros">0</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">累计学习时长</div>
+            <div class="stat-value"><span id="totalMinutes">0</span> <small>分钟</small></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>各学科完成任务数</h3>
+          <div class="bar-chart" id="subjectChart"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      数据保存在本机浏览器中,不会上传。给豆豆和家长的小工具 · 加油 🌱
+    </footer>
+  </div>
+
+  <!-- 庆祝弹层 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
