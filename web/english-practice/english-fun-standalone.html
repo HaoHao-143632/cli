@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Fun · 英语练习乐园</title>
+  <meta name="description" content="面向初学者和中小学生的英语练习网站：单词卡片、语法选择题、听力练习、阅读理解。" />
+  <style>
+:root {
+  --bg: #f3f6ff;
+  --card: #ffffff;
+  --primary: #5b6cff;
+  --primary-dark: #3f4fe0;
+  --accent: #ff8a5b;
+  --green: #29b765;
+  --red: #f0524b;
+  --text: #2b2f45;
+  --muted: #7b829e;
+  --shadow: 0 10px 30px rgba(60, 70, 140, 0.12);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: linear-gradient(160deg, #eef2ff 0%, #f7f9ff 40%, #fff5ef 100%);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
+
+/* ---- Header ---- */
+header.site {
+  text-align: center;
+  padding: 26px 0 10px;
+}
+header.site h1 {
+  font-size: 2rem;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+header.site p { color: var(--muted); margin-top: 4px; }
+
+/* ---- Nav tabs ---- */
+nav.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 22px 0;
+}
+.tab {
+  border: none;
+  background: var(--card);
+  color: var(--text);
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform .15s, background .2s, color .2s;
+}
+.tab:hover { transform: translateY(-2px); }
+.tab.active { background: var(--primary); color: #fff; }
+
+/* ---- Panels ---- */
+.panel { display: none; animation: fade .3s ease; }
+.panel.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 18px;
+}
+
+h2.section-title { font-size: 1.3rem; margin-bottom: 4px; }
+.section-sub { color: var(--muted); margin-bottom: 18px; }
+
+/* ---- Buttons ---- */
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 11px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  transition: background .2s, transform .1s;
+}
+.btn:hover { background: var(--primary-dark); }
+.btn:active { transform: scale(.97); }
+.btn.ghost { background: #eceefb; color: var(--primary); }
+.btn.ghost:hover { background: #e0e3fb; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+/* ---- Category chips ---- */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.chip {
+  border: 2px solid #e6e8f5;
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-size: .95rem;
+  transition: all .2s;
+}
+.chip.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+
+/* ---- Flashcard ---- */
+.flashcard {
+  perspective: 1200px;
+  height: 240px;
+  margin: 0 auto 8px;
+  max-width: 420px;
+  cursor: pointer;
+}
+.flash-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transition: transform .6s;
+  transform-style: preserve-3d;
+}
+.flashcard.flipped .flash-inner { transform: rotateY(180deg); }
+.flash-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+}
+.flash-front { background: linear-gradient(135deg, #5b6cff, #7b8cff); color: #fff; }
+.flash-back { background: linear-gradient(135deg, #fff1e8, #ffe3d3); transform: rotateY(180deg); color: var(--text); }
+.flash-word { font-size: 2.4rem; font-weight: 700; }
+.flash-ipa { opacity: .85; margin-top: 6px; }
+.flash-cn { font-size: 1.8rem; font-weight: 700; }
+.flash-ex { margin-top: 10px; color: var(--muted); font-style: italic; }
+.flip-hint { font-size: .8rem; opacity: .8; margin-top: 14px; }
+
+.card-counter { text-align: center; color: var(--muted); margin: 10px 0; }
+
+/* ---- Quiz options ---- */
+.question { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; }
+.options { display: grid; gap: 10px; }
+.option {
+  text-align: left;
+  border: 2px solid #e6e8f5;
+  background: #fff;
+  border-radius: 12px;
+  padding: 13px 16px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all .15s;
+}
+.option:hover:not(:disabled) { border-color: var(--primary); }
+.option.correct { border-color: var(--green); background: #e6f8ee; }
+.option.wrong { border-color: var(--red); background: #fdeceb; }
+.option:disabled { cursor: default; }
+
+.explain {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f4f6ff;
+  color: var(--text);
+  font-size: .95rem;
+  display: none;
+}
+.explain.show { display: block; }
+
+.progress-bar { height: 8px; background: #e6e8f5; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+.progress-fill { height: 100%; background: var(--primary); width: 0; transition: width .3s; }
+
+/* ---- Result ---- */
+.result { text-align: center; padding: 10px 0; }
+.result .score { font-size: 3rem; font-weight: 800; color: var(--primary); }
+.result .emoji { font-size: 3rem; }
+
+/* ---- Reading ---- */
+.passage {
+  background: #fbfbff;
+  border-left: 4px solid var(--primary);
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: 1.05rem;
+}
+.rq { margin-bottom: 18px; }
+
+/* ---- Listening big play ---- */
+.play-big {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  display: block;
+  margin: 6px auto 18px;
+  box-shadow: 0 8px 20px rgba(255, 138, 91, .4);
+  transition: transform .15s;
+}
+.play-big:hover { transform: scale(1.06); }
+
+/* ---- Stat badges on home ---- */
+.stats { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.stat {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  min-width: 110px;
+}
+.stat .num { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+.stat .lbl { color: var(--muted); font-size: .85rem; }
+
+footer.site { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 30px; }
+
+.small-audio {
+  border: none; background: #eceefb; color: var(--primary);
+  border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: .9rem;
+}
+.small-audio:hover { background: #e0e3fb; }
+
+@media (max-width: 520px) {
+  header.site h1 { font-size: 1.6rem; }
+  .flash-word { font-size: 2rem; }
+}
+
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <h1>🌟 English Fun 英语练习乐园</h1>
+      <p>单词 · 语法 · 听力 · 阅读 —— 边玩边学，轻松进步</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="home">🏠 首页</button>
+      <button class="tab" data-tab="vocab">🃏 单词卡片</button>
+      <button class="tab" data-tab="grammar">✏️ 语法练习</button>
+      <button class="tab" data-tab="listening">🎧 听力练习</button>
+      <button class="tab" data-tab="reading">📖 阅读理解</button>
+    </nav>
+
+    <!-- 首页 -->
+    <section class="panel active" id="panel-home">
+      <div class="card">
+        <h2 class="section-title">欢迎来到英语练习乐园 👋</h2>
+        <p class="section-sub">选择上面的任意一个模块开始练习吧！你的学习进度会自动保存在本机。</p>
+        <div class="stats">
+          <div class="stat"><div class="num" id="stat-done">0</div><div class="lbl">完成练习次数</div></div>
+          <div class="stat"><div class="num" id="stat-acc">0%</div><div class="lbl">平均正确率</div></div>
+          <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">答题总数</div></div>
+        </div>
+        <div class="btn-row" style="margin-top:22px">
+          <button class="btn" onclick="document.querySelector('[data-tab=vocab]').click()">🃏 学单词</button>
+          <button class="btn ghost" onclick="document.querySelector('[data-tab=grammar]').click()">✏️ 做语法题</button>
+          <button class="btn ghost" onclick="document.querySelector('[data-tab=listening]').click()">🎧 练听力</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">📚 各模块介绍</h2>
+        <ul style="margin-left:18px; color:var(--muted); line-height:2">
+          <li><b>单词卡片</b>：分类记单词，点击翻面看中文和例句，可点喇叭跟读。</li>
+          <li><b>语法练习</b>：选择题形式，答题后立即给出解析。</li>
+          <li><b>听力练习</b>：浏览器朗读句子，选出你听到的内容。</li>
+          <li><b>阅读理解</b>：阅读短文并回答问题，可朗读全文。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 单词卡片 -->
+    <section class="panel" id="panel-vocab">
+      <div class="card">
+        <h2 class="section-title">🃏 单词卡片</h2>
+        <p class="section-sub">先选分类，点击卡片翻面看中文。</p>
+        <div class="chips" id="vocab-chips"></div>
+        <div class="flashcard" id="flash"></div>
+        <div class="card-counter" id="vocab-counter"></div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn ghost" id="vocab-prev">← 上一个</button>
+          <button class="btn" id="vocab-next">下一个 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 语法 -->
+    <section class="panel" id="panel-grammar">
+      <div class="card">
+        <h2 class="section-title">✏️ 语法练习</h2>
+        <p class="section-sub">选出正确答案，答题后会显示解析。</p>
+        <div id="grammar-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 听力 -->
+    <section class="panel" id="panel-listening">
+      <div class="card">
+        <h2 class="section-title">🎧 听力练习</h2>
+        <p class="section-sub">点喇叭听句子（可重复），然后选出你听到的那一句。</p>
+        <div id="listening-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 阅读 -->
+    <section class="panel" id="panel-reading">
+      <div class="card">
+        <h2 class="section-title">📖 阅读理解</h2>
+        <p class="section-sub">读完短文后回答问题，完成后会自动进入下一篇。</p>
+        <div id="reading-content"></div>
+      </div>
+    </section>
+
+    <footer class="site">
+      <p>English Fun · 纯静态网页，打开即用 · 学习进度保存在你的浏览器中</p>
+    </footer>
+  </div>
+
+  <script>
+/*
+ * 英语练习内容数据（面向初学者 / 中小学）
+ * 所有内容集中在此文件，方便老师/家长自行增删。
+ * 修改后直接刷新页面即可生效，无需重新构建。
+ */
+window.AppData = {
+  /* ---------------- 单词卡片 ---------------- */
+  // 每个分类包含若干单词，word=英文, cn=中文, ipa=音标, example=例句
+  vocabulary: [
+    {
+      category: "动物 Animals",
+      icon: "🐾",
+      words: [
+        { word: "cat", cn: "猫", ipa: "/kæt/", example: "The cat is sleeping." },
+        { word: "dog", cn: "狗", ipa: "/dɔːɡ/", example: "My dog likes to run." },
+        { word: "rabbit", cn: "兔子", ipa: "/ˈræbɪt/", example: "A rabbit has long ears." },
+        { word: "bird", cn: "鸟", ipa: "/bɜːrd/", example: "The bird can fly high." },
+        { word: "fish", cn: "鱼", ipa: "/fɪʃ/", example: "Fish live in the water." },
+        { word: "tiger", cn: "老虎", ipa: "/ˈtaɪɡər/", example: "The tiger is very strong." },
+      ],
+    },
+    {
+      category: "食物 Food",
+      icon: "🍎",
+      words: [
+        { word: "apple", cn: "苹果", ipa: "/ˈæpl/", example: "I eat an apple every day." },
+        { word: "bread", cn: "面包", ipa: "/bred/", example: "She bought some bread." },
+        { word: "milk", cn: "牛奶", ipa: "/mɪlk/", example: "Milk is good for you." },
+        { word: "rice", cn: "米饭", ipa: "/raɪs/", example: "We eat rice for dinner." },
+        { word: "egg", cn: "鸡蛋", ipa: "/eɡ/", example: "He had an egg for breakfast." },
+        { word: "water", cn: "水", ipa: "/ˈwɔːtər/", example: "Please drink more water." },
+      ],
+    },
+    {
+      category: "颜色 Colors",
+      icon: "🎨",
+      words: [
+        { word: "red", cn: "红色", ipa: "/red/", example: "The apple is red." },
+        { word: "blue", cn: "蓝色", ipa: "/bluː/", example: "The sky is blue." },
+        { word: "green", cn: "绿色", ipa: "/ɡriːn/", example: "Grass is green." },
+        { word: "yellow", cn: "黄色", ipa: "/ˈjeloʊ/", example: "The sun looks yellow." },
+        { word: "black", cn: "黑色", ipa: "/blæk/", example: "I have a black bag." },
+        { word: "white", cn: "白色", ipa: "/waɪt/", example: "Snow is white." },
+      ],
+    },
+    {
+      category: "学校 School",
+      icon: "🏫",
+      words: [
+        { word: "book", cn: "书", ipa: "/bʊk/", example: "I read a book." },
+        { word: "pen", cn: "钢笔", ipa: "/pen/", example: "Write with a pen." },
+        { word: "teacher", cn: "老师", ipa: "/ˈtiːtʃər/", example: "Our teacher is kind." },
+        { word: "student", cn: "学生", ipa: "/ˈstuːdnt/", example: "She is a good student." },
+        { word: "desk", cn: "课桌", ipa: "/desk/", example: "My desk is clean." },
+        { word: "class", cn: "课/班级", ipa: "/klæs/", example: "Our class is fun." },
+      ],
+    },
+  ],
+
+  /* ---------------- 语法选择题 ---------------- */
+  // q=题干, options=选项, answer=正确选项下标(从0开始), explain=解析
+  grammar: [
+    {
+      q: "She ___ a teacher.",
+      options: ["am", "is", "are", "be"],
+      answer: 1,
+      explain: "主语 she 是第三人称单数，be 动词用 is。",
+    },
+    {
+      q: "There are three ___ on the desk.",
+      options: ["book", "books", "a book", "bookes"],
+      answer: 1,
+      explain: "three 表示复数，名词 book 要加 s 变成 books。",
+    },
+    {
+      q: "I ___ to school every day.",
+      options: ["goes", "going", "go", "gone"],
+      answer: 2,
+      explain: "主语 I 用动词原形 go，表示日常习惯。",
+    },
+    {
+      q: "This is ___ apple.",
+      options: ["a", "an", "the", "/"],
+      answer: 1,
+      explain: "apple 以元音音素开头，用 an。",
+    },
+    {
+      q: "He ___ TV now.",
+      options: ["watch", "watches", "is watching", "watched"],
+      answer: 2,
+      explain: "now 表示现在正在进行，用现在进行时 is watching。",
+    },
+    {
+      q: "My brother is taller ___ me.",
+      options: ["then", "than", "that", "as"],
+      answer: 1,
+      explain: "比较级后面用 than 引出比较对象。",
+    },
+    {
+      q: "___ you like ice cream?",
+      options: ["Are", "Is", "Do", "Does"],
+      answer: 2,
+      explain: "实义动词 like 的一般疑问句，主语 you 用 Do。",
+    },
+    {
+      q: "There ___ some milk in the cup.",
+      options: ["is", "are", "am", "be"],
+      answer: 0,
+      explain: "milk 是不可数名词，用 is。",
+    },
+    {
+      q: "We had a lot of fun ___ the party.",
+      options: ["in", "at", "on", "to"],
+      answer: 1,
+      explain: "在某次活动/聚会上用介词 at。",
+    },
+    {
+      q: "Look! The children ___ in the park.",
+      options: ["play", "plays", "are playing", "played"],
+      answer: 2,
+      explain: "Look! 提示正在发生，用现在进行时 are playing。",
+    },
+  ],
+
+  /* ---------------- 听力练习 ---------------- */
+  // 朗读 sentence，让学生选出听到的句子；options 含干扰项
+  listening: [
+    {
+      sentence: "Good morning, how are you?",
+      options: [
+        "Good morning, how are you?",
+        "Good evening, where are you?",
+        "Good morning, how old are you?",
+      ],
+      answer: 0,
+    },
+    {
+      sentence: "I have two red apples.",
+      options: [
+        "I have two red apples.",
+        "I have ten red apples.",
+        "I have two red bananas.",
+      ],
+      answer: 0,
+    },
+    {
+      sentence: "The cat is under the table.",
+      options: [
+        "The cat is on the table.",
+        "The cat is under the table.",
+        "The dog is under the table.",
+      ],
+      answer: 1,
+    },
+    {
+      sentence: "My favorite color is blue.",
+      options: [
+        "My favorite color is blue.",
+        "My favorite color is green.",
+        "My favorite animal is blue.",
+      ],
+      answer: 0,
+    },
+    {
+      sentence: "We go to school by bus.",
+      options: [
+        "We go to school by car.",
+        "We go to work by bus.",
+        "We go to school by bus.",
+      ],
+      answer: 2,
+    },
+    {
+      sentence: "She likes to read books at night.",
+      options: [
+        "She likes to read books at night.",
+        "He likes to read books at night.",
+        "She likes to write books at night.",
+      ],
+      answer: 0,
+    },
+  ],
+
+  /* ---------------- 阅读理解 ---------------- */
+  reading: [
+    {
+      title: "Tom's Day",
+      passage:
+        "Tom is a student. He gets up at seven o'clock every morning. He has breakfast with his family. Then he goes to school by bike. Tom likes English and music. After school, he plays football with his friends. In the evening, he does his homework and reads a book. Tom goes to bed at nine o'clock.",
+      questions: [
+        {
+          q: "When does Tom get up?",
+          options: ["At six o'clock", "At seven o'clock", "At nine o'clock"],
+          answer: 1,
+        },
+        {
+          q: "How does Tom go to school?",
+          options: ["By bike", "By bus", "On foot"],
+          answer: 0,
+        },
+        {
+          q: "What does Tom do after school?",
+          options: ["Reads a book", "Plays football", "Watches TV"],
+          answer: 1,
+        },
+      ],
+    },
+    {
+      title: "My Pet",
+      passage:
+        "I have a little dog. Its name is Lucky. Lucky is white and brown. It is two years old. Lucky likes to run and play with a ball. Every day I give it food and water. Lucky sleeps in a small house in our garden. I love my dog very much.",
+      questions: [
+        {
+          q: "What is the dog's name?",
+          options: ["Lucky", "Tom", "Bobby"],
+          answer: 0,
+        },
+        {
+          q: "What color is the dog?",
+          options: ["Black and white", "White and brown", "Yellow"],
+          answer: 1,
+        },
+        {
+          q: "Where does the dog sleep?",
+          options: ["In the garden", "On the bed", "In the kitchen"],
+          answer: 0,
+        },
+      ],
+    },
+  ],
+};
+
+</script>
+  <script>
+/* 英语练习网站 —— 纯前端逻辑（无框架，无后端） */
+(function () {
+  "use strict";
+  const D = window.AppData;
+
+  /* ---------- 工具 ---------- */
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const el = (tag, cls, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  };
+  const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  /* ---------- 语音合成（朗读） ---------- */
+  const speak = (text) => {
+    if (!("speechSynthesis" in window)) {
+      alert("当前浏览器不支持语音朗读，请使用 Chrome / Edge 等现代浏览器。");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.9;
+    const v = window.speechSynthesis
+      .getVoices()
+      .find((x) => /en[-_]/i.test(x.lang));
+    if (v) u.voice = v;
+    window.speechSynthesis.speak(u);
+  };
+
+  /* ---------- 进度记录（localStorage） ---------- */
+  const Store = {
+    key: "eng-practice-stats",
+    get() {
+      try {
+        return JSON.parse(localStorage.getItem(this.key)) || { done: 0, correct: 0, total: 0 };
+      } catch {
+        return { done: 0, correct: 0, total: 0 };
+      }
+    },
+    add(correct, total) {
+      const s = this.get();
+      s.done += 1;
+      s.correct += correct;
+      s.total += total;
+      localStorage.setItem(this.key, JSON.stringify(s));
+      renderStats();
+    },
+  };
+
+  function renderStats() {
+    const s = Store.get();
+    const acc = s.total ? Math.round((s.correct / s.total) * 100) : 0;
+    $("#stat-done").textContent = s.done;
+    $("#stat-acc").textContent = acc + "%";
+    $("#stat-total").textContent = s.total;
+  }
+
+  /* ================= 单词卡片 ================= */
+  const Vocab = {
+    cat: 0,
+    idx: 0,
+    init() {
+      const chips = $("#vocab-chips");
+      chips.innerHTML = "";
+      D.vocabulary.forEach((c, i) => {
+        const chip = el("button", "chip" + (i === 0 ? " active" : ""), c.icon + " " + c.category);
+        chip.onclick = () => {
+          this.cat = i;
+          this.idx = 0;
+          chips.querySelectorAll(".chip").forEach((x) => x.classList.remove("active"));
+          chip.classList.add("active");
+          this.render();
+        };
+        chips.appendChild(chip);
+      });
+      this.render();
+    },
+    render() {
+      const words = D.vocabulary[this.cat].words;
+      const w = words[this.idx];
+      $("#flash").className = "flashcard";
+      $("#flash").innerHTML = `
+        <div class="flash-inner">
+          <div class="flash-face flash-front">
+            <div class="flash-word">${w.word}</div>
+            <div class="flash-ipa">${w.ipa}</div>
+            <button class="small-audio" style="margin-top:14px" data-speak="${w.word}">🔊 朗读</button>
+            <div class="flip-hint">点击卡片看中文 ↻</div>
+          </div>
+          <div class="flash-face flash-back">
+            <div class="flash-cn">${w.cn}</div>
+            <div class="flash-ex">${w.example}</div>
+            <div class="flip-hint">点击卡片返回 ↻</div>
+          </div>
+        </div>`;
+      $("#vocab-counter").textContent = `${this.idx + 1} / ${words.length}`;
+    },
+    flip(e) {
+      if (e.target.closest("[data-speak]")) return; // 点朗读按钮不翻转
+      $("#flash").classList.toggle("flipped");
+    },
+    next() {
+      const words = D.vocabulary[this.cat].words;
+      this.idx = (this.idx + 1) % words.length;
+      this.render();
+    },
+    prev() {
+      const words = D.vocabulary[this.cat].words;
+      this.idx = (this.idx - 1 + words.length) % words.length;
+      this.render();
+    },
+  };
+
+  /* ================= 通用测验（语法 / 听力 / 阅读题） ================= */
+  // 渲染一组题目并统计得分，结束后调用 onDone
+  function runQuiz(container, items, opts) {
+    let i = 0,
+      correct = 0;
+    container.innerHTML = "";
+    const fill = el("div", "progress-bar", '<div class="progress-fill"></div>');
+    const stage = el("div");
+    container.append(fill, stage);
+
+    function show() {
+      const it = items[i];
+      $(".progress-fill", fill).style.width = (i / items.length) * 100 + "%";
+      stage.innerHTML = "";
+      if (opts.header) stage.appendChild(opts.header(it, i));
+      const qEl = el("div", "question", `${i + 1}. ${opts.text(it)}`);
+      stage.appendChild(qEl);
+      const optsBox = el("div", "options");
+      it._opts = it._opts || it.options.map((o, idx) => ({ o, idx }));
+      it._opts.forEach(({ o, idx }) => {
+        const b = el("button", "option", o);
+        b.onclick = () => choose(b, idx, optsBox, it);
+        optsBox.appendChild(b);
+      });
+      stage.appendChild(optsBox);
+      const ex = el("div", "explain", it.explain ? "💡 " + it.explain : "");
+      if (it.explain) stage.appendChild(ex);
+    }
+
+    function choose(btn, idx, box, it) {
+      [...box.children].forEach((b) => (b.disabled = true));
+      if (idx === it.answer) {
+        btn.classList.add("correct");
+        correct++;
+      } else {
+        btn.classList.add("wrong");
+        // 高亮正确项
+        [...box.children].forEach((b) => {
+          if (b.textContent === it.options[it.answer]) b.classList.add("correct");
+        });
+      }
+      $(".explain", stage)?.classList.add("show");
+      const nextBtn = el("button", "btn", i < items.length - 1 ? "下一题 →" : "查看结果 🎉");
+      nextBtn.style.marginTop = "16px";
+      nextBtn.onclick = () => {
+        i++;
+        if (i < items.length) show();
+        else finish();
+      };
+      stage.appendChild(nextBtn);
+    }
+
+    function finish() {
+      Store.add(correct, items.length);
+      const pct = Math.round((correct / items.length) * 100);
+      const emoji = pct === 100 ? "🏆" : pct >= 60 ? "😃" : "💪";
+      const tip = pct === 100 ? "完美！太棒了！" : pct >= 60 ? "做得不错，继续加油！" : "多练习一定会进步！";
+      stage.innerHTML = `
+        <div class="result">
+          <div class="emoji">${emoji}</div>
+          <div class="score">${correct} / ${items.length}</div>
+          <p>${tip}</p>
+        </div>`;
+      const again = el("button", "btn", "再来一次 🔄");
+      again.onclick = () => opts.restart();
+      const row = el("div", "btn-row");
+      row.style.justifyContent = "center";
+      row.appendChild(again);
+      stage.appendChild(row);
+      $(".progress-fill", fill).style.width = "100%";
+    }
+
+    show();
+  }
+
+  /* ================= 语法 ================= */
+  function initGrammar() {
+    runQuiz($("#grammar-quiz"), shuffle(D.grammar).slice(0, 8), {
+      text: (it) => it.q,
+      restart: initGrammar,
+    });
+  }
+
+  /* ================= 听力 ================= */
+  function initListening() {
+    runQuiz($("#listening-quiz"), shuffle(D.listening), {
+      text: () => "你听到的是哪一句？",
+      header: (it) => {
+        const wrap = el("div");
+        wrap.style.textAlign = "center";
+        const btn = el("button", "play-big", "🔊");
+        btn.title = "点击播放";
+        btn.onclick = () => speak(it.sentence);
+        wrap.appendChild(btn);
+        const hint = el("div", "section-sub", "点击喇叭听句子，可重复播放");
+        hint.style.textAlign = "center";
+        wrap.appendChild(hint);
+        setTimeout(() => speak(it.sentence), 300); // 进入自动播一次
+        return wrap;
+      },
+      restart: initListening,
+    });
+  }
+
+  /* ================= 阅读 ================= */
+  const Reading = { idx: 0 };
+  function initReading() {
+    const r = D.reading[Reading.idx];
+    const box = $("#reading-content");
+    box.innerHTML = `
+      <h3>${r.title} <button class="small-audio" data-speak="${r.passage.replace(/"/g, "&quot;")}">🔊 朗读全文</button></h3>
+      <div class="passage">${r.passage}</div>
+      <div id="reading-quiz"></div>`;
+    runQuiz($("#reading-quiz", box), r.questions, {
+      text: (it) => it.q,
+      restart: () => {
+        Reading.idx = (Reading.idx + 1) % D.reading.length; // 完成后换下一篇
+        initReading();
+      },
+    });
+  }
+
+  /* ================= 导航 ================= */
+  function switchTab(name) {
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + name));
+    if (name === "grammar") initGrammar();
+    if (name === "listening") initListening();
+    if (name === "reading") initReading();
+    if (name === "vocab") Vocab.init();
+    if (name === "home") renderStats();
+  }
+
+  /* ================= 启动 ================= */
+  document.addEventListener("DOMContentLoaded", () => {
+    // 预加载语音列表（部分浏览器异步）
+    if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
+
+    document.querySelectorAll(".tab").forEach((t) => (t.onclick = () => switchTab(t.dataset.tab)));
+
+    // 全局：点击带 data-speak 的元素朗读
+    document.body.addEventListener("click", (e) => {
+      const s = e.target.closest("[data-speak]");
+      if (s) {
+        e.stopPropagation();
+        speak(s.getAttribute("data-speak"));
+      }
+    });
+
+    // 单词卡片交互
+    $("#flash").addEventListener("click", (e) => Vocab.flip(e));
+    $("#vocab-next").onclick = () => Vocab.next();
+    $("#vocab-prev").onclick = () => Vocab.prev();
+
+    renderStats();
+    switchTab("home");
+  });
+})();
+
+</script>
+</body>
+</html>
