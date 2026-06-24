@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Fun · 英语练习乐园</title>
+  <meta name="description" content="面向初学者和中小学生的英语练习网站：单词卡片、语法选择题、听力练习、阅读理解。" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <h1>🌟 English Fun 英语练习乐园</h1>
+      <p>人教版(PEP)· 三年级起点 —— 单词 · 语法 · 听力 · 阅读</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="home">🏠 首页</button>
+      <button class="tab" data-tab="vocab">🃏 单词卡片</button>
+      <button class="tab" data-tab="spell">🔤 单词听写</button>
+      <button class="tab" data-tab="mixed">🔁 词义测验</button>
+      <button class="tab" data-tab="grammar">✏️ 语法练习</button>
+      <button class="tab" data-tab="listening">🎧 听力练习</button>
+      <button class="tab" data-tab="reading">📖 阅读理解</button>
+      <button class="tab" data-tab="mistakes">📕 错词本</button>
+    </nav>
+
+    <!-- 首页 -->
+    <section class="panel active" id="panel-home">
+      <div class="card">
+        <h2 class="section-title">欢迎来到英语练习乐园 👋</h2>
+        <p class="section-sub">选择上面的任意一个模块开始练习吧！你的学习进度会自动保存在本机。</p>
+        <div class="stats">
+          <div class="stat"><div class="num" id="stat-done">0</div><div class="lbl">完成练习次数</div></div>
+          <div class="stat"><div class="num" id="stat-acc">0%</div><div class="lbl">平均正确率</div></div>
+          <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">答题总数</div></div>
+          <div class="stat"><div class="num" id="stat-mistakes">0</div><div class="lbl">错词本词数</div></div>
+        </div>
+        <div class="btn-row" style="margin-top:22px">
+          <button class="btn" onclick="document.querySelector('[data-tab=vocab]').click()">🃏 学单词</button>
+          <button class="btn ghost" onclick="document.querySelector('[data-tab=grammar]').click()">✏️ 做语法题</button>
+          <button class="btn ghost" onclick="document.querySelector('[data-tab=listening]').click()">🎧 练听力</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">📚 各模块介绍</h2>
+        <ul style="margin-left:18px; color:var(--muted); line-height:2">
+          <li><b>单词卡片</b>：按年级单元记单词，点击翻面看中文和例句，可点喇叭跟读。</li>
+          <li><b>单词听写</b>：听单词发音 + 看中文提示，把单词拼写出来。</li>
+          <li><b>语法练习</b>：选择题形式，答题后立即给出解析。</li>
+          <li><b>听力练习</b>：浏览器朗读句子，选出你听到的内容。</li>
+          <li><b>阅读理解</b>：阅读短文并回答问题，可朗读全文。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 单词卡片 -->
+    <section class="panel" id="panel-vocab">
+      <div class="card">
+        <h2 class="section-title">🃏 单词卡片</h2>
+        <p class="section-sub">先选年级，再选单元，点击卡片翻面看中文。</p>
+        <div class="chips" id="vocab-grades"></div>
+        <div class="chips" id="vocab-chips"></div>
+        <div class="flashcard" id="flash"></div>
+        <div class="card-counter" id="vocab-counter"></div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn ghost" id="vocab-prev">← 上一个</button>
+          <button class="btn" id="vocab-next">下一个 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 单词听写 -->
+    <section class="panel" id="panel-spell">
+      <div class="card">
+        <h2 class="section-title">🔤 单词听写</h2>
+        <p class="section-sub">选年级和单元 → 点喇叭听单词 → 拼写出来。看中文提示，写对得分！</p>
+        <div class="chips" id="spell-grades"></div>
+        <div class="chips" id="spell-units"></div>
+        <div id="spell-area"></div>
+      </div>
+    </section>
+
+    <!-- 词义测验 -->
+    <section class="panel" id="panel-mixed">
+      <div class="card">
+        <h2 class="section-title">🔁 词义测验</h2>
+        <p class="section-sub">中文↔英文混合选择：看英文选中文，或看中文选英文。答错的词会进错词本。</p>
+        <div class="chips" id="mixed-grades"></div>
+        <div id="mixed-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 语法 -->
+    <section class="panel" id="panel-grammar">
+      <div class="card">
+        <h2 class="section-title">✏️ 语法练习</h2>
+        <p class="section-sub">选年级筛选题目，选出正确答案后会显示解析。</p>
+        <div class="chips" id="grammar-grades"></div>
+        <div id="grammar-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 听力 -->
+    <section class="panel" id="panel-listening">
+      <div class="card">
+        <h2 class="section-title">🎧 听力练习</h2>
+        <p class="section-sub">选年级筛选，点喇叭听句子（可重复），然后选出你听到的那一句。</p>
+        <div class="chips" id="listening-grades"></div>
+        <div id="listening-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 阅读 -->
+    <section class="panel" id="panel-reading">
+      <div class="card">
+        <h2 class="section-title">📖 阅读理解</h2>
+        <p class="section-sub">选年级筛选短文，读完后回答问题，完成后自动进入下一篇。</p>
+        <div class="chips" id="reading-grades"></div>
+        <div id="reading-content"></div>
+      </div>
+    </section>
+
+    <!-- 错词本 -->
+    <section class="panel" id="panel-mistakes">
+      <div class="card">
+        <h2 class="section-title">📕 错词本</h2>
+        <p class="section-sub">听写 / 词义测验答错的单词会自动收集到这里，听写拼对后会自动移除。</p>
+        <div id="mistakes-content"></div>
+      </div>
+    </section>
+
+    <footer class="site">
+      <p>English Fun · 纯静态网页，打开即用 · 学习进度保存在你的浏览器中</p>
+    </footer>
+  </div>
+
+  <script src="data/content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

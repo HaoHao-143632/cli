@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Fun · 英语练习乐园</title>
+  <meta name="description" content="面向初学者和中小学生的英语练习网站：单词卡片、语法选择题、听力练习、阅读理解。" />
+  <style>
+:root {
+  --bg: #f3f6ff;
+  --card: #ffffff;
+  --primary: #5b6cff;
+  --primary-dark: #3f4fe0;
+  --accent: #ff8a5b;
+  --green: #29b765;
+  --red: #f0524b;
+  --text: #2b2f45;
+  --muted: #7b829e;
+  --shadow: 0 10px 30px rgba(60, 70, 140, 0.12);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: linear-gradient(160deg, #eef2ff 0%, #f7f9ff 40%, #fff5ef 100%);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
+
+/* ---- Header ---- */
+header.site {
+  text-align: center;
+  padding: 26px 0 10px;
+}
+header.site h1 {
+  font-size: 2rem;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+header.site p { color: var(--muted); margin-top: 4px; }
+
+/* ---- Nav tabs ---- */
+nav.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 22px 0;
+}
+.tab {
+  border: none;
+  background: var(--card);
+  color: var(--text);
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform .15s, background .2s, color .2s;
+}
+.tab:hover { transform: translateY(-2px); }
+.tab.active { background: var(--primary); color: #fff; }
+
+/* ---- Panels ---- */
+.panel { display: none; animation: fade .3s ease; }
+.panel.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 18px;
+}
+
+h2.section-title { font-size: 1.3rem; margin-bottom: 4px; }
+.section-sub { color: var(--muted); margin-bottom: 18px; }
+
+/* ---- Buttons ---- */
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 11px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  transition: background .2s, transform .1s;
+}
+.btn:hover { background: var(--primary-dark); }
+.btn:active { transform: scale(.97); }
+.btn.ghost { background: #eceefb; color: var(--primary); }
+.btn.ghost:hover { background: #e0e3fb; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+/* ---- Category chips ---- */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.chip {
+  border: 2px solid #e6e8f5;
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-size: .95rem;
+  transition: all .2s;
+}
+.chip.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+
+/* ---- Flashcard ---- */
+.flashcard {
+  perspective: 1200px;
+  height: 240px;
+  margin: 0 auto 8px;
+  max-width: 420px;
+  cursor: pointer;
+}
+.flash-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transition: transform .6s;
+  transform-style: preserve-3d;
+}
+.flashcard.flipped .flash-inner { transform: rotateY(180deg); }
+.flash-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+}
+.flash-front { background: linear-gradient(135deg, #5b6cff, #7b8cff); color: #fff; }
+.flash-back { background: linear-gradient(135deg, #fff1e8, #ffe3d3); transform: rotateY(180deg); color: var(--text); }
+.flash-word { font-size: 2.4rem; font-weight: 700; }
+.flash-ipa { opacity: .85; margin-top: 6px; }
+.flash-cn { font-size: 1.8rem; font-weight: 700; }
+.flash-ex { margin-top: 10px; color: var(--muted); font-style: italic; }
+.flip-hint { font-size: .8rem; opacity: .8; margin-top: 14px; }
+
+.card-counter { text-align: center; color: var(--muted); margin: 10px 0; }
+
+/* ---- Quiz options ---- */
+.question { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; }
+.options { display: grid; gap: 10px; }
+.option {
+  text-align: left;
+  border: 2px solid #e6e8f5;
+  background: #fff;
+  border-radius: 12px;
+  padding: 13px 16px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all .15s;
+}
+.option:hover:not(:disabled) { border-color: var(--primary); }
+.option.correct { border-color: var(--green); background: #e6f8ee; }
+.option.wrong { border-color: var(--red); background: #fdeceb; }
+.option:disabled { cursor: default; }
+
+.explain {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f4f6ff;
+  color: var(--text);
+  font-size: .95rem;
+  display: none;
+}
+.explain.show { display: block; }
+
+.progress-bar { height: 8px; background: #e6e8f5; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+.progress-fill { height: 100%; background: var(--primary); width: 0; transition: width .3s; }
+
+/* ---- Result ---- */
+.result { text-align: center; padding: 10px 0; }
+.result .score { font-size: 3rem; font-weight: 800; color: var(--primary); }
+.result .emoji { font-size: 3rem; }
+
+/* ---- Reading ---- */
+.passage {
+  background: #fbfbff;
+  border-left: 4px solid var(--primary);
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: 1.05rem;
+}
+.rq { margin-bottom: 18px; }
+
+/* ---- Listening big play ---- */
+.play-big {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  display: block;
+  margin: 6px auto 18px;
+  box-shadow: 0 8px 20px rgba(255, 138, 91, .4);
+  transition: transform .15s;
+}
+.play-big:hover { transform: scale(1.06); }
+
+/* ---- Stat badges on home ---- */
+.stats { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.stat {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  min-width: 110px;
+}
+.stat .num { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+.stat .lbl { color: var(--muted); font-size: .85rem; }
+
+footer.site { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 30px; }
+
+.small-audio {
+  border: none; background: #eceefb; color: var(--primary);
+  border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: .9rem;
+}
+.small-audio:hover { background: #e0e3fb; }
+
+/* ---- Spelling ---- */
+.spell-input {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 14px auto;
+  padding: 13px 16px;
+  font-size: 1.4rem;
+  text-align: center;
+  letter-spacing: 2px;
+  border: 2px solid #e6e8f5;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color .2s;
+}
+.spell-input:focus { border-color: var(--primary); }
+.spell-input.ok { border-color: var(--green); background: #e6f8ee; }
+.spell-input.bad { border-color: var(--red); background: #fdeceb; }
+.spell-feedback { min-height: 24px; margin: 8px 0 4px; font-size: 1rem; }
+.spell-feedback.ok { color: var(--green); }
+.spell-feedback.bad { color: var(--red); }
+
+/* ---- Mistakes notebook ---- */
+.mk-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #eceefb;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: #fbfbff;
+}
+.mk-word { font-weight: 700; font-size: 1.1rem; }
+.mk-cn { color: var(--muted); flex: 1; }
+.mk-del {
+  border: none; background: #fdeceb; color: var(--red);
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: .9rem;
+}
+.mk-del:hover { background: #f9d6d4; }
+
+@media (max-width: 520px) {
+  header.site h1 { font-size: 1.6rem; }
+  .flash-word { font-size: 2rem; }
+}
+
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <h1>🌟 English Fun 英语练习乐园</h1>
+      <p>人教版(PEP)· 三年级起点 —— 单词 · 语法 · 听力 · 阅读</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="home">🏠 首页</button>
+      <button class="tab" data-tab="vocab">🃏 单词卡片</button>
+      <button class="tab" data-tab="spell">🔤 单词听写</button>
+      <button class="tab" data-tab="mixed">🔁 词义测验</button>
+      <button class="tab" data-tab="grammar">✏️ 语法练习</button>
+      <button class="tab" data-tab="listening">🎧 听力练习</button>
+      <button class="tab" data-tab="reading">📖 阅读理解</button>
+      <button class="tab" data-tab="mistakes">📕 错词本</button>
+    </nav>
+
+    <!-- 首页 -->
+    <section class="panel active" id="panel-home">
+      <div class="card">
+        <h2 class="section-title">欢迎来到英语练习乐园 👋</h2>
+        <p class="section-sub">选择上面的任意一个模块开始练习吧！你的学习进度会自动保存在本机。</p>
+        <div class="stats">
+          <div class="stat"><div class="num" id="stat-done">0</div><div class="lbl">完成练习次数</div></div>
+          <div class="stat"><div class="num" id="stat-acc">0%</div><div class="lbl">平均正确率</div></div>
+          <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">答题总数</div></div>
+          <div class="stat"><div class="num" id="stat-mistakes">0</div><div class="lbl">错词本词数</div></div>
+        </div>
+        <div class="btn-row" style="margin-top:22px">
+          <button class="btn" onclick="document.querySelector('[data-tab=vocab]').click()">🃏 学单词</button>
+          <button class="btn ghost" onclick="document.querySelector('[data-tab=grammar]').click()">✏️ 做语法题</button>
+          <button class="btn ghost" onclick="document.querySelector('[data-tab=listening]').click()">🎧 练听力</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">📚 各模块介绍</h2>
+        <ul style="margin-left:18px; color:var(--muted); line-height:2">
+          <li><b>单词卡片</b>：按年级单元记单词，点击翻面看中文和例句，可点喇叭跟读。</li>
+          <li><b>单词听写</b>：听单词发音 + 看中文提示，把单词拼写出来。</li>
+          <li><b>语法练习</b>：选择题形式，答题后立即给出解析。</li>
+          <li><b>听力练习</b>：浏览器朗读句子，选出你听到的内容。</li>
+          <li><b>阅读理解</b>：阅读短文并回答问题，可朗读全文。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 单词卡片 -->
+    <section class="panel" id="panel-vocab">
+      <div class="card">
+        <h2 class="section-title">🃏 单词卡片</h2>
+        <p class="section-sub">先选年级，再选单元，点击卡片翻面看中文。</p>
+        <div class="chips" id="vocab-grades"></div>
+        <div class="chips" id="vocab-chips"></div>
+        <div class="flashcard" id="flash"></div>
+        <div class="card-counter" id="vocab-counter"></div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn ghost" id="vocab-prev">← 上一个</button>
+          <button class="btn" id="vocab-next">下一个 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 单词听写 -->
+    <section class="panel" id="panel-spell">
+      <div class="card">
+        <h2 class="section-title">🔤 单词听写</h2>
+        <p class="section-sub">选年级和单元 → 点喇叭听单词 → 拼写出来。看中文提示，写对得分！</p>
+        <div class="chips" id="spell-grades"></div>
+        <div class="chips" id="spell-units"></div>
+        <div id="spell-area"></div>
+      </div>
+    </section>
+
+    <!-- 词义测验 -->
+    <section class="panel" id="panel-mixed">
+      <div class="card">
+        <h2 class="section-title">🔁 词义测验</h2>
+        <p class="section-sub">中文↔英文混合选择：看英文选中文，或看中文选英文。答错的词会进错词本。</p>
+        <div class="chips" id="mixed-grades"></div>
+        <div id="mixed-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 语法 -->
+    <section class="panel" id="panel-grammar">
+      <div class="card">
+        <h2 class="section-title">✏️ 语法练习</h2>
+        <p class="section-sub">选年级筛选题目，选出正确答案后会显示解析。</p>
+        <div class="chips" id="grammar-grades"></div>
+        <div id="grammar-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 听力 -->
+    <section class="panel" id="panel-listening">
+      <div class="card">
+        <h2 class="section-title">🎧 听力练习</h2>
+        <p class="section-sub">选年级筛选，点喇叭听句子（可重复），然后选出你听到的那一句。</p>
+        <div class="chips" id="listening-grades"></div>
+        <div id="listening-quiz"></div>
+      </div>
+    </section>
+
+    <!-- 阅读 -->
+    <section class="panel" id="panel-reading">
+      <div class="card">
+        <h2 class="section-title">📖 阅读理解</h2>
+        <p class="section-sub">选年级筛选短文，读完后回答问题，完成后自动进入下一篇。</p>
+        <div class="chips" id="reading-grades"></div>
+        <div id="reading-content"></div>
+      </div>
+    </section>
+
+    <!-- 错词本 -->
+    <section class="panel" id="panel-mistakes">
+      <div class="card">
+        <h2 class="section-title">📕 错词本</h2>
+        <p class="section-sub">听写 / 词义测验答错的单词会自动收集到这里，听写拼对后会自动移除。</p>
+        <div id="mistakes-content"></div>
+      </div>
+    </section>
+
+    <footer class="site">
+      <p>English Fun · 纯静态网页，打开即用 · 学习进度保存在你的浏览器中</p>
+    </footer>
+  </div>
+
+  <script>
+/*
+ * 英语练习内容数据
+ * 教材版本：人教版(PEP)小学英语 · 三年级起点（3~6 年级，上册 + 下册）
+ * 单词按「年级 + 上/下册 + 单元」编排，并带 grade 字段用于年级筛选。
+ * 修改后直接刷新页面即可生效，无需重新构建。
+ */
+window.AppData = {
+  /* ---------------- 单词卡片 ----------------
+   * 每个分类: { grade:"三年级", category:"3上 U1 文具", icon, words:[{word,cn,ipa,example}] }
+   */
+  vocabulary: [
+    /* ============ 三年级 ============ */
+    {
+      grade: "三年级", category: "3上 U1 文具", icon: "✏️",
+      words: [
+        { word: "pen", cn: "钢笔", ipa: "/pen/", example: "This is my pen." },
+        { word: "pencil", cn: "铅笔", ipa: "/ˈpensl/", example: "I have a pencil." },
+        { word: "pencil-case", cn: "铅笔盒", ipa: "/ˈpenslkeɪs/", example: "Open your pencil-case." },
+        { word: "ruler", cn: "尺子", ipa: "/ˈruːlər/", example: "Show me your ruler." },
+        { word: "eraser", cn: "橡皮", ipa: "/ɪˈreɪsər/", example: "Where is my eraser?" },
+        { word: "crayon", cn: "蜡笔", ipa: "/ˈkreɪən/", example: "I have a red crayon." },
+        { word: "book", cn: "书", ipa: "/bʊk/", example: "Look at my book." },
+        { word: "bag", cn: "书包", ipa: "/bæɡ/", example: "My bag is big." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3上 U2 颜色", icon: "🎨",
+      words: [
+        { word: "red", cn: "红色", ipa: "/red/", example: "The apple is red." },
+        { word: "yellow", cn: "黄色", ipa: "/ˈjeloʊ/", example: "I like yellow." },
+        { word: "green", cn: "绿色", ipa: "/ɡriːn/", example: "The leaf is green." },
+        { word: "blue", cn: "蓝色", ipa: "/bluː/", example: "The sky is blue." },
+        { word: "purple", cn: "紫色", ipa: "/ˈpɜːrpl/", example: "A purple crayon." },
+        { word: "white", cn: "白色", ipa: "/waɪt/", example: "Snow is white." },
+        { word: "black", cn: "黑色", ipa: "/blæk/", example: "My bag is black." },
+        { word: "orange", cn: "橙色", ipa: "/ˈɔːrɪndʒ/", example: "Colour it orange." },
+        { word: "pink", cn: "粉色", ipa: "/pɪŋk/", example: "She likes pink." },
+        { word: "brown", cn: "棕色", ipa: "/braʊn/", example: "The bear is brown." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3上 U3 身体", icon: "🧒",
+      words: [
+        { word: "head", cn: "头", ipa: "/hed/", example: "Touch your head." },
+        { word: "face", cn: "脸", ipa: "/feɪs/", example: "Wash your face." },
+        { word: "ear", cn: "耳朵", ipa: "/ɪr/", example: "I have two ears." },
+        { word: "eye", cn: "眼睛", ipa: "/aɪ/", example: "Close your eyes." },
+        { word: "nose", cn: "鼻子", ipa: "/noʊz/", example: "Touch your nose." },
+        { word: "mouth", cn: "嘴", ipa: "/maʊθ/", example: "Open your mouth." },
+        { word: "arm", cn: "手臂", ipa: "/ɑːrm/", example: "Raise your arm." },
+        { word: "hand", cn: "手", ipa: "/hænd/", example: "Clap your hands." },
+        { word: "leg", cn: "腿", ipa: "/leɡ/", example: "I have two legs." },
+        { word: "foot", cn: "脚", ipa: "/fʊt/", example: "Show me your foot." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3上 U4 动物", icon: "🐼",
+      words: [
+        { word: "cat", cn: "猫", ipa: "/kæt/", example: "The cat is cute." },
+        { word: "dog", cn: "狗", ipa: "/dɔːɡ/", example: "I have a dog." },
+        { word: "monkey", cn: "猴子", ipa: "/ˈmʌŋki/", example: "The monkey can jump." },
+        { word: "panda", cn: "熊猫", ipa: "/ˈpændə/", example: "I like the panda." },
+        { word: "rabbit", cn: "兔子", ipa: "/ˈræbɪt/", example: "A rabbit has long ears." },
+        { word: "duck", cn: "鸭子", ipa: "/dʌk/", example: "The duck can swim." },
+        { word: "pig", cn: "猪", ipa: "/pɪɡ/", example: "The pig is fat." },
+        { word: "bird", cn: "鸟", ipa: "/bɜːrd/", example: "The bird can fly." },
+        { word: "bear", cn: "熊", ipa: "/ber/", example: "The bear is big." },
+        { word: "elephant", cn: "大象", ipa: "/ˈelɪfənt/", example: "The elephant is big." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3上 U5 食物", icon: "🍔",
+      words: [
+        { word: "cake", cn: "蛋糕", ipa: "/keɪk/", example: "I like the cake." },
+        { word: "bread", cn: "面包", ipa: "/bred/", example: "Have some bread." },
+        { word: "hamburger", cn: "汉堡包", ipa: "/ˈhæmbɜːrɡər/", example: "I want a hamburger." },
+        { word: "hot dog", cn: "热狗", ipa: "/ˈhɑːt dɔːɡ/", example: "A hot dog, please." },
+        { word: "chicken", cn: "鸡肉", ipa: "/ˈtʃɪkɪn/", example: "I like chicken." },
+        { word: "juice", cn: "果汁", ipa: "/dʒuːs/", example: "Have some juice." },
+        { word: "milk", cn: "牛奶", ipa: "/mɪlk/", example: "Drink your milk." },
+        { word: "water", cn: "水", ipa: "/ˈwɔːtər/", example: "I want some water." },
+        { word: "egg", cn: "鸡蛋", ipa: "/eɡ/", example: "An egg, please." },
+        { word: "rice", cn: "米饭", ipa: "/raɪs/", example: "I like rice." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3上 U6 数字 1-10", icon: "🔢",
+      words: [
+        { word: "one", cn: "一 (1)", ipa: "/wʌn/", example: "I have one pen." },
+        { word: "two", cn: "二 (2)", ipa: "/tuː/", example: "Two cats." },
+        { word: "three", cn: "三 (3)", ipa: "/θriː/", example: "Three birds." },
+        { word: "four", cn: "四 (4)", ipa: "/fɔːr/", example: "Four books." },
+        { word: "five", cn: "五 (5)", ipa: "/faɪv/", example: "Five fingers." },
+        { word: "six", cn: "六 (6)", ipa: "/sɪks/", example: "Six ducks." },
+        { word: "seven", cn: "七 (7)", ipa: "/ˈsevn/", example: "Seven days." },
+        { word: "eight", cn: "八 (8)", ipa: "/eɪt/", example: "Eight pigs." },
+        { word: "nine", cn: "九 (9)", ipa: "/naɪn/", example: "Nine balls." },
+        { word: "ten", cn: "十 (10)", ipa: "/ten/", example: "Ten fingers." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3下 U2 家庭", icon: "👪",
+      words: [
+        { word: "father", cn: "爸爸", ipa: "/ˈfɑːðər/", example: "This is my father." },
+        { word: "mother", cn: "妈妈", ipa: "/ˈmʌðər/", example: "This is my mother." },
+        { word: "brother", cn: "兄弟", ipa: "/ˈbrʌðər/", example: "He is my brother." },
+        { word: "sister", cn: "姐妹", ipa: "/ˈsɪstər/", example: "She is my sister." },
+        { word: "grandfather", cn: "爷爷/外公", ipa: "/ˈɡrænfɑːðər/", example: "My grandfather is old." },
+        { word: "grandmother", cn: "奶奶/外婆", ipa: "/ˈɡrænmʌðər/", example: "My grandmother is kind." },
+        { word: "family", cn: "家庭", ipa: "/ˈfæməli/", example: "I love my family." },
+        { word: "friend", cn: "朋友", ipa: "/frend/", example: "She is my friend." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3下 U3 描述(动物园)", icon: "🦒",
+      words: [
+        { word: "tall", cn: "高的", ipa: "/tɔːl/", example: "The giraffe is tall." },
+        { word: "short", cn: "矮的/短的", ipa: "/ʃɔːrt/", example: "The deer is short." },
+        { word: "fat", cn: "胖的", ipa: "/fæt/", example: "The pig is fat." },
+        { word: "thin", cn: "瘦的", ipa: "/θɪn/", example: "The monkey is thin." },
+        { word: "long", cn: "长的", ipa: "/lɔːŋ/", example: "It has a long tail." },
+        { word: "small", cn: "小的", ipa: "/smɔːl/", example: "The rabbit is small." },
+        { word: "big", cn: "大的", ipa: "/bɪɡ/", example: "The elephant is big." },
+        { word: "giraffe", cn: "长颈鹿", ipa: "/dʒəˈræf/", example: "Look at the giraffe." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3下 U4 位置", icon: "📦",
+      words: [
+        { word: "in", cn: "在……里面", ipa: "/ɪn/", example: "It's in the box." },
+        { word: "on", cn: "在……上面", ipa: "/ɑːn/", example: "It's on the desk." },
+        { word: "under", cn: "在……下面", ipa: "/ˈʌndər/", example: "It's under the chair." },
+        { word: "chair", cn: "椅子", ipa: "/tʃer/", example: "Sit on the chair." },
+        { word: "desk", cn: "课桌", ipa: "/desk/", example: "My desk is clean." },
+        { word: "box", cn: "盒子/箱子", ipa: "/bɑːks/", example: "A toy in the box." },
+        { word: "cap", cn: "帽子", ipa: "/kæp/", example: "Where is my cap?" },
+        { word: "toy", cn: "玩具", ipa: "/tɔɪ/", example: "I like this toy." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3下 U5 水果", icon: "🍎",
+      words: [
+        { word: "apple", cn: "苹果", ipa: "/ˈæpl/", example: "I like apples." },
+        { word: "banana", cn: "香蕉", ipa: "/bəˈnænə/", example: "Have a banana." },
+        { word: "pear", cn: "梨", ipa: "/per/", example: "Do you like pears?" },
+        { word: "orange", cn: "橙子", ipa: "/ˈɔːrɪndʒ/", example: "An orange, please." },
+        { word: "watermelon", cn: "西瓜", ipa: "/ˈwɔːtərmelən/", example: "I like watermelon." },
+        { word: "strawberry", cn: "草莓", ipa: "/ˈstrɔːberi/", example: "The strawberry is red." },
+        { word: "grape", cn: "葡萄", ipa: "/ɡreɪp/", example: "Grapes are sweet." },
+      ],
+    },
+
+    /* ============ 四年级 ============ */
+    {
+      grade: "四年级", category: "4上 U1 教室", icon: "🏫",
+      words: [
+        { word: "classroom", cn: "教室", ipa: "/ˈklæsruːm/", example: "Our classroom is big." },
+        { word: "window", cn: "窗户", ipa: "/ˈwɪndoʊ/", example: "Open the window." },
+        { word: "door", cn: "门", ipa: "/dɔːr/", example: "Close the door." },
+        { word: "blackboard", cn: "黑板", ipa: "/ˈblækbɔːrd/", example: "Look at the blackboard." },
+        { word: "light", cn: "灯", ipa: "/laɪt/", example: "Turn on the light." },
+        { word: "picture", cn: "图画", ipa: "/ˈpɪktʃər/", example: "A nice picture." },
+        { word: "computer", cn: "电脑", ipa: "/kəmˈpjuːtər/", example: "I have a computer." },
+        { word: "fan", cn: "风扇", ipa: "/fæn/", example: "The fan is on the wall." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U2 书包", icon: "🎒",
+      words: [
+        { word: "schoolbag", cn: "书包", ipa: "/ˈskuːlbæɡ/", example: "My schoolbag is heavy." },
+        { word: "English book", cn: "英语书", ipa: "/ˈɪŋɡlɪʃ bʊk/", example: "This is my English book." },
+        { word: "maths book", cn: "数学书", ipa: "/mæθs bʊk/", example: "Where is my maths book?" },
+        { word: "Chinese book", cn: "语文书", ipa: "/ˌtʃaɪˈniːz bʊk/", example: "A Chinese book." },
+        { word: "story-book", cn: "故事书", ipa: "/ˈstɔːribʊk/", example: "I like story-books." },
+        { word: "notebook", cn: "笔记本", ipa: "/ˈnoʊtbʊk/", example: "Three notebooks." },
+        { word: "key", cn: "钥匙", ipa: "/kiː/", example: "The key is in my bag." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U3 外貌/朋友", icon: "👓",
+      words: [
+        { word: "strong", cn: "强壮的", ipa: "/strɔːŋ/", example: "He is strong." },
+        { word: "quiet", cn: "安静的", ipa: "/ˈkwaɪət/", example: "She is quiet." },
+        { word: "friend", cn: "朋友", ipa: "/frend/", example: "He is my friend." },
+        { word: "glasses", cn: "眼镜", ipa: "/ˈɡlæsɪz/", example: "He has glasses." },
+        { word: "hair", cn: "头发", ipa: "/her/", example: "She has long hair." },
+        { word: "shoe", cn: "鞋", ipa: "/ʃuː/", example: "My shoe is white." },
+        { word: "music", cn: "音乐", ipa: "/ˈmjuːzɪk/", example: "I like music." },
+        { word: "science", cn: "科学", ipa: "/ˈsaɪəns/", example: "Science is fun." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U4 家/房间", icon: "🏠",
+      words: [
+        { word: "study", cn: "书房", ipa: "/ˈstʌdi/", example: "He is in the study." },
+        { word: "bathroom", cn: "卫生间", ipa: "/ˈbæθruːm/", example: "Where is the bathroom?" },
+        { word: "bedroom", cn: "卧室", ipa: "/ˈbedruːm/", example: "This is my bedroom." },
+        { word: "living room", cn: "客厅", ipa: "/ˈlɪvɪŋ ruːm/", example: "We watch TV in the living room." },
+        { word: "kitchen", cn: "厨房", ipa: "/ˈkɪtʃɪn/", example: "Mum is in the kitchen." },
+        { word: "bed", cn: "床", ipa: "/bed/", example: "The cat is on the bed." },
+        { word: "sofa", cn: "沙发", ipa: "/ˈsoʊfə/", example: "Sit on the sofa." },
+        { word: "fridge", cn: "冰箱", ipa: "/frɪdʒ/", example: "Milk is in the fridge." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U5 晚餐", icon: "🍜",
+      words: [
+        { word: "beef", cn: "牛肉", ipa: "/biːf/", example: "I'd like some beef." },
+        { word: "noodles", cn: "面条", ipa: "/ˈnuːdlz/", example: "Noodles, please." },
+        { word: "soup", cn: "汤", ipa: "/suːp/", example: "Have some soup." },
+        { word: "vegetable", cn: "蔬菜", ipa: "/ˈvedʒtəbl/", example: "Eat your vegetables." },
+        { word: "fish", cn: "鱼", ipa: "/fɪʃ/", example: "I like fish." },
+        { word: "knife", cn: "刀", ipa: "/naɪf/", example: "Use a knife." },
+        { word: "fork", cn: "叉子", ipa: "/fɔːrk/", example: "Here is a fork." },
+        { word: "chopsticks", cn: "筷子", ipa: "/ˈtʃɑːpstɪks/", example: "Use chopsticks." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U6 职业/家人", icon: "👨‍⚕️",
+      words: [
+        { word: "parents", cn: "父母", ipa: "/ˈperənts/", example: "These are my parents." },
+        { word: "uncle", cn: "叔叔/舅舅", ipa: "/ˈʌŋkl/", example: "My uncle is a driver." },
+        { word: "aunt", cn: "阿姨/姑姑", ipa: "/ænt/", example: "My aunt is a nurse." },
+        { word: "doctor", cn: "医生", ipa: "/ˈdɑːktər/", example: "She is a doctor." },
+        { word: "cook", cn: "厨师", ipa: "/kʊk/", example: "He is a cook." },
+        { word: "driver", cn: "司机", ipa: "/ˈdraɪvər/", example: "My father is a driver." },
+        { word: "farmer", cn: "农民", ipa: "/ˈfɑːrmər/", example: "He is a farmer." },
+        { word: "nurse", cn: "护士", ipa: "/nɜːrs/", example: "She is a nurse." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4下 U1 学校场所", icon: "📚",
+      words: [
+        { word: "playground", cn: "操场", ipa: "/ˈpleɪɡraʊnd/", example: "We play on the playground." },
+        { word: "garden", cn: "花园", ipa: "/ˈɡɑːrdn/", example: "The garden is beautiful." },
+        { word: "library", cn: "图书馆", ipa: "/ˈlaɪbreri/", example: "Read in the library." },
+        { word: "canteen", cn: "食堂", ipa: "/kænˈtiːn/", example: "We eat in the canteen." },
+        { word: "art room", cn: "美术室", ipa: "/ɑːrt ruːm/", example: "This is the art room." },
+        { word: "music room", cn: "音乐室", ipa: "/ˈmjuːzɪk ruːm/", example: "Sing in the music room." },
+        { word: "gym", cn: "体育馆", ipa: "/dʒɪm/", example: "Play in the gym." },
+        { word: "washroom", cn: "洗手间", ipa: "/ˈwɑːʃruːm/", example: "Where is the washroom?" },
+      ],
+    },
+    {
+      grade: "四年级", category: "4下 U3 天气", icon: "🌤️",
+      words: [
+        { word: "cold", cn: "寒冷的", ipa: "/koʊld/", example: "It's cold today." },
+        { word: "cool", cn: "凉爽的", ipa: "/kuːl/", example: "It's cool in autumn." },
+        { word: "warm", cn: "温暖的", ipa: "/wɔːrm/", example: "It's warm in spring." },
+        { word: "hot", cn: "炎热的", ipa: "/hɑːt/", example: "It's hot in summer." },
+        { word: "sunny", cn: "晴朗的", ipa: "/ˈsʌni/", example: "It's sunny today." },
+        { word: "windy", cn: "有风的", ipa: "/ˈwɪndi/", example: "It's windy outside." },
+        { word: "cloudy", cn: "多云的", ipa: "/ˈklaʊdi/", example: "It's cloudy." },
+        { word: "rainy", cn: "下雨的", ipa: "/ˈreɪni/", example: "It's a rainy day." },
+        { word: "snowy", cn: "下雪的", ipa: "/ˈsnoʊi/", example: "It's snowy in winter." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4下 U5 衣服", icon: "👕",
+      words: [
+        { word: "jacket", cn: "夹克", ipa: "/ˈdʒækɪt/", example: "A green jacket." },
+        { word: "shirt", cn: "衬衫", ipa: "/ʃɜːrt/", example: "This is my shirt." },
+        { word: "skirt", cn: "裙子", ipa: "/skɜːrt/", example: "A pretty skirt." },
+        { word: "dress", cn: "连衣裙", ipa: "/dres/", example: "She has a red dress." },
+        { word: "T-shirt", cn: "T恤衫", ipa: "/ˈtiː ʃɜːrt/", example: "A white T-shirt." },
+        { word: "sweater", cn: "毛衣", ipa: "/ˈswetər/", example: "Wear a sweater." },
+        { word: "socks", cn: "袜子", ipa: "/sɑːks/", example: "These socks are mine." },
+        { word: "shoes", cn: "鞋子", ipa: "/ʃuːz/", example: "My shoes are new." },
+      ],
+    },
+
+    /* ============ 五年级 ============ */
+    {
+      grade: "五年级", category: "5上 U1 人物性格", icon: "🧑‍🏫",
+      words: [
+        { word: "old", cn: "年老的", ipa: "/oʊld/", example: "My grandpa is old." },
+        { word: "young", cn: "年轻的", ipa: "/jʌŋ/", example: "She is young." },
+        { word: "funny", cn: "滑稽的", ipa: "/ˈfʌni/", example: "Our teacher is funny." },
+        { word: "kind", cn: "和蔼的", ipa: "/kaɪnd/", example: "He is kind." },
+        { word: "strict", cn: "严格的", ipa: "/strɪkt/", example: "Mr Li is strict." },
+        { word: "polite", cn: "有礼貌的", ipa: "/pəˈlaɪt/", example: "Be polite." },
+        { word: "hard-working", cn: "勤奋的", ipa: "/ˌhɑːrdˈwɜːrkɪŋ/", example: "She is hard-working." },
+        { word: "helpful", cn: "乐于助人的", ipa: "/ˈhelpfl/", example: "He is helpful." },
+        { word: "clever", cn: "聪明的", ipa: "/ˈklevər/", example: "What a clever boy!" },
+        { word: "shy", cn: "害羞的", ipa: "/ʃaɪ/", example: "She is a little shy." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U2 星期", icon: "📅",
+      words: [
+        { word: "Monday", cn: "星期一", ipa: "/ˈmʌndeɪ/", example: "We have English on Monday." },
+        { word: "Tuesday", cn: "星期二", ipa: "/ˈtuːzdeɪ/", example: "It's Tuesday today." },
+        { word: "Wednesday", cn: "星期三", ipa: "/ˈwenzdeɪ/", example: "I have PE on Wednesday." },
+        { word: "Thursday", cn: "星期四", ipa: "/ˈθɜːrzdeɪ/", example: "Thursday is busy." },
+        { word: "Friday", cn: "星期五", ipa: "/ˈfraɪdeɪ/", example: "I like Friday." },
+        { word: "Saturday", cn: "星期六", ipa: "/ˈsætərdeɪ/", example: "No school on Saturday." },
+        { word: "Sunday", cn: "星期日", ipa: "/ˈsʌndeɪ/", example: "We rest on Sunday." },
+        { word: "weekend", cn: "周末", ipa: "/ˈwiːkend/", example: "Have a nice weekend!" },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U3 食物口味", icon: "🥪",
+      words: [
+        { word: "sandwich", cn: "三明治", ipa: "/ˈsænwɪtʃ/", example: "I'd like a sandwich." },
+        { word: "salad", cn: "沙拉", ipa: "/ˈsæləd/", example: "A fresh salad." },
+        { word: "ice cream", cn: "冰激凌", ipa: "/ˈaɪs kriːm/", example: "I love ice cream." },
+        { word: "tea", cn: "茶", ipa: "/tiː/", example: "Have a cup of tea." },
+        { word: "fresh", cn: "新鲜的", ipa: "/freʃ/", example: "The salad is fresh." },
+        { word: "healthy", cn: "健康的", ipa: "/ˈhelθi/", example: "Eat healthy food." },
+        { word: "delicious", cn: "美味的", ipa: "/dɪˈlɪʃəs/", example: "It's delicious!" },
+        { word: "sweet", cn: "甜的", ipa: "/swiːt/", example: "The cake is sweet." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U4 能力 can", icon: "🎤",
+      words: [
+        { word: "sing", cn: "唱歌", ipa: "/sɪŋ/", example: "I can sing." },
+        { word: "dance", cn: "跳舞", ipa: "/dæns/", example: "She can dance." },
+        { word: "swim", cn: "游泳", ipa: "/swɪm/", example: "Can you swim?" },
+        { word: "cook", cn: "做饭", ipa: "/kʊk/", example: "He can cook." },
+        { word: "draw", cn: "画画", ipa: "/drɔː/", example: "I can draw cartoons." },
+        { word: "kung fu", cn: "功夫", ipa: "/ˌkʌŋ ˈfuː/", example: "He can do kung fu." },
+        { word: "basketball", cn: "篮球", ipa: "/ˈbæskɪtbɔːl/", example: "Play basketball." },
+        { word: "speak", cn: "说(语言)", ipa: "/spiːk/", example: "I can speak English." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U6 自然公园", icon: "🏞️",
+      words: [
+        { word: "river", cn: "河流", ipa: "/ˈrɪvər/", example: "A long river." },
+        { word: "lake", cn: "湖", ipa: "/leɪk/", example: "A big lake." },
+        { word: "forest", cn: "森林", ipa: "/ˈfɔːrɪst/", example: "A green forest." },
+        { word: "path", cn: "小路", ipa: "/pæθ/", example: "Walk on the path." },
+        { word: "flower", cn: "花", ipa: "/ˈflaʊər/", example: "Beautiful flowers." },
+        { word: "grass", cn: "草", ipa: "/ɡræs/", example: "The grass is green." },
+        { word: "tree", cn: "树", ipa: "/triː/", example: "A tall tree." },
+        { word: "mountain", cn: "山", ipa: "/ˈmaʊntn/", example: "A high mountain." },
+        { word: "bridge", cn: "桥", ipa: "/brɪdʒ/", example: "Cross the bridge." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5下 U2 季节", icon: "🍂",
+      words: [
+        { word: "spring", cn: "春天", ipa: "/sprɪŋ/", example: "It's warm in spring." },
+        { word: "summer", cn: "夏天", ipa: "/ˈsʌmər/", example: "Summer is hot." },
+        { word: "autumn", cn: "秋天", ipa: "/ˈɔːtəm/", example: "Autumn is cool." },
+        { word: "winter", cn: "冬天", ipa: "/ˈwɪntər/", example: "Winter is cold." },
+        { word: "season", cn: "季节", ipa: "/ˈsiːzn/", example: "Which season do you like?" },
+      ],
+    },
+    {
+      grade: "五年级", category: "5下 U3 月份", icon: "🗓️",
+      words: [
+        { word: "January", cn: "一月", ipa: "/ˈdʒænjueri/", example: "January is cold." },
+        { word: "February", cn: "二月", ipa: "/ˈfebrueri/", example: "Spring Festival is in February." },
+        { word: "March", cn: "三月", ipa: "/mɑːrtʃ/", example: "Tree Planting Day is in March." },
+        { word: "April", cn: "四月", ipa: "/ˈeɪprəl/", example: "April is rainy." },
+        { word: "May", cn: "五月", ipa: "/meɪ/", example: "May is warm." },
+        { word: "June", cn: "六月", ipa: "/dʒuːn/", example: "Children's Day is in June." },
+        { word: "July", cn: "七月", ipa: "/dʒuˈlaɪ/", example: "July is hot." },
+        { word: "August", cn: "八月", ipa: "/ˈɔːɡəst/", example: "August is hot, too." },
+        { word: "September", cn: "九月", ipa: "/sepˈtembər/", example: "School starts in September." },
+        { word: "October", cn: "十月", ipa: "/ɑːkˈtoʊbər/", example: "National Day is in October." },
+        { word: "November", cn: "十一月", ipa: "/noʊˈvembər/", example: "November is cool." },
+        { word: "December", cn: "十二月", ipa: "/dɪˈsembər/", example: "Christmas is in December." },
+      ],
+    },
+
+    /* ============ 六年级 ============ */
+    {
+      grade: "六年级", category: "6上 U1 问路/地点", icon: "🧭",
+      words: [
+        { word: "science museum", cn: "科学博物馆", ipa: "/ˈsaɪəns mjuˈziːəm/", example: "Go to the science museum." },
+        { word: "post office", cn: "邮局", ipa: "/ˈpoʊst ɔːfɪs/", example: "Where is the post office?" },
+        { word: "bookstore", cn: "书店", ipa: "/ˈbʊkstɔːr/", example: "Buy books at the bookstore." },
+        { word: "cinema", cn: "电影院", ipa: "/ˈsɪnəmə/", example: "Let's go to the cinema." },
+        { word: "hospital", cn: "医院", ipa: "/ˈhɑːspɪtl/", example: "The hospital is near." },
+        { word: "crossing", cn: "十字路口", ipa: "/ˈkrɔːsɪŋ/", example: "Turn left at the crossing." },
+        { word: "turn left", cn: "向左转", ipa: "/tɜːrn left/", example: "Turn left here." },
+        { word: "turn right", cn: "向右转", ipa: "/tɜːrn raɪt/", example: "Turn right at the corner." },
+        { word: "straight", cn: "直地", ipa: "/streɪt/", example: "Go straight ahead." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U2 交通方式", icon: "🚌",
+      words: [
+        { word: "bus", cn: "公共汽车", ipa: "/bʌs/", example: "Go by bus." },
+        { word: "train", cn: "火车", ipa: "/treɪn/", example: "Go by train." },
+        { word: "plane", cn: "飞机", ipa: "/pleɪn/", example: "Go by plane." },
+        { word: "ship", cn: "轮船", ipa: "/ʃɪp/", example: "Go by ship." },
+        { word: "subway", cn: "地铁", ipa: "/ˈsʌbweɪ/", example: "Go by subway." },
+        { word: "on foot", cn: "步行", ipa: "/ɑːn fʊt/", example: "I go to school on foot." },
+        { word: "traffic light", cn: "红绿灯", ipa: "/ˈtræfɪk laɪt/", example: "Watch the traffic lights." },
+        { word: "slow down", cn: "减速", ipa: "/sloʊ daʊn/", example: "Slow down and stop." },
+        { word: "wait", cn: "等待", ipa: "/weɪt/", example: "Stop and wait." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U4 爱好", icon: "🎯",
+      words: [
+        { word: "hobby", cn: "爱好", ipa: "/ˈhɑːbi/", example: "What's your hobby?" },
+        { word: "riding a bike", cn: "骑自行车", ipa: "/ˈraɪdɪŋ ə baɪk/", example: "I like riding a bike." },
+        { word: "diving", cn: "跳水", ipa: "/ˈdaɪvɪŋ/", example: "He likes diving." },
+        { word: "playing the violin", cn: "拉小提琴", ipa: "/ˈpleɪɪŋ ðə ˌvaɪəˈlɪn/", example: "She likes playing the violin." },
+        { word: "making kites", cn: "制作风筝", ipa: "/ˈmeɪkɪŋ kaɪts/", example: "We like making kites." },
+        { word: "collecting stamps", cn: "集邮", ipa: "/kəˈlektɪŋ stæmps/", example: "He likes collecting stamps." },
+        { word: "swimming", cn: "游泳", ipa: "/ˈswɪmɪŋ/", example: "Swimming is fun." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U5 职业", icon: "👮",
+      words: [
+        { word: "factory worker", cn: "工厂工人", ipa: "/ˈfæktri wɜːrkər/", example: "He is a factory worker." },
+        { word: "postman", cn: "邮递员", ipa: "/ˈpoʊstmən/", example: "The postman is busy." },
+        { word: "businessman", cn: "商人", ipa: "/ˈbɪznəsmæn/", example: "She is a businesswoman." },
+        { word: "police officer", cn: "警察", ipa: "/pəˈliːs ɔːfɪsər/", example: "He is a police officer." },
+        { word: "fisherman", cn: "渔民", ipa: "/ˈfɪʃərmən/", example: "The fisherman has a boat." },
+        { word: "scientist", cn: "科学家", ipa: "/ˈsaɪəntɪst/", example: "I want to be a scientist." },
+        { word: "pilot", cn: "飞行员", ipa: "/ˈpaɪlət/", example: "A pilot flies planes." },
+        { word: "coach", cn: "教练", ipa: "/koʊtʃ/", example: "He is a football coach." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U6 情绪", icon: "😊",
+      words: [
+        { word: "happy", cn: "高兴的", ipa: "/ˈhæpi/", example: "I feel happy." },
+        { word: "sad", cn: "难过的", ipa: "/sæd/", example: "Don't be sad." },
+        { word: "angry", cn: "生气的", ipa: "/ˈæŋɡri/", example: "He is angry." },
+        { word: "afraid", cn: "害怕的", ipa: "/əˈfreɪd/", example: "Are you afraid?" },
+        { word: "worried", cn: "担心的", ipa: "/ˈwɜːrid/", example: "She looks worried." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6下 U1 比较级", icon: "📏",
+      words: [
+        { word: "taller", cn: "更高的", ipa: "/ˈtɔːlər/", example: "I'm taller than you." },
+        { word: "shorter", cn: "更矮的", ipa: "/ˈʃɔːrtər/", example: "He is shorter than me." },
+        { word: "stronger", cn: "更强壮的", ipa: "/ˈstrɔːŋɡər/", example: "He is stronger." },
+        { word: "older", cn: "年龄更大的", ipa: "/ˈoʊldər/", example: "She is older than him." },
+        { word: "younger", cn: "更年轻的", ipa: "/ˈjʌŋɡər/", example: "I'm younger than my brother." },
+        { word: "bigger", cn: "更大的", ipa: "/ˈbɪɡər/", example: "My feet are bigger." },
+        { word: "heavier", cn: "更重的", ipa: "/ˈheviər/", example: "The bag is heavier." },
+        { word: "longer", cn: "更长的", ipa: "/ˈlɔːŋɡər/", example: "My hair is longer." },
+        { word: "thinner", cn: "更瘦的", ipa: "/ˈθɪnər/", example: "He is thinner now." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6下 U3 过去式动作", icon: "🧳",
+      words: [
+        { word: "went", cn: "去(go过去式)", ipa: "/went/", example: "I went to Beijing." },
+        { word: "ate", cn: "吃(eat过去式)", ipa: "/eɪt/", example: "I ate good food." },
+        { word: "saw", cn: "看见(see过去式)", ipa: "/sɔː/", example: "We saw a film." },
+        { word: "rode", cn: "骑(ride过去式)", ipa: "/roʊd/", example: "I rode a horse." },
+        { word: "did", cn: "做(do过去式)", ipa: "/dɪd/", example: "What did you do?" },
+        { word: "bought", cn: "买(buy过去式)", ipa: "/bɔːt/", example: "I bought a gift." },
+        { word: "took pictures", cn: "拍照", ipa: "/tʊk ˈpɪktʃərz/", example: "We took pictures." },
+      ],
+    },
+  ],
+
+  /* ---------------- 语法选择题（覆盖各年级核心句型，带 grade 标签） ---------------- */
+  grammar: [
+    { grade: "三年级", q: "—Hello! What's your ___? —My name is Mike.", options: ["name", "color", "book", "dog"], answer: 0, explain: "问名字用 What's your name?（三上 U1）。" },
+    { grade: "三年级", q: "—How ___ you? —I'm fine, thank you.", options: ["is", "am", "are", "do"], answer: 2, explain: "How are you? 是固定问候，主语 you 用 are。" },
+    { grade: "三年级", q: "This ___ my father.", options: ["am", "is", "are", "be"], answer: 1, explain: "This is... 介绍单数用 is。" },
+    { grade: "三年级", q: "I ___ a ruler and two pencils.", options: ["am", "has", "have", "is"], answer: 2, explain: "主语 I 表示“有”用 have。" },
+    { grade: "三年级", q: "—___ is my eraser? —It's on the desk.", options: ["What", "Who", "Where", "How"], answer: 2, explain: "问位置用 Where。" },
+    { grade: "三年级", q: "—Do you like pears? —Yes, I ___.", options: ["am", "do", "does", "like"], answer: 1, explain: "Do you...? 的肯定回答用 Yes, I do.（三下 U5）" },
+    { grade: "三年级", q: "—How many books? —___ books.", options: ["Four", "Color", "Red", "Where"], answer: 0, explain: "How many 问数量，用数字回答。" },
+    { grade: "四年级", q: "—What time is it? —It's 7 o'clock. It's time ___ breakfast.", options: ["to", "for", "at", "in"], answer: 1, explain: "It's time for + 名词（四下 U2）。" },
+    { grade: "四年级", q: "My father is a doctor. ___ works in a hospital.", options: ["She", "He", "It", "They"], answer: 1, explain: "father 是男性，用 He（四上 U6）。" },
+    { grade: "四年级", q: "It's ___ today. Take an umbrella!", options: ["sunny", "rainy", "warm", "cool"], answer: 1, explain: "带伞说明在下雨，用 rainy（四下 U3）。" },
+    { grade: "五年级", q: "There ___ a big bed in the room.", options: ["is", "are", "am", "be"], answer: 0, explain: "There is + 单数（五上 U5）。" },
+    { grade: "五年级", q: "—What can you do? —I can ___.", options: ["sang", "sings", "sing", "singing"], answer: 2, explain: "情态动词 can 后用动词原形（五上 U4）。" },
+    { grade: "五年级", q: "She likes ___ in summer.", options: ["swim", "swims", "swimming", "swam"], answer: 2, explain: "like doing sth，用 swimming（五下 U2）。" },
+    { grade: "六年级", q: "I'm taller ___ my brother.", options: ["then", "than", "that", "as"], answer: 1, explain: "比较级后用 than（六下 U1）。" },
+    { grade: "六年级", q: "—How do you go to school? —I go ___ bus.", options: ["on", "by", "in", "to"], answer: 1, explain: "乘交通工具用 by bus（六上 U2）。" },
+    { grade: "六年级", q: "Last weekend I ___ my room.", options: ["clean", "cleaned", "cleaning", "cleans"], answer: 1, explain: "last weekend 用一般过去时 cleaned（六下 U2）。" },
+    { grade: "六年级", q: "—Where did you go? —I ___ to the park.", options: ["go", "goes", "went", "going"], answer: 2, explain: "did 引导，动词用过去式 went（六下 U3）。" },
+  ],
+
+  /* ---------------- 听力练习（带 grade 标签） ---------------- */
+  listening: [
+    { grade: "三年级", sentence: "Hello! My name is Sarah.", options: ["Hello! My name is Sarah.", "Hello! My name is Sam.", "Hi! This is my ruler."], answer: 0 },
+    { grade: "三年级", sentence: "I have a red crayon.", options: ["I have a red crayon.", "I have a green crayon.", "I have a red ruler."], answer: 0 },
+    { grade: "三年级", sentence: "Look at the panda. It's so cute.", options: ["Look at the panda. It's so cute.", "Look at the monkey. It's so cute.", "Look at the panda. It's so big."], answer: 0 },
+    { grade: "四年级", sentence: "It's cold and snowy in winter.", options: ["It's cold and snowy in winter.", "It's hot and sunny in summer.", "It's cool and windy in autumn."], answer: 0 },
+    { grade: "四年级", sentence: "My father is a policeman.", options: ["My father is a postman.", "My father is a policeman.", "My brother is a policeman."], answer: 1 },
+    { grade: "五年级", sentence: "I can sing and dance.", options: ["I can sing and dance.", "I can swim and run.", "I can cook and draw."], answer: 0 },
+    { grade: "六年级", sentence: "I go to school by subway.", options: ["I go to school by bus.", "I go to school by subway.", "I go to school on foot."], answer: 1 },
+    { grade: "六年级", sentence: "I'm taller and stronger than him.", options: ["I'm taller and stronger than him.", "I'm shorter and thinner than him.", "I'm older and stronger than him."], answer: 0 },
+    { grade: "六年级", sentence: "Last weekend I watched TV at home.", options: ["Last weekend I watched TV at home.", "Last weekend I played football.", "Last weekend I washed my clothes."], answer: 0 },
+  ],
+
+  /* ---------------- 阅读理解（带 grade 标签） ---------------- */
+  reading: [
+    {
+      grade: "三年级",
+      title: "My Pencil-case",
+      passage: "Hello! I'm Lily. This is my pencil-case. It is blue. Look! I have two pens, three pencils and a ruler. I have a red eraser, too. I like my pencil-case very much.",
+      questions: [
+        { q: "What colour is the pencil-case?", options: ["Red", "Blue", "Green"], answer: 1 },
+        { q: "How many pencils does Lily have?", options: ["Two", "Three", "Four"], answer: 1 },
+        { q: "What colour is the eraser?", options: ["Red", "Blue", "Black"], answer: 0 },
+      ],
+    },
+    {
+      grade: "五年级",
+      title: "My Week",
+      passage: "I'm Tom. I'm busy at school. On Monday I have English and music. On Wednesday I have PE. I love PE because I can play football. On the weekend I do my homework and visit my grandparents. I'm happy on the weekend.",
+      questions: [
+        { q: "What does Tom have on Monday?", options: ["English and music", "PE and art", "Maths and science"], answer: 0 },
+        { q: "Why does Tom love PE?", options: ["He can sing", "He can play football", "He can swim"], answer: 1 },
+        { q: "What does Tom do on the weekend?", options: ["Plays computer games", "Visits his grandparents", "Goes to school"], answer: 1 },
+      ],
+    },
+    {
+      grade: "六年级",
+      title: "Our Trip",
+      passage: "Last weekend my family went to a nature park. We saw a big lake and many trees. My father took many pictures. We ate a picnic near the river. In the afternoon I rode a bike with my brother. We were tired but very happy.",
+      questions: [
+        { q: "Where did the family go?", options: ["A zoo", "A nature park", "A cinema"], answer: 1 },
+        { q: "What did the father do?", options: ["Took many pictures", "Rode a bike", "Cooked dinner"], answer: 0 },
+        { q: "How did they feel?", options: ["Sad", "Angry", "Happy"], answer: 2 },
+      ],
+    },
+  ],
+};
+
+</script>
+  <script>
+/* 英语练习网站 —— 纯前端逻辑（无框架，无后端）
+ * 模块：单词卡片 / 单词听写 / 词义测验 / 语法 / 听力 / 阅读 / 错词本
+ */
+(function () {
+  "use strict";
+  const D = window.AppData;
+
+  /* ---------- 工具 ---------- */
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const el = (tag, cls, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  };
+  const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+  const escapeAttr = (s) => String(s).replace(/"/g, "&quot;");
+
+  // 年级列表（按词汇出现顺序去重）
+  const grades = D.vocabulary.reduce((a, c) => (a.includes(c.grade) ? a : a.concat(c.grade)), []);
+
+  /* ---------- 语音合成（朗读） ---------- */
+  const speak = (text) => {
+    if (!("speechSynthesis" in window)) {
+      alert("当前浏览器不支持语音朗读，请使用 Chrome / Edge 等现代浏览器。");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.9;
+    const v = window.speechSynthesis.getVoices().find((x) => /en[-_]/i.test(x.lang));
+    if (v) u.voice = v;
+    window.speechSynthesis.speak(u);
+  };
+
+  /* ---------- 进度记录 ---------- */
+  const Store = {
+    key: "eng-practice-stats",
+    get() {
+      try {
+        return JSON.parse(localStorage.getItem(this.key)) || { done: 0, correct: 0, total: 0 };
+      } catch {
+        return { done: 0, correct: 0, total: 0 };
+      }
+    },
+    add(correct, total) {
+      const s = this.get();
+      s.done += 1;
+      s.correct += correct;
+      s.total += total;
+      localStorage.setItem(this.key, JSON.stringify(s));
+      renderStats();
+    },
+  };
+
+  /* ---------- 错词本 ---------- */
+  const Mistakes = {
+    key: "eng-practice-mistakes",
+    get() {
+      try {
+        return JSON.parse(localStorage.getItem(this.key)) || [];
+      } catch {
+        return [];
+      }
+    },
+    save(arr) {
+      localStorage.setItem(this.key, JSON.stringify(arr));
+      renderStats();
+    },
+    add(w) {
+      if (!w || !w.word) return;
+      const a = this.get();
+      if (!a.some((x) => x.word === w.word)) {
+        a.push({ word: w.word, cn: w.cn, ipa: w.ipa || "", example: w.example || "" });
+        this.save(a);
+      }
+    },
+    remove(word) {
+      this.save(this.get().filter((x) => x.word !== word));
+    },
+    clear() {
+      this.save([]);
+    },
+  };
+
+  function renderStats() {
+    const s = Store.get();
+    const acc = s.total ? Math.round((s.correct / s.total) * 100) : 0;
+    if ($("#stat-done")) $("#stat-done").textContent = s.done;
+    if ($("#stat-acc")) $("#stat-acc").textContent = acc + "%";
+    if ($("#stat-total")) $("#stat-total").textContent = s.total;
+    const mc = Mistakes.get().length;
+    if ($("#stat-mistakes")) $("#stat-mistakes").textContent = mc;
+    const tab = $('[data-tab="mistakes"]');
+    if (tab) tab.textContent = mc ? `📕 错词本 (${mc})` : "📕 错词本";
+  }
+
+  /* ---------- 通用：年级选择 chip 行 ---------- */
+  function buildGradeChips(container, list, current, onPick) {
+    container.innerHTML = "";
+    list.forEach((g) => {
+      const chip = el("button", "chip" + (g === current ? " active" : ""), g);
+      chip.onclick = () => onPick(g);
+      container.appendChild(chip);
+    });
+  }
+
+  /* ================= 单词卡片 ================= */
+  const Vocab = {
+    grade: grades[0],
+    cat: 0,
+    idx: 0,
+    units() {
+      return D.vocabulary.filter((c) => c.grade === this.grade);
+    },
+    init() {
+      buildGradeChips($("#vocab-grades"), grades, this.grade, (g) => {
+        this.grade = g;
+        this.cat = 0;
+        this.idx = 0;
+        this.init();
+      });
+      const units = this.units();
+      const chips = $("#vocab-chips");
+      chips.innerHTML = "";
+      units.forEach((c, i) => {
+        const chip = el("button", "chip" + (i === this.cat ? " active" : ""), c.icon + " " + c.category);
+        chip.onclick = () => {
+          this.cat = i;
+          this.idx = 0;
+          chips.querySelectorAll(".chip").forEach((x) => x.classList.remove("active"));
+          chip.classList.add("active");
+          this.render();
+        };
+        chips.appendChild(chip);
+      });
+      this.render();
+    },
+    render() {
+      const words = this.units()[this.cat].words;
+      const w = words[this.idx];
+      $("#flash").className = "flashcard";
+      $("#flash").innerHTML = `
+        <div class="flash-inner">
+          <div class="flash-face flash-front">
+            <div class="flash-word">${w.word}</div>
+            <div class="flash-ipa">${w.ipa}</div>
+            <button class="small-audio" style="margin-top:14px" data-speak="${escapeAttr(w.word)}">🔊 朗读</button>
+            <div class="flip-hint">点击卡片看中文 ↻</div>
+          </div>
+          <div class="flash-face flash-back">
+            <div class="flash-cn">${w.cn}</div>
+            <div class="flash-ex">${w.example}</div>
+            <div class="flip-hint">点击卡片返回 ↻</div>
+          </div>
+        </div>`;
+      $("#vocab-counter").textContent = `${this.idx + 1} / ${words.length}`;
+    },
+    flip(e) {
+      if (e.target.closest("[data-speak]")) return;
+      $("#flash").classList.toggle("flipped");
+    },
+    next() {
+      const words = this.units()[this.cat].words;
+      this.idx = (this.idx + 1) % words.length;
+      this.render();
+    },
+    prev() {
+      const words = this.units()[this.cat].words;
+      this.idx = (this.idx - 1 + words.length) % words.length;
+      this.render();
+    },
+  };
+
+  /* ================= 拼写引擎（听写 + 错词本共用） ================= */
+  // container: 渲染容器; list: 单词数组; opts.onCorrect(w)/onWrong(w); opts.onRestart(); opts.restartLabel
+  function runSpelling(container, list, opts) {
+    opts = opts || {};
+    let i = 0,
+      correct = 0;
+
+    function show() {
+      if (i >= list.length) return finish();
+      const w = list[i];
+      container.innerHTML = `
+        <div class="progress-bar"><div class="progress-fill" style="width:${(i / list.length) * 100}%"></div></div>
+        <div style="text-align:center">
+          <button class="play-big" data-play>🔊</button>
+          <div class="section-sub">第 ${i + 1} / ${list.length} 个 · 中文提示：<b style="color:var(--text)">${w.cn}</b></div>
+          <input class="spell-input" data-input placeholder="在这里拼写单词…" autocomplete="off" autocapitalize="off" spellcheck="false" />
+          <div class="spell-feedback" data-fb></div>
+          <div class="btn-row" style="justify-content:center">
+            <button class="btn ghost" data-again>🔊 再听一次</button>
+            <button class="btn" data-check>提交</button>
+          </div>
+        </div>`;
+      const input = $("[data-input]", container);
+      const play = () => speak(w.word);
+      $("[data-play]", container).onclick = play;
+      $("[data-again]", container).onclick = play;
+      $("[data-check]", container).onclick = check;
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") check();
+      });
+      input.focus();
+      setTimeout(play, 300);
+    }
+
+    function check() {
+      const w = list[i];
+      const input = $("[data-input]", container);
+      if (!input || input.disabled) return;
+      const ans = input.value.trim().toLowerCase();
+      const right = w.word.toLowerCase();
+      const fb = $("[data-fb]", container);
+      input.disabled = true;
+      $("[data-check]", container).disabled = true;
+      if (ans === right) {
+        correct++;
+        input.classList.add("ok");
+        fb.innerHTML = `✅ 正确！<b>${w.word}</b> — ${w.cn}`;
+        fb.className = "spell-feedback ok";
+        if (opts.onCorrect) opts.onCorrect(w);
+      } else {
+        input.classList.add("bad");
+        fb.innerHTML = `❌ 正确拼写：<b>${w.word}</b>　你写的：${ans || "(空)"}`;
+        fb.className = "spell-feedback bad";
+        if (opts.onWrong) opts.onWrong(w);
+      }
+      const next = el("button", "btn", i < list.length - 1 ? "下一个 →" : "看结果 🎉");
+      next.onclick = () => {
+        i++;
+        show();
+      };
+      const row = el("div", "btn-row");
+      row.style.justifyContent = "center";
+      row.appendChild(next);
+      container.appendChild(row);
+    }
+
+    function finish() {
+      Store.add(correct, list.length);
+      const pct = Math.round((correct / list.length) * 100);
+      const emoji = pct === 100 ? "🏆" : pct >= 60 ? "😃" : "💪";
+      container.innerHTML = `
+        <div class="result">
+          <div class="emoji">${emoji}</div>
+          <div class="score">${correct} / ${list.length}</div>
+          <p>${pct === 100 ? "全对！拼写小能手！" : pct >= 60 ? "不错，继续练习！" : "多听多写就能记住啦！"}</p>
+        </div>`;
+      if (opts.onRestart) {
+        const again = el("button", "btn", opts.restartLabel || "再来一组 🔄");
+        again.onclick = opts.onRestart;
+        const row = el("div", "btn-row");
+        row.style.justifyContent = "center";
+        row.appendChild(again);
+        container.appendChild(row);
+      }
+    }
+
+    if (!list.length) {
+      container.innerHTML = '<p class="section-sub" style="text-align:center">没有可练习的单词。</p>';
+      return;
+    }
+    show();
+  }
+
+  /* ================= 单词听写（按年级 + 单元） ================= */
+  const Spell = {
+    grade: grades[0],
+    unit: "全部", // "全部" 或 单元 category 名
+    init() {
+      buildGradeChips($("#spell-grades"), grades, this.grade, (g) => {
+        this.grade = g;
+        this.unit = "全部";
+        this.init();
+      });
+      // 单元 chips（含“全部单元”）
+      const units = D.vocabulary.filter((c) => c.grade === this.grade);
+      const ubox = $("#spell-units");
+      ubox.innerHTML = "";
+      const allChip = el("button", "chip" + (this.unit === "全部" ? " active" : ""), "📚 全部单元");
+      allChip.onclick = () => {
+        this.unit = "全部";
+        this.init();
+      };
+      ubox.appendChild(allChip);
+      units.forEach((c) => {
+        const chip = el("button", "chip" + (this.unit === c.category ? " active" : ""), c.category);
+        chip.onclick = () => {
+          this.unit = c.category;
+          this.init();
+        };
+        ubox.appendChild(chip);
+      });
+      this.start();
+    },
+    start() {
+      const cats = D.vocabulary.filter(
+        (c) => c.grade === this.grade && (this.unit === "全部" || c.category === this.unit)
+      );
+      const pool = cats.flatMap((c) => c.words).filter((w) => !/\s/.test(w.word));
+      const list = shuffle(pool).slice(0, Math.min(10, pool.length));
+      runSpelling($("#spell-area"), list, {
+        restartLabel: "再来一组 🔄",
+        onRestart: () => this.start(),
+        onWrong: (w) => Mistakes.add(w),
+      });
+    },
+  };
+
+  /* ================= 通用选择题（语法 / 听力 / 阅读题 / 词义） ================= */
+  function runQuiz(container, items, opts) {
+    let i = 0,
+      correct = 0;
+    container.innerHTML = "";
+    const fill = el("div", "progress-bar", '<div class="progress-fill"></div>');
+    const stage = el("div");
+    container.append(fill, stage);
+
+    function show() {
+      const it = items[i];
+      $(".progress-fill", fill).style.width = (i / items.length) * 100 + "%";
+      stage.innerHTML = "";
+      if (opts.header) stage.appendChild(opts.header(it, i));
+      stage.appendChild(el("div", "question", `${i + 1}. ${opts.text(it)}`));
+      const box = el("div", "options");
+      it.options.forEach((o, idx) => {
+        const b = el("button", "option", o);
+        b.onclick = () => choose(b, idx, box, it);
+        box.appendChild(b);
+      });
+      stage.appendChild(box);
+      if (it.explain) stage.appendChild(el("div", "explain", "💡 " + it.explain));
+    }
+
+    function choose(btn, idx, box, it) {
+      [...box.children].forEach((b) => (b.disabled = true));
+      if (idx === it.answer) {
+        btn.classList.add("correct");
+        correct++;
+      } else {
+        btn.classList.add("wrong");
+        [...box.children].forEach((b) => {
+          if (b.textContent === it.options[it.answer]) b.classList.add("correct");
+        });
+        if (opts.onWrong) opts.onWrong(it);
+      }
+      $(".explain", stage)?.classList.add("show");
+      const nextBtn = el("button", "btn", i < items.length - 1 ? "下一题 →" : "查看结果 🎉");
+      nextBtn.style.marginTop = "16px";
+      nextBtn.onclick = () => {
+        i++;
+        if (i < items.length) show();
+        else finish();
+      };
+      stage.appendChild(nextBtn);
+    }
+
+    function finish() {
+      Store.add(correct, items.length);
+      const pct = Math.round((correct / items.length) * 100);
+      const emoji = pct === 100 ? "🏆" : pct >= 60 ? "😃" : "💪";
+      const tip = pct === 100 ? "完美！太棒了！" : pct >= 60 ? "做得不错，继续加油！" : "多练习一定会进步！";
+      stage.innerHTML = `
+        <div class="result">
+          <div class="emoji">${emoji}</div>
+          <div class="score">${correct} / ${items.length}</div>
+          <p>${tip}</p>
+        </div>`;
+      const again = el("button", "btn", "再来一次 🔄");
+      again.onclick = () => opts.restart();
+      const row = el("div", "btn-row");
+      row.style.justifyContent = "center";
+      row.appendChild(again);
+      stage.appendChild(row);
+      $(".progress-fill", fill).style.width = "100%";
+    }
+
+    if (!items.length) {
+      container.innerHTML = '<p class="section-sub" style="text-align:center">该年级暂无题目，换一个年级试试～</p>';
+      return;
+    }
+    show();
+  }
+
+  /* ---------- 通用：带年级筛选的练习面板（语法/听力/阅读用） ---------- */
+  // prefix 对应 #<prefix>-grades 和 #<prefix>-quiz; run(grade) 执行一次练习
+  function initGradeQuizPanel(prefix, run) {
+    const tags = ["全部"].concat(grades);
+    const box = $("#" + prefix + "-grades");
+    let current = "全部";
+    const draw = () =>
+      buildGradeChips(box, tags, current, (g) => {
+        current = g;
+        draw();
+        run(g);
+      });
+    draw();
+    run(current);
+  }
+
+  /* ================= 语法 ================= */
+  function initGrammar() {
+    initGradeQuizPanel("grammar", (grade) => {
+      const pool = D.grammar.filter((x) => grade === "全部" || x.grade === grade);
+      runQuiz($("#grammar-quiz"), shuffle(pool).slice(0, Math.min(8, pool.length)), {
+        text: (it) => it.q,
+        restart: () => initGrammar(),
+      });
+    });
+  }
+
+  /* ================= 听力 ================= */
+  function initListening() {
+    initGradeQuizPanel("listening", (grade) => {
+      const pool = D.listening.filter((x) => grade === "全部" || x.grade === grade);
+      runQuiz($("#listening-quiz"), shuffle(pool), {
+        text: () => "你听到的是哪一句？",
+        header: (it) => {
+          const wrap = el("div");
+          wrap.style.textAlign = "center";
+          const btn = el("button", "play-big", "🔊");
+          btn.onclick = () => speak(it.sentence);
+          wrap.appendChild(btn);
+          const hint = el("div", "section-sub", "点击喇叭听句子，可重复播放");
+          hint.style.textAlign = "center";
+          wrap.appendChild(hint);
+          setTimeout(() => speak(it.sentence), 300);
+          return wrap;
+        },
+        restart: () => initListening(),
+      });
+    });
+  }
+
+  /* ================= 阅读 ================= */
+  const Reading = { idx: 0 };
+  function initReading() {
+    initGradeQuizPanel("reading", (grade) => {
+      Reading.idx = 0;
+      Reading.pool = D.reading.filter((x) => grade === "全部" || x.grade === grade);
+      showReading();
+    });
+  }
+  function showReading() {
+    const pool = Reading.pool || D.reading;
+    const box = $("#reading-content");
+    if (!pool.length) {
+      box.innerHTML = '<p class="section-sub" style="text-align:center">该年级暂无短文，换一个年级试试～</p>';
+      return;
+    }
+    const r = pool[Reading.idx % pool.length];
+    box.innerHTML = `
+      <h3>${r.title} <button class="small-audio" data-speak="${escapeAttr(r.passage)}">🔊 朗读全文</button></h3>
+      <div class="passage">${r.passage}</div>
+      <div id="reading-quiz"></div>`;
+    runQuiz($("#reading-quiz", box), r.questions, {
+      text: (it) => it.q,
+      restart: () => {
+        Reading.idx = (Reading.idx + 1) % pool.length;
+        showReading();
+      },
+    });
+  }
+
+  /* ================= 词义测验（中↔英 混合选择） ================= */
+  const Mixed = { grade: "全部" };
+  function pickDistractors(pool, target, field, n) {
+    const seen = new Set([target[field]]);
+    const out = [];
+    for (const w of shuffle(pool)) {
+      if (out.length >= n) break;
+      if (!seen.has(w[field])) {
+        seen.add(w[field]);
+        out.push(w);
+      }
+    }
+    return out;
+  }
+  function initMixed() {
+    initGradeQuizPanel("mixed", (grade) => {
+      Mixed.grade = grade;
+      startMixed();
+    });
+  }
+  function startMixed() {
+    const pool = D.vocabulary
+      .filter((c) => Mixed.grade === "全部" || c.grade === Mixed.grade)
+      .flatMap((c) => c.words);
+    const targets = shuffle(pool).slice(0, Math.min(10, pool.length));
+    const items = targets.map((t) => {
+      const en2cn = Math.random() < 0.5;
+      const field = en2cn ? "cn" : "word";
+      const distract = pickDistractors(pool, t, field, 3).map((w) => w[field]);
+      const optList = shuffle([t[field], ...distract]);
+      return {
+        q: en2cn ? `“${t.word}” 的中文意思是？` : `“${t.cn}” 的英文是哪个？`,
+        options: optList,
+        answer: optList.indexOf(t[field]),
+        _target: t,
+      };
+    });
+    runQuiz($("#mixed-quiz"), items, {
+      text: (it) => it.q,
+      onWrong: (it) => Mistakes.add(it._target),
+      restart: () => startMixed(),
+    });
+  }
+
+  /* ================= 错词本 ================= */
+  function initMistakes() {
+    const list = Mistakes.get();
+    const box = $("#mistakes-content");
+    if (!list.length) {
+      box.innerHTML =
+        '<p class="section-sub" style="text-align:center">🎉 错词本是空的！做「单词听写」或「词义测验」答错的单词会自动收集到这里。</p>';
+      return;
+    }
+    box.innerHTML = `
+      <div class="btn-row" style="margin-bottom:14px">
+        <button class="btn" id="mk-practice">✍️ 听写练这些词 (${list.length})</button>
+        <button class="btn ghost" id="mk-clear">🗑️ 清空</button>
+      </div>
+      <div id="mk-list"></div>`;
+    const ul = $("#mk-list", box);
+    list.forEach((w) => {
+      const row = el("div", "mk-item");
+      row.innerHTML = `
+        <button class="small-audio" data-speak="${escapeAttr(w.word)}">🔊</button>
+        <span class="mk-word">${w.word}</span>
+        <span class="mk-cn">${w.cn}</span>
+        <button class="mk-del" title="移除" data-del="${escapeAttr(w.word)}">✖</button>`;
+      ul.appendChild(row);
+    });
+    $("#mk-clear", box).onclick = () => {
+      if (confirm("确定清空错词本吗？")) {
+        Mistakes.clear();
+        initMistakes();
+      }
+    };
+    $("#mk-practice", box).onclick = () => {
+      box.innerHTML = '<div id="mk-spell"></div>';
+      runSpelling($("#mk-spell", box), shuffle(Mistakes.get()), {
+        restartLabel: "再练剩余错词 🔄",
+        onCorrect: (w) => Mistakes.remove(w.word), // 拼对即从错词本移除
+        onRestart: () => initMistakes(),
+      });
+    };
+    ul.addEventListener("click", (e) => {
+      const d = e.target.closest("[data-del]");
+      if (d) {
+        Mistakes.remove(d.getAttribute("data-del"));
+        initMistakes();
+      }
+    });
+  }
+
+  /* ================= 导航 ================= */
+  function switchTab(name) {
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + name));
+    if (name === "vocab") Vocab.init();
+    if (name === "spell") Spell.init();
+    if (name === "mixed") initMixed();
+    if (name === "grammar") initGrammar();
+    if (name === "listening") initListening();
+    if (name === "reading") initReading();
+    if (name === "mistakes") initMistakes();
+    if (name === "home") renderStats();
+  }
+
+  /* ================= 启动 ================= */
+  document.addEventListener("DOMContentLoaded", () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
+    document.querySelectorAll(".tab").forEach((t) => (t.onclick = () => switchTab(t.dataset.tab)));
+
+    document.body.addEventListener("click", (e) => {
+      const s = e.target.closest("[data-speak]");
+      if (s) {
+        e.stopPropagation();
+        speak(s.getAttribute("data-speak"));
+      }
+    });
+
+    $("#flash").addEventListener("click", (e) => Vocab.flip(e));
+    $("#vocab-next").onclick = () => Vocab.next();
+    $("#vocab-prev").onclick = () => Vocab.prev();
+
+    renderStats();
+    switchTab("home");
+  });
+})();
+
+</script>
+</body>
+</html>
