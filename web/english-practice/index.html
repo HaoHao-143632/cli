@@ -18,9 +18,11 @@
       <button class="tab active" data-tab="home">🏠 首页</button>
       <button class="tab" data-tab="vocab">🃏 单词卡片</button>
       <button class="tab" data-tab="spell">🔤 单词听写</button>
+      <button class="tab" data-tab="mixed">🔁 词义测验</button>
       <button class="tab" data-tab="grammar">✏️ 语法练习</button>
       <button class="tab" data-tab="listening">🎧 听力练习</button>
       <button class="tab" data-tab="reading">📖 阅读理解</button>
+      <button class="tab" data-tab="mistakes">📕 错词本</button>
     </nav>
 
     <!-- 首页 -->
@@ -32,6 +34,7 @@
           <div class="stat"><div class="num" id="stat-done">0</div><div class="lbl">完成练习次数</div></div>
           <div class="stat"><div class="num" id="stat-acc">0%</div><div class="lbl">平均正确率</div></div>
           <div class="stat"><div class="num" id="stat-total">0</div><div class="lbl">答题总数</div></div>
+          <div class="stat"><div class="num" id="stat-mistakes">0</div><div class="lbl">错词本词数</div></div>
         </div>
         <div class="btn-row" style="margin-top:22px">
           <button class="btn" onclick="document.querySelector('[data-tab=vocab]').click()">🃏 学单词</button>
@@ -71,9 +74,20 @@
     <section class="panel" id="panel-spell">
       <div class="card">
         <h2 class="section-title">🔤 单词听写</h2>
-        <p class="section-sub">选年级 → 点喇叭听单词 → 拼写出来。看中文提示，写对得分！</p>
+        <p class="section-sub">选年级和单元 → 点喇叭听单词 → 拼写出来。看中文提示，写对得分！</p>
         <div class="chips" id="spell-grades"></div>
+        <div class="chips" id="spell-units"></div>
         <div id="spell-area"></div>
+      </div>
+    </section>
+
+    <!-- 词义测验 -->
+    <section class="panel" id="panel-mixed">
+      <div class="card">
+        <h2 class="section-title">🔁 词义测验</h2>
+        <p class="section-sub">中文↔英文混合选择：看英文选中文，或看中文选英文。答错的词会进错词本。</p>
+        <div class="chips" id="mixed-grades"></div>
+        <div id="mixed-quiz"></div>
       </div>
     </section>
 
@@ -81,7 +95,8 @@
     <section class="panel" id="panel-grammar">
       <div class="card">
         <h2 class="section-title">✏️ 语法练习</h2>
-        <p class="section-sub">选出正确答案，答题后会显示解析。</p>
+        <p class="section-sub">选年级筛选题目，选出正确答案后会显示解析。</p>
+        <div class="chips" id="grammar-grades"></div>
         <div id="grammar-quiz"></div>
       </div>
     </section>
@@ -90,7 +105,8 @@
     <section class="panel" id="panel-listening">
       <div class="card">
         <h2 class="section-title">🎧 听力练习</h2>
-        <p class="section-sub">点喇叭听句子（可重复），然后选出你听到的那一句。</p>
+        <p class="section-sub">选年级筛选，点喇叭听句子（可重复），然后选出你听到的那一句。</p>
+        <div class="chips" id="listening-grades"></div>
         <div id="listening-quiz"></div>
       </div>
     </section>
@@ -99,8 +115,18 @@
     <section class="panel" id="panel-reading">
       <div class="card">
         <h2 class="section-title">📖 阅读理解</h2>
-        <p class="section-sub">读完短文后回答问题，完成后会自动进入下一篇。</p>
+        <p class="section-sub">选年级筛选短文，读完后回答问题，完成后自动进入下一篇。</p>
+        <div class="chips" id="reading-grades"></div>
         <div id="reading-content"></div>
+      </div>
+    </section>
+
+    <!-- 错词本 -->
+    <section class="panel" id="panel-mistakes">
+      <div class="card">
+        <h2 class="section-title">📕 错词本</h2>
+        <p class="section-sub">听写 / 词义测验答错的单词会自动收集到这里，听写拼对后会自动移除。</p>
+        <div id="mistakes-content"></div>
       </div>
     </section>
 

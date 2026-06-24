@@ -458,41 +458,44 @@ window.AppData = {
     },
   ],
 
-  /* ---------------- 语法选择题（覆盖各年级核心句型） ---------------- */
+  /* ---------------- 语法选择题（覆盖各年级核心句型，带 grade 标签） ---------------- */
   grammar: [
-    { q: "—Hello! What's your ___? —My name is Mike.", options: ["name", "color", "book", "dog"], answer: 0, explain: "问名字用 What's your name?（三上 U1）。" },
-    { q: "—How ___ you? —I'm fine, thank you.", options: ["is", "am", "are", "do"], answer: 2, explain: "How are you? 是固定问候，主语 you 用 are。" },
-    { q: "This ___ my father.", options: ["am", "is", "are", "be"], answer: 1, explain: "This is... 介绍单数用 is。" },
-    { q: "I ___ a ruler and two pencils.", options: ["am", "has", "have", "is"], answer: 2, explain: "主语 I 表示“有”用 have。" },
-    { q: "—___ is my eraser? —It's on the desk.", options: ["What", "Who", "Where", "How"], answer: 2, explain: "问位置用 Where。" },
-    { q: "—Do you like pears? —Yes, I ___.", options: ["am", "do", "does", "like"], answer: 1, explain: "Do you...? 的肯定回答用 Yes, I do.（三下 U5）" },
-    { q: "—How many books? —___ books.", options: ["Four", "Color", "Red", "Where"], answer: 0, explain: "How many 问数量，用数字回答。" },
-    { q: "There ___ a big bed in the room.", options: ["is", "are", "am", "be"], answer: 0, explain: "There is + 单数（五上 U5）。" },
-    { q: "—What time is it? —It's 7 o'clock. It's time ___ breakfast.", options: ["to", "for", "at", "in"], answer: 1, explain: "It's time for + 名词（四下 U2）。" },
-    { q: "My father is a doctor. ___ works in a hospital.", options: ["She", "He", "It", "They"], answer: 1, explain: "father 是男性，用 He（四上 U6）。" },
-    { q: "I'm taller ___ my brother.", options: ["then", "than", "that", "as"], answer: 1, explain: "比较级后用 than（六下 U1）。" },
-    { q: "—What can you do? —I can ___.", options: ["sang", "sings", "sing", "singing"], answer: 2, explain: "情态动词 can 后用动词原形（五上 U4）。" },
-    { q: "—How do you go to school? —I go ___ bus.", options: ["on", "by", "in", "to"], answer: 1, explain: "乘交通工具用 by bus（六上 U2）。" },
-    { q: "Last weekend I ___ my room.", options: ["clean", "cleaned", "cleaning", "cleans"], answer: 1, explain: "last weekend 用一般过去时 cleaned（六下 U2）。" },
-    { q: "—Where did you go? —I ___ to the park.", options: ["go", "goes", "went", "going"], answer: 2, explain: "did 引导，动词用过去式 went（六下 U3）。" },
-    { q: "She likes ___ in summer.", options: ["swim", "swims", "swimming", "swam"], answer: 2, explain: "like doing sth，用 swimming（五下 U2）。" },
+    { grade: "三年级", q: "—Hello! What's your ___? —My name is Mike.", options: ["name", "color", "book", "dog"], answer: 0, explain: "问名字用 What's your name?（三上 U1）。" },
+    { grade: "三年级", q: "—How ___ you? —I'm fine, thank you.", options: ["is", "am", "are", "do"], answer: 2, explain: "How are you? 是固定问候，主语 you 用 are。" },
+    { grade: "三年级", q: "This ___ my father.", options: ["am", "is", "are", "be"], answer: 1, explain: "This is... 介绍单数用 is。" },
+    { grade: "三年级", q: "I ___ a ruler and two pencils.", options: ["am", "has", "have", "is"], answer: 2, explain: "主语 I 表示“有”用 have。" },
+    { grade: "三年级", q: "—___ is my eraser? —It's on the desk.", options: ["What", "Who", "Where", "How"], answer: 2, explain: "问位置用 Where。" },
+    { grade: "三年级", q: "—Do you like pears? —Yes, I ___.", options: ["am", "do", "does", "like"], answer: 1, explain: "Do you...? 的肯定回答用 Yes, I do.（三下 U5）" },
+    { grade: "三年级", q: "—How many books? —___ books.", options: ["Four", "Color", "Red", "Where"], answer: 0, explain: "How many 问数量，用数字回答。" },
+    { grade: "四年级", q: "—What time is it? —It's 7 o'clock. It's time ___ breakfast.", options: ["to", "for", "at", "in"], answer: 1, explain: "It's time for + 名词（四下 U2）。" },
+    { grade: "四年级", q: "My father is a doctor. ___ works in a hospital.", options: ["She", "He", "It", "They"], answer: 1, explain: "father 是男性，用 He（四上 U6）。" },
+    { grade: "四年级", q: "It's ___ today. Take an umbrella!", options: ["sunny", "rainy", "warm", "cool"], answer: 1, explain: "带伞说明在下雨，用 rainy（四下 U3）。" },
+    { grade: "五年级", q: "There ___ a big bed in the room.", options: ["is", "are", "am", "be"], answer: 0, explain: "There is + 单数（五上 U5）。" },
+    { grade: "五年级", q: "—What can you do? —I can ___.", options: ["sang", "sings", "sing", "singing"], answer: 2, explain: "情态动词 can 后用动词原形（五上 U4）。" },
+    { grade: "五年级", q: "She likes ___ in summer.", options: ["swim", "swims", "swimming", "swam"], answer: 2, explain: "like doing sth，用 swimming（五下 U2）。" },
+    { grade: "六年级", q: "I'm taller ___ my brother.", options: ["then", "than", "that", "as"], answer: 1, explain: "比较级后用 than（六下 U1）。" },
+    { grade: "六年级", q: "—How do you go to school? —I go ___ bus.", options: ["on", "by", "in", "to"], answer: 1, explain: "乘交通工具用 by bus（六上 U2）。" },
+    { grade: "六年级", q: "Last weekend I ___ my room.", options: ["clean", "cleaned", "cleaning", "cleans"], answer: 1, explain: "last weekend 用一般过去时 cleaned（六下 U2）。" },
+    { grade: "六年级", q: "—Where did you go? —I ___ to the park.", options: ["go", "goes", "went", "going"], answer: 2, explain: "did 引导，动词用过去式 went（六下 U3）。" },
   ],
 
-  /* ---------------- 听力练习 ---------------- */
+  /* ---------------- 听力练习（带 grade 标签） ---------------- */
   listening: [
-    { sentence: "Hello! My name is Sarah.", options: ["Hello! My name is Sarah.", "Hello! My name is Sam.", "Hi! This is my ruler."], answer: 0 },
-    { sentence: "I have a red crayon.", options: ["I have a red crayon.", "I have a green crayon.", "I have a red ruler."], answer: 0 },
-    { sentence: "Look at the panda. It's so cute.", options: ["Look at the panda. It's so cute.", "Look at the monkey. It's so cute.", "Look at the panda. It's so big."], answer: 0 },
-    { sentence: "It's cold and snowy in winter.", options: ["It's cold and snowy in winter.", "It's hot and sunny in summer.", "It's cool and windy in autumn."], answer: 0 },
-    { sentence: "My father is a policeman.", options: ["My father is a postman.", "My father is a policeman.", "My brother is a policeman."], answer: 1 },
-    { sentence: "I go to school by subway.", options: ["I go to school by bus.", "I go to school by subway.", "I go to school on foot."], answer: 1 },
-    { sentence: "I'm taller and stronger than him.", options: ["I'm taller and stronger than him.", "I'm shorter and thinner than him.", "I'm older and stronger than him."], answer: 0 },
-    { sentence: "Last weekend I watched TV at home.", options: ["Last weekend I watched TV at home.", "Last weekend I played football.", "Last weekend I washed my clothes."], answer: 0 },
+    { grade: "三年级", sentence: "Hello! My name is Sarah.", options: ["Hello! My name is Sarah.", "Hello! My name is Sam.", "Hi! This is my ruler."], answer: 0 },
+    { grade: "三年级", sentence: "I have a red crayon.", options: ["I have a red crayon.", "I have a green crayon.", "I have a red ruler."], answer: 0 },
+    { grade: "三年级", sentence: "Look at the panda. It's so cute.", options: ["Look at the panda. It's so cute.", "Look at the monkey. It's so cute.", "Look at the panda. It's so big."], answer: 0 },
+    { grade: "四年级", sentence: "It's cold and snowy in winter.", options: ["It's cold and snowy in winter.", "It's hot and sunny in summer.", "It's cool and windy in autumn."], answer: 0 },
+    { grade: "四年级", sentence: "My father is a policeman.", options: ["My father is a postman.", "My father is a policeman.", "My brother is a policeman."], answer: 1 },
+    { grade: "五年级", sentence: "I can sing and dance.", options: ["I can sing and dance.", "I can swim and run.", "I can cook and draw."], answer: 0 },
+    { grade: "六年级", sentence: "I go to school by subway.", options: ["I go to school by bus.", "I go to school by subway.", "I go to school on foot."], answer: 1 },
+    { grade: "六年级", sentence: "I'm taller and stronger than him.", options: ["I'm taller and stronger than him.", "I'm shorter and thinner than him.", "I'm older and stronger than him."], answer: 0 },
+    { grade: "六年级", sentence: "Last weekend I watched TV at home.", options: ["Last weekend I watched TV at home.", "Last weekend I played football.", "Last weekend I washed my clothes."], answer: 0 },
   ],
 
-  /* ---------------- 阅读理解 ---------------- */
+  /* ---------------- 阅读理解（带 grade 标签） ---------------- */
   reading: [
     {
+      grade: "三年级",
       title: "My Pencil-case",
       passage: "Hello! I'm Lily. This is my pencil-case. It is blue. Look! I have two pens, three pencils and a ruler. I have a red eraser, too. I like my pencil-case very much.",
       questions: [
@@ -502,6 +505,7 @@ window.AppData = {
       ],
     },
     {
+      grade: "五年级",
       title: "My Week",
       passage: "I'm Tom. I'm busy at school. On Monday I have English and music. On Wednesday I have PE. I love PE because I can play football. On the weekend I do my homework and visit my grandparents. I'm happy on the weekend.",
       questions: [
@@ -511,6 +515,7 @@ window.AppData = {
       ],
     },
     {
+      grade: "六年级",
       title: "Our Trip",
       passage: "Last weekend my family went to a nature park. We saw a big lake and many trees. My father took many pictures. We ate a picnic near the river. In the afternoon I rode a bike with my brother. We were tired but very happy.",
       questions: [

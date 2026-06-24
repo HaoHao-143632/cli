@@ -252,6 +252,25 @@ footer.site { text-align: center; color: var(--muted); font-size: .85rem; margin
 .spell-feedback.ok { color: var(--green); }
 .spell-feedback.bad { color: var(--red); }
 
+/* ---- Mistakes notebook ---- */
+.mk-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #eceefb;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: #fbfbff;
+}
+.mk-word { font-weight: 700; font-size: 1.1rem; }
+.mk-cn { color: var(--muted); flex: 1; }
+.mk-del {
+  border: none; background: #fdeceb; color: var(--red);
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: .9rem;
+}
+.mk-del:hover { background: #f9d6d4; }
+
 @media (max-width: 520px) {
   header.site h1 { font-size: 1.6rem; }
   .flash-word { font-size: 2rem; }
