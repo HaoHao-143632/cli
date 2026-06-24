@@ -1,15 +1,17 @@
 /*
  * 英语练习内容数据
- * 教材版本：人教版(PEP)小学英语 · 三年级起点（上册 + 下册）
- * 内容按教材单元主题编排，方便老师/家长对照课本增删。
+ * 教材版本：人教版(PEP)小学英语 · 三年级起点（3~6 年级，上册 + 下册）
+ * 单词按「年级 + 上/下册 + 单元」编排，并带 grade 字段用于年级筛选。
  * 修改后直接刷新页面即可生效，无需重新构建。
  */
 window.AppData = {
-  /* ---------------- 单词卡片（按单元主题分类） ---------------- */
+  /* ---------------- 单词卡片 ----------------
+   * 每个分类: { grade:"三年级", category:"3上 U1 文具", icon, words:[{word,cn,ipa,example}] }
+   */
   vocabulary: [
+    /* ============ 三年级 ============ */
     {
-      category: "Unit 1 文具 Stationery",
-      icon: "✏️",
+      grade: "三年级", category: "3上 U1 文具", icon: "✏️",
       words: [
         { word: "pen", cn: "钢笔", ipa: "/pen/", example: "This is my pen." },
         { word: "pencil", cn: "铅笔", ipa: "/ˈpensl/", example: "I have a pencil." },
@@ -19,18 +21,16 @@ window.AppData = {
         { word: "crayon", cn: "蜡笔", ipa: "/ˈkreɪən/", example: "I have a red crayon." },
         { word: "book", cn: "书", ipa: "/bʊk/", example: "Look at my book." },
         { word: "bag", cn: "书包", ipa: "/bæɡ/", example: "My bag is big." },
-        { word: "sharpener", cn: "卷笔刀", ipa: "/ˈʃɑːrpənər/", example: "This is a sharpener." },
       ],
     },
     {
-      category: "Unit 2 颜色 Colours",
-      icon: "🎨",
+      grade: "三年级", category: "3上 U2 颜色", icon: "🎨",
       words: [
         { word: "red", cn: "红色", ipa: "/red/", example: "The apple is red." },
         { word: "yellow", cn: "黄色", ipa: "/ˈjeloʊ/", example: "I like yellow." },
         { word: "green", cn: "绿色", ipa: "/ɡriːn/", example: "The leaf is green." },
         { word: "blue", cn: "蓝色", ipa: "/bluː/", example: "The sky is blue." },
-        { word: "purple", cn: "紫色", ipa: "/ˈpɜːrpl/", example: "I have a purple crayon." },
+        { word: "purple", cn: "紫色", ipa: "/ˈpɜːrpl/", example: "A purple crayon." },
         { word: "white", cn: "白色", ipa: "/waɪt/", example: "Snow is white." },
         { word: "black", cn: "黑色", ipa: "/blæk/", example: "My bag is black." },
         { word: "orange", cn: "橙色", ipa: "/ˈɔːrɪndʒ/", example: "Colour it orange." },
@@ -39,8 +39,7 @@ window.AppData = {
       ],
     },
     {
-      category: "Unit 3 身体 Body",
-      icon: "🧒",
+      grade: "三年级", category: "3上 U3 身体", icon: "🧒",
       words: [
         { word: "head", cn: "头", ipa: "/hed/", example: "Touch your head." },
         { word: "face", cn: "脸", ipa: "/feɪs/", example: "Wash your face." },
@@ -55,8 +54,7 @@ window.AppData = {
       ],
     },
     {
-      category: "Unit 4 动物 Animals",
-      icon: "🐼",
+      grade: "三年级", category: "3上 U4 动物", icon: "🐼",
       words: [
         { word: "cat", cn: "猫", ipa: "/kæt/", example: "The cat is cute." },
         { word: "dog", cn: "狗", ipa: "/dɔːɡ/", example: "I have a dog." },
@@ -71,8 +69,7 @@ window.AppData = {
       ],
     },
     {
-      category: "Unit 5 食物 Food & Drink",
-      icon: "🍔",
+      grade: "三年级", category: "3上 U5 食物", icon: "🍔",
       words: [
         { word: "cake", cn: "蛋糕", ipa: "/keɪk/", example: "I like the cake." },
         { word: "bread", cn: "面包", ipa: "/bred/", example: "Have some bread." },
@@ -87,8 +84,7 @@ window.AppData = {
       ],
     },
     {
-      category: "Unit 6 数字 Numbers",
-      icon: "🔢",
+      grade: "三年级", category: "3上 U6 数字 1-10", icon: "🔢",
       words: [
         { word: "one", cn: "一 (1)", ipa: "/wʌn/", example: "I have one pen." },
         { word: "two", cn: "二 (2)", ipa: "/tuː/", example: "Two cats." },
@@ -103,8 +99,7 @@ window.AppData = {
       ],
     },
     {
-      category: "下册 Unit 2 家庭 Family",
-      icon: "👪",
+      grade: "三年级", category: "3下 U2 家庭", icon: "👪",
       words: [
         { word: "father", cn: "爸爸", ipa: "/ˈfɑːðər/", example: "This is my father." },
         { word: "mother", cn: "妈妈", ipa: "/ˈmʌðər/", example: "This is my mother." },
@@ -117,8 +112,33 @@ window.AppData = {
       ],
     },
     {
-      category: "下册 Unit 5 水果 Fruit",
-      icon: "🍎",
+      grade: "三年级", category: "3下 U3 描述(动物园)", icon: "🦒",
+      words: [
+        { word: "tall", cn: "高的", ipa: "/tɔːl/", example: "The giraffe is tall." },
+        { word: "short", cn: "矮的/短的", ipa: "/ʃɔːrt/", example: "The deer is short." },
+        { word: "fat", cn: "胖的", ipa: "/fæt/", example: "The pig is fat." },
+        { word: "thin", cn: "瘦的", ipa: "/θɪn/", example: "The monkey is thin." },
+        { word: "long", cn: "长的", ipa: "/lɔːŋ/", example: "It has a long tail." },
+        { word: "small", cn: "小的", ipa: "/smɔːl/", example: "The rabbit is small." },
+        { word: "big", cn: "大的", ipa: "/bɪɡ/", example: "The elephant is big." },
+        { word: "giraffe", cn: "长颈鹿", ipa: "/dʒəˈræf/", example: "Look at the giraffe." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3下 U4 位置", icon: "📦",
+      words: [
+        { word: "in", cn: "在……里面", ipa: "/ɪn/", example: "It's in the box." },
+        { word: "on", cn: "在……上面", ipa: "/ɑːn/", example: "It's on the desk." },
+        { word: "under", cn: "在……下面", ipa: "/ˈʌndər/", example: "It's under the chair." },
+        { word: "chair", cn: "椅子", ipa: "/tʃer/", example: "Sit on the chair." },
+        { word: "desk", cn: "课桌", ipa: "/desk/", example: "My desk is clean." },
+        { word: "box", cn: "盒子/箱子", ipa: "/bɑːks/", example: "A toy in the box." },
+        { word: "cap", cn: "帽子", ipa: "/kæp/", example: "Where is my cap?" },
+        { word: "toy", cn: "玩具", ipa: "/tɔɪ/", example: "I like this toy." },
+      ],
+    },
+    {
+      grade: "三年级", category: "3下 U5 水果", icon: "🍎",
       words: [
         { word: "apple", cn: "苹果", ipa: "/ˈæpl/", example: "I like apples." },
         { word: "banana", cn: "香蕉", ipa: "/bəˈnænə/", example: "Have a banana." },
@@ -129,226 +149,374 @@ window.AppData = {
         { word: "grape", cn: "葡萄", ipa: "/ɡreɪp/", example: "Grapes are sweet." },
       ],
     },
+
+    /* ============ 四年级 ============ */
+    {
+      grade: "四年级", category: "4上 U1 教室", icon: "🏫",
+      words: [
+        { word: "classroom", cn: "教室", ipa: "/ˈklæsruːm/", example: "Our classroom is big." },
+        { word: "window", cn: "窗户", ipa: "/ˈwɪndoʊ/", example: "Open the window." },
+        { word: "door", cn: "门", ipa: "/dɔːr/", example: "Close the door." },
+        { word: "blackboard", cn: "黑板", ipa: "/ˈblækbɔːrd/", example: "Look at the blackboard." },
+        { word: "light", cn: "灯", ipa: "/laɪt/", example: "Turn on the light." },
+        { word: "picture", cn: "图画", ipa: "/ˈpɪktʃər/", example: "A nice picture." },
+        { word: "computer", cn: "电脑", ipa: "/kəmˈpjuːtər/", example: "I have a computer." },
+        { word: "fan", cn: "风扇", ipa: "/fæn/", example: "The fan is on the wall." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U2 书包", icon: "🎒",
+      words: [
+        { word: "schoolbag", cn: "书包", ipa: "/ˈskuːlbæɡ/", example: "My schoolbag is heavy." },
+        { word: "English book", cn: "英语书", ipa: "/ˈɪŋɡlɪʃ bʊk/", example: "This is my English book." },
+        { word: "maths book", cn: "数学书", ipa: "/mæθs bʊk/", example: "Where is my maths book?" },
+        { word: "Chinese book", cn: "语文书", ipa: "/ˌtʃaɪˈniːz bʊk/", example: "A Chinese book." },
+        { word: "story-book", cn: "故事书", ipa: "/ˈstɔːribʊk/", example: "I like story-books." },
+        { word: "notebook", cn: "笔记本", ipa: "/ˈnoʊtbʊk/", example: "Three notebooks." },
+        { word: "key", cn: "钥匙", ipa: "/kiː/", example: "The key is in my bag." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U3 外貌/朋友", icon: "👓",
+      words: [
+        { word: "strong", cn: "强壮的", ipa: "/strɔːŋ/", example: "He is strong." },
+        { word: "quiet", cn: "安静的", ipa: "/ˈkwaɪət/", example: "She is quiet." },
+        { word: "friend", cn: "朋友", ipa: "/frend/", example: "He is my friend." },
+        { word: "glasses", cn: "眼镜", ipa: "/ˈɡlæsɪz/", example: "He has glasses." },
+        { word: "hair", cn: "头发", ipa: "/her/", example: "She has long hair." },
+        { word: "shoe", cn: "鞋", ipa: "/ʃuː/", example: "My shoe is white." },
+        { word: "music", cn: "音乐", ipa: "/ˈmjuːzɪk/", example: "I like music." },
+        { word: "science", cn: "科学", ipa: "/ˈsaɪəns/", example: "Science is fun." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U4 家/房间", icon: "🏠",
+      words: [
+        { word: "study", cn: "书房", ipa: "/ˈstʌdi/", example: "He is in the study." },
+        { word: "bathroom", cn: "卫生间", ipa: "/ˈbæθruːm/", example: "Where is the bathroom?" },
+        { word: "bedroom", cn: "卧室", ipa: "/ˈbedruːm/", example: "This is my bedroom." },
+        { word: "living room", cn: "客厅", ipa: "/ˈlɪvɪŋ ruːm/", example: "We watch TV in the living room." },
+        { word: "kitchen", cn: "厨房", ipa: "/ˈkɪtʃɪn/", example: "Mum is in the kitchen." },
+        { word: "bed", cn: "床", ipa: "/bed/", example: "The cat is on the bed." },
+        { word: "sofa", cn: "沙发", ipa: "/ˈsoʊfə/", example: "Sit on the sofa." },
+        { word: "fridge", cn: "冰箱", ipa: "/frɪdʒ/", example: "Milk is in the fridge." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U5 晚餐", icon: "🍜",
+      words: [
+        { word: "beef", cn: "牛肉", ipa: "/biːf/", example: "I'd like some beef." },
+        { word: "noodles", cn: "面条", ipa: "/ˈnuːdlz/", example: "Noodles, please." },
+        { word: "soup", cn: "汤", ipa: "/suːp/", example: "Have some soup." },
+        { word: "vegetable", cn: "蔬菜", ipa: "/ˈvedʒtəbl/", example: "Eat your vegetables." },
+        { word: "fish", cn: "鱼", ipa: "/fɪʃ/", example: "I like fish." },
+        { word: "knife", cn: "刀", ipa: "/naɪf/", example: "Use a knife." },
+        { word: "fork", cn: "叉子", ipa: "/fɔːrk/", example: "Here is a fork." },
+        { word: "chopsticks", cn: "筷子", ipa: "/ˈtʃɑːpstɪks/", example: "Use chopsticks." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4上 U6 职业/家人", icon: "👨‍⚕️",
+      words: [
+        { word: "parents", cn: "父母", ipa: "/ˈperənts/", example: "These are my parents." },
+        { word: "uncle", cn: "叔叔/舅舅", ipa: "/ˈʌŋkl/", example: "My uncle is a driver." },
+        { word: "aunt", cn: "阿姨/姑姑", ipa: "/ænt/", example: "My aunt is a nurse." },
+        { word: "doctor", cn: "医生", ipa: "/ˈdɑːktər/", example: "She is a doctor." },
+        { word: "cook", cn: "厨师", ipa: "/kʊk/", example: "He is a cook." },
+        { word: "driver", cn: "司机", ipa: "/ˈdraɪvər/", example: "My father is a driver." },
+        { word: "farmer", cn: "农民", ipa: "/ˈfɑːrmər/", example: "He is a farmer." },
+        { word: "nurse", cn: "护士", ipa: "/nɜːrs/", example: "She is a nurse." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4下 U1 学校场所", icon: "📚",
+      words: [
+        { word: "playground", cn: "操场", ipa: "/ˈpleɪɡraʊnd/", example: "We play on the playground." },
+        { word: "garden", cn: "花园", ipa: "/ˈɡɑːrdn/", example: "The garden is beautiful." },
+        { word: "library", cn: "图书馆", ipa: "/ˈlaɪbreri/", example: "Read in the library." },
+        { word: "canteen", cn: "食堂", ipa: "/kænˈtiːn/", example: "We eat in the canteen." },
+        { word: "art room", cn: "美术室", ipa: "/ɑːrt ruːm/", example: "This is the art room." },
+        { word: "music room", cn: "音乐室", ipa: "/ˈmjuːzɪk ruːm/", example: "Sing in the music room." },
+        { word: "gym", cn: "体育馆", ipa: "/dʒɪm/", example: "Play in the gym." },
+        { word: "washroom", cn: "洗手间", ipa: "/ˈwɑːʃruːm/", example: "Where is the washroom?" },
+      ],
+    },
+    {
+      grade: "四年级", category: "4下 U3 天气", icon: "🌤️",
+      words: [
+        { word: "cold", cn: "寒冷的", ipa: "/koʊld/", example: "It's cold today." },
+        { word: "cool", cn: "凉爽的", ipa: "/kuːl/", example: "It's cool in autumn." },
+        { word: "warm", cn: "温暖的", ipa: "/wɔːrm/", example: "It's warm in spring." },
+        { word: "hot", cn: "炎热的", ipa: "/hɑːt/", example: "It's hot in summer." },
+        { word: "sunny", cn: "晴朗的", ipa: "/ˈsʌni/", example: "It's sunny today." },
+        { word: "windy", cn: "有风的", ipa: "/ˈwɪndi/", example: "It's windy outside." },
+        { word: "cloudy", cn: "多云的", ipa: "/ˈklaʊdi/", example: "It's cloudy." },
+        { word: "rainy", cn: "下雨的", ipa: "/ˈreɪni/", example: "It's a rainy day." },
+        { word: "snowy", cn: "下雪的", ipa: "/ˈsnoʊi/", example: "It's snowy in winter." },
+      ],
+    },
+    {
+      grade: "四年级", category: "4下 U5 衣服", icon: "👕",
+      words: [
+        { word: "jacket", cn: "夹克", ipa: "/ˈdʒækɪt/", example: "A green jacket." },
+        { word: "shirt", cn: "衬衫", ipa: "/ʃɜːrt/", example: "This is my shirt." },
+        { word: "skirt", cn: "裙子", ipa: "/skɜːrt/", example: "A pretty skirt." },
+        { word: "dress", cn: "连衣裙", ipa: "/dres/", example: "She has a red dress." },
+        { word: "T-shirt", cn: "T恤衫", ipa: "/ˈtiː ʃɜːrt/", example: "A white T-shirt." },
+        { word: "sweater", cn: "毛衣", ipa: "/ˈswetər/", example: "Wear a sweater." },
+        { word: "socks", cn: "袜子", ipa: "/sɑːks/", example: "These socks are mine." },
+        { word: "shoes", cn: "鞋子", ipa: "/ʃuːz/", example: "My shoes are new." },
+      ],
+    },
+
+    /* ============ 五年级 ============ */
+    {
+      grade: "五年级", category: "5上 U1 人物性格", icon: "🧑‍🏫",
+      words: [
+        { word: "old", cn: "年老的", ipa: "/oʊld/", example: "My grandpa is old." },
+        { word: "young", cn: "年轻的", ipa: "/jʌŋ/", example: "She is young." },
+        { word: "funny", cn: "滑稽的", ipa: "/ˈfʌni/", example: "Our teacher is funny." },
+        { word: "kind", cn: "和蔼的", ipa: "/kaɪnd/", example: "He is kind." },
+        { word: "strict", cn: "严格的", ipa: "/strɪkt/", example: "Mr Li is strict." },
+        { word: "polite", cn: "有礼貌的", ipa: "/pəˈlaɪt/", example: "Be polite." },
+        { word: "hard-working", cn: "勤奋的", ipa: "/ˌhɑːrdˈwɜːrkɪŋ/", example: "She is hard-working." },
+        { word: "helpful", cn: "乐于助人的", ipa: "/ˈhelpfl/", example: "He is helpful." },
+        { word: "clever", cn: "聪明的", ipa: "/ˈklevər/", example: "What a clever boy!" },
+        { word: "shy", cn: "害羞的", ipa: "/ʃaɪ/", example: "She is a little shy." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U2 星期", icon: "📅",
+      words: [
+        { word: "Monday", cn: "星期一", ipa: "/ˈmʌndeɪ/", example: "We have English on Monday." },
+        { word: "Tuesday", cn: "星期二", ipa: "/ˈtuːzdeɪ/", example: "It's Tuesday today." },
+        { word: "Wednesday", cn: "星期三", ipa: "/ˈwenzdeɪ/", example: "I have PE on Wednesday." },
+        { word: "Thursday", cn: "星期四", ipa: "/ˈθɜːrzdeɪ/", example: "Thursday is busy." },
+        { word: "Friday", cn: "星期五", ipa: "/ˈfraɪdeɪ/", example: "I like Friday." },
+        { word: "Saturday", cn: "星期六", ipa: "/ˈsætərdeɪ/", example: "No school on Saturday." },
+        { word: "Sunday", cn: "星期日", ipa: "/ˈsʌndeɪ/", example: "We rest on Sunday." },
+        { word: "weekend", cn: "周末", ipa: "/ˈwiːkend/", example: "Have a nice weekend!" },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U3 食物口味", icon: "🥪",
+      words: [
+        { word: "sandwich", cn: "三明治", ipa: "/ˈsænwɪtʃ/", example: "I'd like a sandwich." },
+        { word: "salad", cn: "沙拉", ipa: "/ˈsæləd/", example: "A fresh salad." },
+        { word: "ice cream", cn: "冰激凌", ipa: "/ˈaɪs kriːm/", example: "I love ice cream." },
+        { word: "tea", cn: "茶", ipa: "/tiː/", example: "Have a cup of tea." },
+        { word: "fresh", cn: "新鲜的", ipa: "/freʃ/", example: "The salad is fresh." },
+        { word: "healthy", cn: "健康的", ipa: "/ˈhelθi/", example: "Eat healthy food." },
+        { word: "delicious", cn: "美味的", ipa: "/dɪˈlɪʃəs/", example: "It's delicious!" },
+        { word: "sweet", cn: "甜的", ipa: "/swiːt/", example: "The cake is sweet." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U4 能力 can", icon: "🎤",
+      words: [
+        { word: "sing", cn: "唱歌", ipa: "/sɪŋ/", example: "I can sing." },
+        { word: "dance", cn: "跳舞", ipa: "/dæns/", example: "She can dance." },
+        { word: "swim", cn: "游泳", ipa: "/swɪm/", example: "Can you swim?" },
+        { word: "cook", cn: "做饭", ipa: "/kʊk/", example: "He can cook." },
+        { word: "draw", cn: "画画", ipa: "/drɔː/", example: "I can draw cartoons." },
+        { word: "kung fu", cn: "功夫", ipa: "/ˌkʌŋ ˈfuː/", example: "He can do kung fu." },
+        { word: "basketball", cn: "篮球", ipa: "/ˈbæskɪtbɔːl/", example: "Play basketball." },
+        { word: "speak", cn: "说(语言)", ipa: "/spiːk/", example: "I can speak English." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5上 U6 自然公园", icon: "🏞️",
+      words: [
+        { word: "river", cn: "河流", ipa: "/ˈrɪvər/", example: "A long river." },
+        { word: "lake", cn: "湖", ipa: "/leɪk/", example: "A big lake." },
+        { word: "forest", cn: "森林", ipa: "/ˈfɔːrɪst/", example: "A green forest." },
+        { word: "path", cn: "小路", ipa: "/pæθ/", example: "Walk on the path." },
+        { word: "flower", cn: "花", ipa: "/ˈflaʊər/", example: "Beautiful flowers." },
+        { word: "grass", cn: "草", ipa: "/ɡræs/", example: "The grass is green." },
+        { word: "tree", cn: "树", ipa: "/triː/", example: "A tall tree." },
+        { word: "mountain", cn: "山", ipa: "/ˈmaʊntn/", example: "A high mountain." },
+        { word: "bridge", cn: "桥", ipa: "/brɪdʒ/", example: "Cross the bridge." },
+      ],
+    },
+    {
+      grade: "五年级", category: "5下 U2 季节", icon: "🍂",
+      words: [
+        { word: "spring", cn: "春天", ipa: "/sprɪŋ/", example: "It's warm in spring." },
+        { word: "summer", cn: "夏天", ipa: "/ˈsʌmər/", example: "Summer is hot." },
+        { word: "autumn", cn: "秋天", ipa: "/ˈɔːtəm/", example: "Autumn is cool." },
+        { word: "winter", cn: "冬天", ipa: "/ˈwɪntər/", example: "Winter is cold." },
+        { word: "season", cn: "季节", ipa: "/ˈsiːzn/", example: "Which season do you like?" },
+      ],
+    },
+    {
+      grade: "五年级", category: "5下 U3 月份", icon: "🗓️",
+      words: [
+        { word: "January", cn: "一月", ipa: "/ˈdʒænjueri/", example: "January is cold." },
+        { word: "February", cn: "二月", ipa: "/ˈfebrueri/", example: "Spring Festival is in February." },
+        { word: "March", cn: "三月", ipa: "/mɑːrtʃ/", example: "Tree Planting Day is in March." },
+        { word: "April", cn: "四月", ipa: "/ˈeɪprəl/", example: "April is rainy." },
+        { word: "May", cn: "五月", ipa: "/meɪ/", example: "May is warm." },
+        { word: "June", cn: "六月", ipa: "/dʒuːn/", example: "Children's Day is in June." },
+        { word: "July", cn: "七月", ipa: "/dʒuˈlaɪ/", example: "July is hot." },
+        { word: "August", cn: "八月", ipa: "/ˈɔːɡəst/", example: "August is hot, too." },
+        { word: "September", cn: "九月", ipa: "/sepˈtembər/", example: "School starts in September." },
+        { word: "October", cn: "十月", ipa: "/ɑːkˈtoʊbər/", example: "National Day is in October." },
+        { word: "November", cn: "十一月", ipa: "/noʊˈvembər/", example: "November is cool." },
+        { word: "December", cn: "十二月", ipa: "/dɪˈsembər/", example: "Christmas is in December." },
+      ],
+    },
+
+    /* ============ 六年级 ============ */
+    {
+      grade: "六年级", category: "6上 U1 问路/地点", icon: "🧭",
+      words: [
+        { word: "science museum", cn: "科学博物馆", ipa: "/ˈsaɪəns mjuˈziːəm/", example: "Go to the science museum." },
+        { word: "post office", cn: "邮局", ipa: "/ˈpoʊst ɔːfɪs/", example: "Where is the post office?" },
+        { word: "bookstore", cn: "书店", ipa: "/ˈbʊkstɔːr/", example: "Buy books at the bookstore." },
+        { word: "cinema", cn: "电影院", ipa: "/ˈsɪnəmə/", example: "Let's go to the cinema." },
+        { word: "hospital", cn: "医院", ipa: "/ˈhɑːspɪtl/", example: "The hospital is near." },
+        { word: "crossing", cn: "十字路口", ipa: "/ˈkrɔːsɪŋ/", example: "Turn left at the crossing." },
+        { word: "turn left", cn: "向左转", ipa: "/tɜːrn left/", example: "Turn left here." },
+        { word: "turn right", cn: "向右转", ipa: "/tɜːrn raɪt/", example: "Turn right at the corner." },
+        { word: "straight", cn: "直地", ipa: "/streɪt/", example: "Go straight ahead." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U2 交通方式", icon: "🚌",
+      words: [
+        { word: "bus", cn: "公共汽车", ipa: "/bʌs/", example: "Go by bus." },
+        { word: "train", cn: "火车", ipa: "/treɪn/", example: "Go by train." },
+        { word: "plane", cn: "飞机", ipa: "/pleɪn/", example: "Go by plane." },
+        { word: "ship", cn: "轮船", ipa: "/ʃɪp/", example: "Go by ship." },
+        { word: "subway", cn: "地铁", ipa: "/ˈsʌbweɪ/", example: "Go by subway." },
+        { word: "on foot", cn: "步行", ipa: "/ɑːn fʊt/", example: "I go to school on foot." },
+        { word: "traffic light", cn: "红绿灯", ipa: "/ˈtræfɪk laɪt/", example: "Watch the traffic lights." },
+        { word: "slow down", cn: "减速", ipa: "/sloʊ daʊn/", example: "Slow down and stop." },
+        { word: "wait", cn: "等待", ipa: "/weɪt/", example: "Stop and wait." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U4 爱好", icon: "🎯",
+      words: [
+        { word: "hobby", cn: "爱好", ipa: "/ˈhɑːbi/", example: "What's your hobby?" },
+        { word: "riding a bike", cn: "骑自行车", ipa: "/ˈraɪdɪŋ ə baɪk/", example: "I like riding a bike." },
+        { word: "diving", cn: "跳水", ipa: "/ˈdaɪvɪŋ/", example: "He likes diving." },
+        { word: "playing the violin", cn: "拉小提琴", ipa: "/ˈpleɪɪŋ ðə ˌvaɪəˈlɪn/", example: "She likes playing the violin." },
+        { word: "making kites", cn: "制作风筝", ipa: "/ˈmeɪkɪŋ kaɪts/", example: "We like making kites." },
+        { word: "collecting stamps", cn: "集邮", ipa: "/kəˈlektɪŋ stæmps/", example: "He likes collecting stamps." },
+        { word: "swimming", cn: "游泳", ipa: "/ˈswɪmɪŋ/", example: "Swimming is fun." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U5 职业", icon: "👮",
+      words: [
+        { word: "factory worker", cn: "工厂工人", ipa: "/ˈfæktri wɜːrkər/", example: "He is a factory worker." },
+        { word: "postman", cn: "邮递员", ipa: "/ˈpoʊstmən/", example: "The postman is busy." },
+        { word: "businessman", cn: "商人", ipa: "/ˈbɪznəsmæn/", example: "She is a businesswoman." },
+        { word: "police officer", cn: "警察", ipa: "/pəˈliːs ɔːfɪsər/", example: "He is a police officer." },
+        { word: "fisherman", cn: "渔民", ipa: "/ˈfɪʃərmən/", example: "The fisherman has a boat." },
+        { word: "scientist", cn: "科学家", ipa: "/ˈsaɪəntɪst/", example: "I want to be a scientist." },
+        { word: "pilot", cn: "飞行员", ipa: "/ˈpaɪlət/", example: "A pilot flies planes." },
+        { word: "coach", cn: "教练", ipa: "/koʊtʃ/", example: "He is a football coach." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6上 U6 情绪", icon: "😊",
+      words: [
+        { word: "happy", cn: "高兴的", ipa: "/ˈhæpi/", example: "I feel happy." },
+        { word: "sad", cn: "难过的", ipa: "/sæd/", example: "Don't be sad." },
+        { word: "angry", cn: "生气的", ipa: "/ˈæŋɡri/", example: "He is angry." },
+        { word: "afraid", cn: "害怕的", ipa: "/əˈfreɪd/", example: "Are you afraid?" },
+        { word: "worried", cn: "担心的", ipa: "/ˈwɜːrid/", example: "She looks worried." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6下 U1 比较级", icon: "📏",
+      words: [
+        { word: "taller", cn: "更高的", ipa: "/ˈtɔːlər/", example: "I'm taller than you." },
+        { word: "shorter", cn: "更矮的", ipa: "/ˈʃɔːrtər/", example: "He is shorter than me." },
+        { word: "stronger", cn: "更强壮的", ipa: "/ˈstrɔːŋɡər/", example: "He is stronger." },
+        { word: "older", cn: "年龄更大的", ipa: "/ˈoʊldər/", example: "She is older than him." },
+        { word: "younger", cn: "更年轻的", ipa: "/ˈjʌŋɡər/", example: "I'm younger than my brother." },
+        { word: "bigger", cn: "更大的", ipa: "/ˈbɪɡər/", example: "My feet are bigger." },
+        { word: "heavier", cn: "更重的", ipa: "/ˈheviər/", example: "The bag is heavier." },
+        { word: "longer", cn: "更长的", ipa: "/ˈlɔːŋɡər/", example: "My hair is longer." },
+        { word: "thinner", cn: "更瘦的", ipa: "/ˈθɪnər/", example: "He is thinner now." },
+      ],
+    },
+    {
+      grade: "六年级", category: "6下 U3 过去式动作", icon: "🧳",
+      words: [
+        { word: "went", cn: "去(go过去式)", ipa: "/went/", example: "I went to Beijing." },
+        { word: "ate", cn: "吃(eat过去式)", ipa: "/eɪt/", example: "I ate good food." },
+        { word: "saw", cn: "看见(see过去式)", ipa: "/sɔː/", example: "We saw a film." },
+        { word: "rode", cn: "骑(ride过去式)", ipa: "/roʊd/", example: "I rode a horse." },
+        { word: "did", cn: "做(do过去式)", ipa: "/dɪd/", example: "What did you do?" },
+        { word: "bought", cn: "买(buy过去式)", ipa: "/bɔːt/", example: "I bought a gift." },
+        { word: "took pictures", cn: "拍照", ipa: "/tʊk ˈpɪktʃərz/", example: "We took pictures." },
+      ],
+    },
   ],
 
-  /* ---------------- 语法选择题（教材核心句型） ---------------- */
+  /* ---------------- 语法选择题（覆盖各年级核心句型） ---------------- */
   grammar: [
-    {
-      q: "—Hello! What's your ___? —My name is Mike.",
-      options: ["name", "color", "book", "dog"],
-      answer: 0,
-      explain: "问名字用 What's your name?（你叫什么名字？）。",
-    },
-    {
-      q: "—How ___ you? —I'm fine, thank you.",
-      options: ["is", "am", "are", "do"],
-      answer: 2,
-      explain: "How are you? 是固定问候句型，主语 you 用 are。",
-    },
-    {
-      q: "This ___ my father.",
-      options: ["am", "is", "are", "be"],
-      answer: 1,
-      explain: "This is... 介绍某人，单数用 is。",
-    },
-    {
-      q: "I ___ a ruler and two pencils.",
-      options: ["am", "has", "have", "is"],
-      answer: 2,
-      explain: "主语 I 表示“有”用 have。",
-    },
-    {
-      q: "—___ is my eraser? —It's on the desk.",
-      options: ["What", "Who", "Where", "How"],
-      answer: 2,
-      explain: "问位置用 Where（在哪里），回答 It's on the desk。",
-    },
-    {
-      q: "The pen is ___ the pencil-case.",
-      options: ["in", "to", "and", "a"],
-      answer: 0,
-      explain: "在……里面用介词 in。",
-    },
-    {
-      q: "—Do you like pears? —Yes, I ___.",
-      options: ["am", "do", "does", "like"],
-      answer: 1,
-      explain: "Do you...? 的肯定回答用 Yes, I do.",
-    },
-    {
-      q: "—How many books? —___ books.",
-      options: ["Four", "Color", "Red", "Where"],
-      answer: 0,
-      explain: "How many 问数量，要用数字回答，如 Four。",
-    },
-    {
-      q: "I can see ___ elephant.",
-      options: ["a", "an", "two", "the"],
-      answer: 1,
-      explain: "elephant 以元音音素开头，用 an。",
-    },
-    {
-      q: "Colour ___ cat black, please.",
-      options: ["a", "the", "an", "two"],
-      answer: 1,
-      explain: "特指这只猫用 the cat。",
-    },
-    {
-      q: "—Is this your bag? —___, it is.",
-      options: ["Yes", "No", "Not", "Don't"],
-      answer: 0,
-      explain: "Is this...? 的肯定回答用 Yes, it is.",
-    },
-    {
-      q: "Let's ___ to school.",
-      options: ["goes", "going", "go", "went"],
-      answer: 2,
-      explain: "Let's 后面跟动词原形 go。",
-    },
+    { q: "—Hello! What's your ___? —My name is Mike.", options: ["name", "color", "book", "dog"], answer: 0, explain: "问名字用 What's your name?（三上 U1）。" },
+    { q: "—How ___ you? —I'm fine, thank you.", options: ["is", "am", "are", "do"], answer: 2, explain: "How are you? 是固定问候，主语 you 用 are。" },
+    { q: "This ___ my father.", options: ["am", "is", "are", "be"], answer: 1, explain: "This is... 介绍单数用 is。" },
+    { q: "I ___ a ruler and two pencils.", options: ["am", "has", "have", "is"], answer: 2, explain: "主语 I 表示“有”用 have。" },
+    { q: "—___ is my eraser? —It's on the desk.", options: ["What", "Who", "Where", "How"], answer: 2, explain: "问位置用 Where。" },
+    { q: "—Do you like pears? —Yes, I ___.", options: ["am", "do", "does", "like"], answer: 1, explain: "Do you...? 的肯定回答用 Yes, I do.（三下 U5）" },
+    { q: "—How many books? —___ books.", options: ["Four", "Color", "Red", "Where"], answer: 0, explain: "How many 问数量，用数字回答。" },
+    { q: "There ___ a big bed in the room.", options: ["is", "are", "am", "be"], answer: 0, explain: "There is + 单数（五上 U5）。" },
+    { q: "—What time is it? —It's 7 o'clock. It's time ___ breakfast.", options: ["to", "for", "at", "in"], answer: 1, explain: "It's time for + 名词（四下 U2）。" },
+    { q: "My father is a doctor. ___ works in a hospital.", options: ["She", "He", "It", "They"], answer: 1, explain: "father 是男性，用 He（四上 U6）。" },
+    { q: "I'm taller ___ my brother.", options: ["then", "than", "that", "as"], answer: 1, explain: "比较级后用 than（六下 U1）。" },
+    { q: "—What can you do? —I can ___.", options: ["sang", "sings", "sing", "singing"], answer: 2, explain: "情态动词 can 后用动词原形（五上 U4）。" },
+    { q: "—How do you go to school? —I go ___ bus.", options: ["on", "by", "in", "to"], answer: 1, explain: "乘交通工具用 by bus（六上 U2）。" },
+    { q: "Last weekend I ___ my room.", options: ["clean", "cleaned", "cleaning", "cleans"], answer: 1, explain: "last weekend 用一般过去时 cleaned（六下 U2）。" },
+    { q: "—Where did you go? —I ___ to the park.", options: ["go", "goes", "went", "going"], answer: 2, explain: "did 引导，动词用过去式 went（六下 U3）。" },
+    { q: "She likes ___ in summer.", options: ["swim", "swims", "swimming", "swam"], answer: 2, explain: "like doing sth，用 swimming（五下 U2）。" },
   ],
 
-  /* ---------------- 听力练习（教材常用句子） ---------------- */
+  /* ---------------- 听力练习 ---------------- */
   listening: [
-    {
-      sentence: "Hello! My name is Sarah.",
-      options: [
-        "Hello! My name is Sarah.",
-        "Hello! My name is Sam.",
-        "Hi! This is my ruler.",
-      ],
-      answer: 0,
-    },
-    {
-      sentence: "I have a red crayon.",
-      options: [
-        "I have a red crayon.",
-        "I have a green crayon.",
-        "I have a red ruler.",
-      ],
-      answer: 0,
-    },
-    {
-      sentence: "Look at the panda. It's so cute.",
-      options: [
-        "Look at the panda. It's so cute.",
-        "Look at the monkey. It's so cute.",
-        "Look at the panda. It's so big.",
-      ],
-      answer: 0,
-    },
-    {
-      sentence: "Where is my pencil-case?",
-      options: [
-        "Where is my pencil-case?",
-        "Where is my pencil?",
-        "What is in your bag?",
-      ],
-      answer: 0,
-    },
-    {
-      sentence: "I'd like some chicken and rice.",
-      options: [
-        "I'd like some chicken and rice.",
-        "I'd like some bread and milk.",
-        "I'd like some chicken and juice.",
-      ],
-      answer: 0,
-    },
-    {
-      sentence: "Do you like bananas?",
-      options: [
-        "Do you like apples?",
-        "Do you like bananas?",
-        "Do you like oranges?",
-      ],
-      answer: 1,
-    },
-    {
-      sentence: "This is my father. He is tall.",
-      options: [
-        "This is my mother. She is tall.",
-        "This is my father. He is tall.",
-        "This is my brother. He is tall.",
-      ],
-      answer: 1,
-    },
-    {
-      sentence: "How many ducks? Six ducks.",
-      options: [
-        "How many ducks? Six ducks.",
-        "How many dogs? Six dogs.",
-        "How many ducks? Seven ducks.",
-      ],
-      answer: 0,
-    },
+    { sentence: "Hello! My name is Sarah.", options: ["Hello! My name is Sarah.", "Hello! My name is Sam.", "Hi! This is my ruler."], answer: 0 },
+    { sentence: "I have a red crayon.", options: ["I have a red crayon.", "I have a green crayon.", "I have a red ruler."], answer: 0 },
+    { sentence: "Look at the panda. It's so cute.", options: ["Look at the panda. It's so cute.", "Look at the monkey. It's so cute.", "Look at the panda. It's so big."], answer: 0 },
+    { sentence: "It's cold and snowy in winter.", options: ["It's cold and snowy in winter.", "It's hot and sunny in summer.", "It's cool and windy in autumn."], answer: 0 },
+    { sentence: "My father is a policeman.", options: ["My father is a postman.", "My father is a policeman.", "My brother is a policeman."], answer: 1 },
+    { sentence: "I go to school by subway.", options: ["I go to school by bus.", "I go to school by subway.", "I go to school on foot."], answer: 1 },
+    { sentence: "I'm taller and stronger than him.", options: ["I'm taller and stronger than him.", "I'm shorter and thinner than him.", "I'm older and stronger than him."], answer: 0 },
+    { sentence: "Last weekend I watched TV at home.", options: ["Last weekend I watched TV at home.", "Last weekend I played football.", "Last weekend I washed my clothes."], answer: 0 },
   ],
 
-  /* ---------------- 阅读理解（用教材词汇编写） ---------------- */
+  /* ---------------- 阅读理解 ---------------- */
   reading: [
     {
       title: "My Pencil-case",
-      passage:
-        "Hello! I'm Lily. This is my pencil-case. It is blue. Look! I have two pens, three pencils and a ruler. I have a red eraser, too. I like my pencil-case very much.",
+      passage: "Hello! I'm Lily. This is my pencil-case. It is blue. Look! I have two pens, three pencils and a ruler. I have a red eraser, too. I like my pencil-case very much.",
       questions: [
-        {
-          q: "What colour is the pencil-case?",
-          options: ["Red", "Blue", "Green"],
-          answer: 1,
-        },
-        {
-          q: "How many pencils does Lily have?",
-          options: ["Two", "Three", "Four"],
-          answer: 1,
-        },
-        {
-          q: "What colour is the eraser?",
-          options: ["Red", "Blue", "Black"],
-          answer: 0,
-        },
+        { q: "What colour is the pencil-case?", options: ["Red", "Blue", "Green"], answer: 1 },
+        { q: "How many pencils does Lily have?", options: ["Two", "Three", "Four"], answer: 1 },
+        { q: "What colour is the eraser?", options: ["Red", "Blue", "Black"], answer: 0 },
       ],
     },
     {
-      title: "My Family",
-      passage:
-        "This is my family. My father is a teacher. My mother likes apples and pears. I have a little brother. He is two. We have a dog. Its name is Lucky. I love my family.",
+      title: "My Week",
+      passage: "I'm Tom. I'm busy at school. On Monday I have English and music. On Wednesday I have PE. I love PE because I can play football. On the weekend I do my homework and visit my grandparents. I'm happy on the weekend.",
       questions: [
-        {
-          q: "What does the father do?",
-          options: ["A teacher", "A student", "A doctor"],
-          answer: 0,
-        },
-        {
-          q: "What fruit does the mother like?",
-          options: ["Bananas and grapes", "Apples and pears", "Oranges"],
-          answer: 1,
-        },
-        {
-          q: "What is the dog's name?",
-          options: ["Lily", "Lucky", "Mike"],
-          answer: 1,
-        },
+        { q: "What does Tom have on Monday?", options: ["English and music", "PE and art", "Maths and science"], answer: 0 },
+        { q: "Why does Tom love PE?", options: ["He can sing", "He can play football", "He can swim"], answer: 1 },
+        { q: "What does Tom do on the weekend?", options: ["Plays computer games", "Visits his grandparents", "Goes to school"], answer: 1 },
       ],
     },
     {
-      title: "At the Zoo",
-      passage:
-        "Today we are at the zoo. Look at the animals! The panda is black and white. The monkey is brown. It can jump. The elephant is big and grey. I like the panda best. It is so cute!",
+      title: "Our Trip",
+      passage: "Last weekend my family went to a nature park. We saw a big lake and many trees. My father took many pictures. We ate a picnic near the river. In the afternoon I rode a bike with my brother. We were tired but very happy.",
       questions: [
-        {
-          q: "What colour is the panda?",
-          options: ["Brown", "Black and white", "Grey"],
-          answer: 1,
-        },
-        {
-          q: "What can the monkey do?",
-          options: ["Swim", "Fly", "Jump"],
-          answer: 2,
-        },
-        {
-          q: "Which animal does the writer like best?",
-          options: ["The panda", "The monkey", "The elephant"],
-          answer: 0,
-        },
+        { q: "Where did the family go?", options: ["A zoo", "A nature park", "A cinema"], answer: 1 },
+        { q: "What did the father do?", options: ["Took many pictures", "Rode a bike", "Cooked dinner"], answer: 0 },
+        { q: "How did they feel?", options: ["Sad", "Angry", "Happy"], answer: 2 },
       ],
     },
   ],

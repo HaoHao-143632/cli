@@ -17,6 +17,7 @@
     <nav class="tabs">
       <button class="tab active" data-tab="home">🏠 首页</button>
       <button class="tab" data-tab="vocab">🃏 单词卡片</button>
+      <button class="tab" data-tab="spell">🔤 单词听写</button>
       <button class="tab" data-tab="grammar">✏️ 语法练习</button>
       <button class="tab" data-tab="listening">🎧 听力练习</button>
       <button class="tab" data-tab="reading">📖 阅读理解</button>
@@ -41,7 +42,8 @@
       <div class="card">
         <h2 class="section-title">📚 各模块介绍</h2>
         <ul style="margin-left:18px; color:var(--muted); line-height:2">
-          <li><b>单词卡片</b>：分类记单词，点击翻面看中文和例句，可点喇叭跟读。</li>
+          <li><b>单词卡片</b>：按年级单元记单词，点击翻面看中文和例句，可点喇叭跟读。</li>
+          <li><b>单词听写</b>：听单词发音 + 看中文提示，把单词拼写出来。</li>
           <li><b>语法练习</b>：选择题形式，答题后立即给出解析。</li>
           <li><b>听力练习</b>：浏览器朗读句子，选出你听到的内容。</li>
           <li><b>阅读理解</b>：阅读短文并回答问题，可朗读全文。</li>
@@ -53,7 +55,8 @@
     <section class="panel" id="panel-vocab">
       <div class="card">
         <h2 class="section-title">🃏 单词卡片</h2>
-        <p class="section-sub">先选分类，点击卡片翻面看中文。</p>
+        <p class="section-sub">先选年级，再选单元，点击卡片翻面看中文。</p>
+        <div class="chips" id="vocab-grades"></div>
         <div class="chips" id="vocab-chips"></div>
         <div class="flashcard" id="flash"></div>
         <div class="card-counter" id="vocab-counter"></div>
@@ -61,6 +64,16 @@
           <button class="btn ghost" id="vocab-prev">← 上一个</button>
           <button class="btn" id="vocab-next">下一个 →</button>
         </div>
+      </div>
+    </section>
+
+    <!-- 单词听写 -->
+    <section class="panel" id="panel-spell">
+      <div class="card">
+        <h2 class="section-title">🔤 单词听写</h2>
+        <p class="section-sub">选年级 → 点喇叭听单词 → 拼写出来。看中文提示，写对得分！</p>
+        <div class="chips" id="spell-grades"></div>
+        <div id="spell-area"></div>
       </div>
     </section>
 

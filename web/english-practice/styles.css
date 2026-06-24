@@ -230,6 +230,28 @@ footer.site { text-align: center; color: var(--muted); font-size: .85rem; margin
 }
 .small-audio:hover { background: #e0e3fb; }
 
+/* ---- Spelling ---- */
+.spell-input {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 14px auto;
+  padding: 13px 16px;
+  font-size: 1.4rem;
+  text-align: center;
+  letter-spacing: 2px;
+  border: 2px solid #e6e8f5;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color .2s;
+}
+.spell-input:focus { border-color: var(--primary); }
+.spell-input.ok { border-color: var(--green); background: #e6f8ee; }
+.spell-input.bad { border-color: var(--red); background: #fdeceb; }
+.spell-feedback { min-height: 24px; margin: 8px 0 4px; font-size: 1rem; }
+.spell-feedback.ok { color: var(--green); }
+.spell-feedback.bad { color: var(--red); }
+
 @media (max-width: 520px) {
   header.site h1 { font-size: 1.6rem; }
   .flash-word { font-size: 2rem; }

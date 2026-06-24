@@ -65,15 +65,34 @@
     $("#stat-total").textContent = s.total;
   }
 
+  // 年级列表（按出现顺序去重）
+  const grades = D.vocabulary.reduce((a, c) => (a.includes(c.grade) ? a : a.concat(c.grade)), []);
+
   /* ================= 单词卡片 ================= */
   const Vocab = {
-    cat: 0,
+    grade: grades[0],
+    cat: 0, // 在当前年级内的下标
     idx: 0,
     init() {
+      // 年级选择
+      const gbox = $("#vocab-grades");
+      gbox.innerHTML = "";
+      grades.forEach((g) => {
+        const chip = el("button", "chip" + (g === this.grade ? " active" : ""), g);
+        chip.onclick = () => {
+          this.grade = g;
+          this.cat = 0;
+          this.idx = 0;
+          this.init();
+        };
+        gbox.appendChild(chip);
+      });
+      // 当前年级的单元
+      const units = D.vocabulary.filter((c) => c.grade === this.grade);
       const chips = $("#vocab-chips");
       chips.innerHTML = "";
-      D.vocabulary.forEach((c, i) => {
-        const chip = el("button", "chip" + (i === 0 ? " active" : ""), c.icon + " " + c.category);
+      units.forEach((c, i) => {
+        const chip = el("button", "chip" + (i === this.cat ? " active" : ""), c.icon + " " + c.category);
         chip.onclick = () => {
           this.cat = i;
           this.idx = 0;
@@ -85,8 +104,11 @@
       });
       this.render();
     },
+    units() {
+      return D.vocabulary.filter((c) => c.grade === this.grade);
+    },
     render() {
-      const words = D.vocabulary[this.cat].words;
+      const words = this.units()[this.cat].words;
       const w = words[this.idx];
       $("#flash").className = "flashcard";
       $("#flash").innerHTML = `
@@ -110,14 +132,121 @@
       $("#flash").classList.toggle("flipped");
     },
     next() {
-      const words = D.vocabulary[this.cat].words;
+      const words = this.units()[this.cat].words;
       this.idx = (this.idx + 1) % words.length;
       this.render();
     },
     prev() {
-      const words = D.vocabulary[this.cat].words;
+      const words = this.units()[this.cat].words;
       this.idx = (this.idx - 1 + words.length) % words.length;
       this.render();
+    },
+  };
+
+  /* ================= 单词听写 ================= */
+  const Spell = {
+    grade: grades[0],
+    list: [],
+    i: 0,
+    correct: 0,
+    init() {
+      const gbox = $("#spell-grades");
+      gbox.innerHTML = "";
+      grades.forEach((g) => {
+        const chip = el("button", "chip" + (g === this.grade ? " active" : ""), g);
+        chip.onclick = () => {
+          this.grade = g;
+          gbox.querySelectorAll(".chip").forEach((x) => x.classList.remove("active"));
+          chip.classList.add("active");
+          this.start();
+        };
+        gbox.appendChild(chip);
+      });
+      this.start();
+    },
+    start() {
+      // 从该年级所有单元里随机抽 10 个单词（跳过含空格的词组，便于拼写）
+      const pool = D.vocabulary
+        .filter((c) => c.grade === this.grade)
+        .flatMap((c) => c.words)
+        .filter((w) => !/\s/.test(w.word));
+      this.list = shuffle(pool).slice(0, 10);
+      this.i = 0;
+      this.correct = 0;
+      this.show();
+    },
+    show() {
+      const area = $("#spell-area");
+      if (this.i >= this.list.length) return this.finish();
+      const w = this.list[this.i];
+      area.innerHTML = `
+        <div class="progress-bar"><div class="progress-fill" style="width:${(this.i / this.list.length) * 100}%"></div></div>
+        <div style="text-align:center">
+          <button class="play-big" id="spell-play">🔊</button>
+          <div class="section-sub">第 ${this.i + 1} / ${this.list.length} 个 · 中文提示：<b style="color:var(--text)">${w.cn}</b></div>
+          <input id="spell-input" class="spell-input" placeholder="在这里拼写单词…" autocomplete="off" autocapitalize="off" spellcheck="false" />
+          <div id="spell-feedback" class="spell-feedback"></div>
+          <div class="btn-row" style="justify-content:center">
+            <button class="btn ghost" id="spell-again">🔊 再听一次</button>
+            <button class="btn" id="spell-check">提交</button>
+          </div>
+        </div>`;
+      const input = $("#spell-input");
+      const play = () => speak(w.word);
+      $("#spell-play").onclick = play;
+      $("#spell-again").onclick = play;
+      $("#spell-check").onclick = () => this.check();
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") this.check();
+      });
+      input.focus();
+      setTimeout(play, 300); // 进入自动读一次
+    },
+    check() {
+      const w = this.list[this.i];
+      const input = $("#spell-input");
+      if (input.disabled) return; // 已提交
+      const ans = input.value.trim().toLowerCase();
+      const right = w.word.toLowerCase();
+      const fb = $("#spell-feedback");
+      input.disabled = true;
+      $("#spell-check").disabled = true;
+      if (ans === right) {
+        this.correct++;
+        input.classList.add("ok");
+        fb.innerHTML = `✅ 正确！<b>${w.word}</b> — ${w.cn}`;
+        fb.className = "spell-feedback ok";
+      } else {
+        input.classList.add("bad");
+        fb.innerHTML = `❌ 正确拼写：<b>${w.word}</b>　你写的：${ans || "(空)"}`;
+        fb.className = "spell-feedback bad";
+      }
+      const next = el("button", "btn", this.i < this.list.length - 1 ? "下一个 →" : "看结果 🎉");
+      next.onclick = () => {
+        this.i++;
+        this.show();
+      };
+      const row = el("div", "btn-row");
+      row.style.justifyContent = "center";
+      row.appendChild(next);
+      $("#spell-area").appendChild(row);
+    },
+    finish() {
+      Store.add(this.correct, this.list.length);
+      const pct = Math.round((this.correct / this.list.length) * 100);
+      const emoji = pct === 100 ? "🏆" : pct >= 60 ? "😃" : "💪";
+      $("#spell-area").innerHTML = `
+        <div class="result">
+          <div class="emoji">${emoji}</div>
+          <div class="score">${this.correct} / ${this.list.length}</div>
+          <p>${pct === 100 ? "全对！拼写小能手！" : pct >= 60 ? "不错，继续练习！" : "多听多写就能记住啦！"}</p>
+        </div>`;
+      const again = el("button", "btn", "再来一组 🔄");
+      again.onclick = () => this.start();
+      const row = el("div", "btn-row");
+      row.style.justifyContent = "center";
+      row.appendChild(again);
+      $("#spell-area").appendChild(row);
     },
   };
 
@@ -251,6 +380,7 @@
     if (name === "listening") initListening();
     if (name === "reading") initReading();
     if (name === "vocab") Vocab.init();
+    if (name === "spell") Spell.init();
     if (name === "home") renderStats();
   }
 
