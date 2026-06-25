@@ -99,6 +99,14 @@ main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
   border-radius: 14px;
   box-shadow: var(--shadow);
 }
+.info-item {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.info-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(44, 53, 80, 0.14);
+}
 .info-item span { font-size: 30px; }
 .info-item b { color: var(--ink); }
 .info-item div { font-size: 14px; color: var(--muted); }

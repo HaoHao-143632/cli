@@ -107,6 +107,14 @@ main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
   border-radius: 14px;
   box-shadow: var(--shadow);
 }
+.info-item {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.info-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(44, 53, 80, 0.14);
+}
 .info-item span { font-size: 30px; }
 .info-item b { color: var(--ink); }
 .info-item div { font-size: 14px; color: var(--muted); }
@@ -318,9 +326,9 @@ main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
       <div class="grade-grid" id="grade-grid"><!-- 年级卡片由 JS 渲染 --></div>
 
       <div class="info-strip">
-        <div class="info-item"><span>🎯</span><div><b>同步人教版</b><br/>章节顺序与课本一致</div></div>
-        <div class="info-item"><span>♾️</span><div><b>题目无限刷</b><br/>每题随机生成不重复</div></div>
-        <div class="info-item"><span>✅</span><div><b>即时批改</b><br/>答错给出正确答案和提示</div></div>
+        <div class="info-item" id="info-sync"><span>🎯</span><div><b>同步人教版</b><br/>章节顺序与课本一致 · 点此选年级</div></div>
+        <div class="info-item" id="info-random"><span>♾️</span><div><b>题目无限刷</b><br/>点此随机抽题立即开练 →</div></div>
+        <div class="info-item" id="info-grade"><span>✅</span><div><b>即时批改</b><br/>答错给出正确答案和提示</div></div>
       </div>
     </section>
 
@@ -1251,6 +1259,29 @@ function openPractice(unit) {
   nextQuestion();
 }
 
+// 从所有年级里随机抽一个有练习的单元,直接开始做题(“题目无限刷”入口)
+function startRandomPractice() {
+  const pool = [];
+  Object.keys(CURRICULUM).forEach((g) => {
+    CURRICULUM[g].volumes.forEach((vol) => {
+      vol.units.forEach((unit) => {
+        if (GENERATORS[unit.skill]) pool.push({ g, unit });
+      });
+    });
+  });
+  const choice = pool[Math.floor(Math.random() * pool.length)];
+  STATE.grade = choice.g;
+  document.documentElement.style.setProperty("--theme", CURRICULUM[choice.g].color);
+  openPractice(choice.unit);
+}
+
+// 平滑滚动到年级选择区
+function scrollToGrades() {
+  backToHome();
+  const grid = document.getElementById("grade-grid");
+  if (grid) grid.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 function nextQuestion() {
   const gen = GENERATORS[STATE.unit.skill];
   STATE.current = gen();
@@ -1327,6 +1358,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("nav-home").onclick = backToHome;
   document.getElementById("back-grade").onclick = backToGrade;
   document.getElementById("back-home").onclick = backToHome;
+
+  // 首页底部三张特点卡片:点击也有反应
+  document.getElementById("info-sync").onclick = scrollToGrades;
+  document.getElementById("info-grade").onclick = scrollToGrades;
+  document.getElementById("info-random").onclick = startRandomPractice;
 
   document.getElementById("btn-hint").onclick = () => {
     const box = document.getElementById("hint-box");

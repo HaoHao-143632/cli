@@ -380,6 +380,29 @@ function openPractice(unit) {
   nextQuestion();
 }
 
+// 从所有年级里随机抽一个有练习的单元,直接开始做题(“题目无限刷”入口)
+function startRandomPractice() {
+  const pool = [];
+  Object.keys(CURRICULUM).forEach((g) => {
+    CURRICULUM[g].volumes.forEach((vol) => {
+      vol.units.forEach((unit) => {
+        if (GENERATORS[unit.skill]) pool.push({ g, unit });
+      });
+    });
+  });
+  const choice = pool[Math.floor(Math.random() * pool.length)];
+  STATE.grade = choice.g;
+  document.documentElement.style.setProperty("--theme", CURRICULUM[choice.g].color);
+  openPractice(choice.unit);
+}
+
+// 平滑滚动到年级选择区
+function scrollToGrades() {
+  backToHome();
+  const grid = document.getElementById("grade-grid");
+  if (grid) grid.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 function nextQuestion() {
   const gen = GENERATORS[STATE.unit.skill];
   STATE.current = gen();
@@ -456,6 +479,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("nav-home").onclick = backToHome;
   document.getElementById("back-grade").onclick = backToGrade;
   document.getElementById("back-home").onclick = backToHome;
+
+  // 首页底部三张特点卡片:点击也有反应
+  document.getElementById("info-sync").onclick = scrollToGrades;
+  document.getElementById("info-grade").onclick = scrollToGrades;
+  document.getElementById("info-random").onclick = startRandomPractice;
 
   document.getElementById("btn-hint").onclick = () => {
     const box = document.getElementById("hint-box");
