@@ -1,0 +1,286 @@
+/* ===== 杭州小学数学辅导网站样式 ===== */
+:root {
+  --theme: #ff7e67;
+  --bg: #f6f8fc;
+  --ink: #2c3550;
+  --muted: #7b86a3;
+  --card: #ffffff;
+  --shadow: 0 6px 24px rgba(44, 53, 80, 0.08);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.logo { font-size: 34px; }
+.brand-title { font-size: 20px; font-weight: 800; }
+.brand-sub { font-size: 13px; color: var(--muted); }
+.topbar-tag {
+  font-size: 13px;
+  color: var(--theme);
+  background: color-mix(in srgb, var(--theme) 14%, white);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* ---------- 首页 Hero ---------- */
+.hero { text-align: center; padding: 26px 10px 34px; }
+.hero h1 { font-size: 30px; font-weight: 800; }
+.hero p { color: var(--muted); margin-top: 12px; font-size: 16px; }
+.hero strong { color: var(--theme); }
+
+/* ---------- 年级卡片网格 ---------- */
+.grade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.grade-card {
+  --card-color: #ff7e67;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px 22px;
+  box-shadow: var(--shadow);
+  border-top: 5px solid var(--card-color);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  font-family: inherit;
+}
+.grade-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(44, 53, 80, 0.16);
+}
+.grade-icon { font-size: 42px; }
+.grade-name { font-size: 22px; font-weight: 800; margin-top: 8px; color: var(--card-color); }
+.grade-desc { color: var(--muted); font-size: 14.5px; margin-top: 8px; }
+
+/* ---------- 信息条 ---------- */
+.info-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 38px;
+}
+.info-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.info-item span { font-size: 30px; }
+.info-item b { color: var(--ink); }
+.info-item div { font-size: 14px; color: var(--muted); }
+
+/* ---------- 返回按钮 ---------- */
+.back-btn {
+  border: none;
+  background: var(--card);
+  color: var(--theme);
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  font-family: inherit;
+  font-size: 14.5px;
+}
+.back-btn:hover { background: color-mix(in srgb, var(--theme) 10%, white); }
+
+/* ---------- 年级页 ---------- */
+.grade-heading { font-size: 26px; font-weight: 800; margin-bottom: 18px; }
+.volume { margin-bottom: 30px; }
+.volume-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--theme);
+  padding-left: 12px;
+  border-left: 5px solid var(--theme);
+  margin-bottom: 16px;
+}
+.unit-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.unit-card h4 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+.points { list-style: none; }
+.points li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 6px;
+  color: #46506e;
+  font-size: 15px;
+}
+.points li::before {
+  content: "▸";
+  position: absolute;
+  left: 4px;
+  color: var(--theme);
+  font-weight: 800;
+}
+.btn-practice {
+  margin-top: 14px;
+  border: none;
+  background: var(--theme);
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  transition: filter 0.15s;
+}
+.btn-practice:hover { filter: brightness(1.07); }
+.no-practice {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13.5px;
+  background: #eef1f8;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* ---------- 练习页 ---------- */
+.practice-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 30px 28px;
+  box-shadow: var(--shadow);
+  max-width: 640px;
+  margin: 0 auto;
+}
+.practice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.practice-head h2 { font-size: 21px; font-weight: 800; }
+.score {
+  background: color-mix(in srgb, var(--theme) 14%, white);
+  color: var(--theme);
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+.question {
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+  padding: 30px 10px;
+  background: var(--bg);
+  border-radius: 14px;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+.answer-row { display: flex; gap: 10px; flex-wrap: wrap; }
+#answer {
+  flex: 1;
+  min-width: 180px;
+  padding: 14px 16px;
+  font-size: 17px;
+  border: 2px solid #e2e7f3;
+  border-radius: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+#answer:focus { border-color: var(--theme); }
+.btn-primary {
+  border: none;
+  background: var(--theme);
+  color: #fff;
+  font-weight: 700;
+  padding: 0 26px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  transition: filter 0.15s;
+}
+.btn-primary:hover { filter: brightness(1.07); }
+.btn-hint {
+  margin-top: 14px;
+  border: 1px dashed var(--theme);
+  background: transparent;
+  color: var(--theme);
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+}
+.hint-box {
+  margin-top: 12px;
+  background: #fff8e6;
+  border: 1px solid #ffe2a8;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #8a6d1f;
+  font-size: 14.5px;
+}
+.feedback {
+  margin-top: 18px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 26px;
+}
+.feedback.ok { color: #22a06b; }
+.feedback.no { color: #e5484d; }
+
+/* ---------- 页脚 ---------- */
+.footer {
+  text-align: center;
+  padding: 26px 20px;
+  color: var(--muted);
+  font-size: 13px;
+  border-top: 1px solid #e7ebf5;
+}
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 24px; }
+  .question { font-size: 23px; }
+  .topbar { padding: 12px 16px; }
+}
