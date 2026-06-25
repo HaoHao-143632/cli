@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>杭州小学数学辅导 · 人教版(1–6 年级)</title>
+  <meta name="description" content="杭州小学数学学习辅导网站,覆盖人教版一年级到六年级数学知识点与互动练习。" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="topbar">
+    <div class="brand" id="nav-home">
+      <span class="logo">📚</span>
+      <div>
+        <div class="brand-title">杭州小学数学辅导</div>
+        <div class="brand-sub">人教版 · 一年级 → 六年级</div>
+      </div>
+    </div>
+    <div class="topbar-tag">PEP 同步学习 · 知识点 + 互动练习</div>
+  </header>
+
+  <main>
+    <!-- 首页:年级选择 -->
+    <section id="view-home" class="view">
+      <div class="hero">
+        <h1>选择你的年级,开始今天的数学学习 🚀</h1>
+        <p>每个单元都配有<strong>核心知识点讲解</strong>和<strong>无限量随机练习题</strong>,边学边练,自动批改。</p>
+      </div>
+      <div class="grade-grid" id="grade-grid"><!-- 年级卡片由 JS 渲染 --></div>
+
+      <div class="info-strip">
+        <div class="info-item" id="info-sync"><span>🎯</span><div><b>同步人教版</b><br/>章节顺序与课本一致 · 点此选年级</div></div>
+        <div class="info-item" id="info-random"><span>♾️</span><div><b>题目无限刷</b><br/>点此随机抽题立即开练 →</div></div>
+        <div class="info-item" id="info-grade"><span>✅</span><div><b>即时批改</b><br/>答错给出正确答案和提示</div></div>
+      </div>
+    </section>
+
+    <!-- 年级页:单元与知识点 -->
+    <section id="view-grade" class="view hidden">
+      <button class="back-btn" id="back-home">← 返回首页</button>
+      <h2 id="grade-title" class="grade-heading"></h2>
+      <div id="unit-list"></div>
+    </section>
+
+    <!-- 练习页 -->
+    <section id="view-practice" class="view hidden">
+      <button class="back-btn" id="back-grade">← 返回单元</button>
+      <div class="practice-card">
+        <div class="practice-head">
+          <h2 id="practice-title"></h2>
+          <span class="score" id="score"></span>
+        </div>
+        <div class="question" id="question"></div>
+        <div class="answer-row">
+          <input type="text" id="answer" placeholder="在这里输入答案,按回车提交" autocomplete="off" />
+          <button class="btn-primary" id="btn-check">提交</button>
+          <button class="btn-primary hidden" id="btn-next">下一题 →</button>
+        </div>
+        <button class="btn-hint" id="btn-hint">看提示 💡</button>
+        <div class="hint-box hidden" id="hint-box"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>杭州小学数学学习辅导 · 仅供学习练习使用 · 教材版本:人教版(PEP)</p>
+  </footer>
+
+  <script src="js/curriculum.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

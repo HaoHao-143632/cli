@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>杭州小学数学辅导 · 人教版(1–6 年级)</title>
+  <meta name="description" content="杭州小学数学学习辅导网站,覆盖人教版一年级到六年级数学知识点与互动练习。" />
+  <style>
+/* ===== 杭州小学数学辅导网站样式 ===== */
+:root {
+  --theme: #ff7e67;
+  --bg: #f6f8fc;
+  --ink: #2c3550;
+  --muted: #7b86a3;
+  --card: #ffffff;
+  --shadow: 0 6px 24px rgba(44, 53, 80, 0.08);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.logo { font-size: 34px; }
+.brand-title { font-size: 20px; font-weight: 800; }
+.brand-sub { font-size: 13px; color: var(--muted); }
+.topbar-tag {
+  font-size: 13px;
+  color: var(--theme);
+  background: color-mix(in srgb, var(--theme) 14%, white);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* ---------- 首页 Hero ---------- */
+.hero { text-align: center; padding: 26px 10px 34px; }
+.hero h1 { font-size: 30px; font-weight: 800; }
+.hero p { color: var(--muted); margin-top: 12px; font-size: 16px; }
+.hero strong { color: var(--theme); }
+
+/* ---------- 年级卡片网格 ---------- */
+.grade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.grade-card {
+  --card-color: #ff7e67;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px 22px;
+  box-shadow: var(--shadow);
+  border-top: 5px solid var(--card-color);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  font-family: inherit;
+}
+.grade-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(44, 53, 80, 0.16);
+}
+.grade-icon { font-size: 42px; }
+.grade-name { font-size: 22px; font-weight: 800; margin-top: 8px; color: var(--card-color); }
+.grade-desc { color: var(--muted); font-size: 14.5px; margin-top: 8px; }
+
+/* ---------- 信息条 ---------- */
+.info-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 38px;
+}
+.info-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.info-item {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.info-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(44, 53, 80, 0.14);
+}
+.info-item span { font-size: 30px; }
+.info-item b { color: var(--ink); }
+.info-item div { font-size: 14px; color: var(--muted); }
+
+/* ---------- 返回按钮 ---------- */
+.back-btn {
+  border: none;
+  background: var(--card);
+  color: var(--theme);
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  font-family: inherit;
+  font-size: 14.5px;
+}
+.back-btn:hover { background: color-mix(in srgb, var(--theme) 10%, white); }
+
+/* ---------- 年级页 ---------- */
+.grade-heading { font-size: 26px; font-weight: 800; margin-bottom: 18px; }
+.volume { margin-bottom: 30px; }
+.volume-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--theme);
+  padding-left: 12px;
+  border-left: 5px solid var(--theme);
+  margin-bottom: 16px;
+}
+.unit-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.unit-card h4 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+.points { list-style: none; }
+.points li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 6px;
+  color: #46506e;
+  font-size: 15px;
+}
+.points li::before {
+  content: "▸";
+  position: absolute;
+  left: 4px;
+  color: var(--theme);
+  font-weight: 800;
+}
+.btn-practice {
+  margin-top: 14px;
+  border: none;
+  background: var(--theme);
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  transition: filter 0.15s;
+}
+.btn-practice:hover { filter: brightness(1.07); }
+.no-practice {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13.5px;
+  background: #eef1f8;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* ---------- 练习页 ---------- */
+.practice-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 30px 28px;
+  box-shadow: var(--shadow);
+  max-width: 640px;
+  margin: 0 auto;
+}
+.practice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.practice-head h2 { font-size: 21px; font-weight: 800; }
+.score {
+  background: color-mix(in srgb, var(--theme) 14%, white);
+  color: var(--theme);
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+.question {
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+  padding: 30px 10px;
+  background: var(--bg);
+  border-radius: 14px;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+.answer-row { display: flex; gap: 10px; flex-wrap: wrap; }
+#answer {
+  flex: 1;
+  min-width: 180px;
+  padding: 14px 16px;
+  font-size: 17px;
+  border: 2px solid #e2e7f3;
+  border-radius: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+#answer:focus { border-color: var(--theme); }
+.btn-primary {
+  border: none;
+  background: var(--theme);
+  color: #fff;
+  font-weight: 700;
+  padding: 0 26px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  transition: filter 0.15s;
+}
+.btn-primary:hover { filter: brightness(1.07); }
+.btn-hint {
+  margin-top: 14px;
+  border: 1px dashed var(--theme);
+  background: transparent;
+  color: var(--theme);
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+}
+.hint-box {
+  margin-top: 12px;
+  background: #fff8e6;
+  border: 1px solid #ffe2a8;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #8a6d1f;
+  font-size: 14.5px;
+}
+.feedback {
+  margin-top: 18px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 26px;
+}
+.feedback.ok { color: #22a06b; }
+.feedback.no { color: #e5484d; }
+
+/* ---------- 页脚 ---------- */
+.footer {
+  text-align: center;
+  padding: 26px 20px;
+  color: var(--muted);
+  font-size: 13px;
+  border-top: 1px solid #e7ebf5;
+}
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 24px; }
+  .question { font-size: 23px; }
+  .topbar { padding: 12px 16px; }
+}
+
+</style>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="topbar">
+    <div class="brand" id="nav-home">
+      <span class="logo">📚</span>
+      <div>
+        <div class="brand-title">杭州小学数学辅导</div>
+        <div class="brand-sub">人教版 · 一年级 → 六年级</div>
+      </div>
+    </div>
+    <div class="topbar-tag">PEP 同步学习 · 知识点 + 互动练习</div>
+  </header>
+
+  <main>
+    <!-- 首页:年级选择 -->
+    <section id="view-home" class="view">
+      <div class="hero">
+        <h1>选择你的年级,开始今天的数学学习 🚀</h1>
+        <p>每个单元都配有<strong>核心知识点讲解</strong>和<strong>无限量随机练习题</strong>,边学边练,自动批改。</p>
+      </div>
+      <div class="grade-grid" id="grade-grid"><!-- 年级卡片由 JS 渲染 --></div>
+
+      <div class="info-strip">
+        <div class="info-item" id="info-sync"><span>🎯</span><div><b>同步人教版</b><br/>章节顺序与课本一致 · 点此选年级</div></div>
+        <div class="info-item" id="info-random"><span>♾️</span><div><b>题目无限刷</b><br/>点此随机抽题立即开练 →</div></div>
+        <div class="info-item" id="info-grade"><span>✅</span><div><b>即时批改</b><br/>答错给出正确答案和提示</div></div>
+      </div>
+    </section>
+
+    <!-- 年级页:单元与知识点 -->
+    <section id="view-grade" class="view hidden">
+      <button class="back-btn" id="back-home">← 返回首页</button>
+      <h2 id="grade-title" class="grade-heading"></h2>
+      <div id="unit-list"></div>
+    </section>
+
+    <!-- 练习页 -->
+    <section id="view-practice" class="view hidden">
+      <button class="back-btn" id="back-grade">← 返回单元</button>
+      <div class="practice-card">
+        <div class="practice-head">
+          <h2 id="practice-title"></h2>
+          <span class="score" id="score"></span>
+        </div>
+        <div class="question" id="question"></div>
+        <div class="answer-row">
+          <input type="text" id="answer" placeholder="在这里输入答案,按回车提交" autocomplete="off" />
+          <button class="btn-primary" id="btn-check">提交</button>
+          <button class="btn-primary hidden" id="btn-next">下一题 →</button>
+        </div>
+        <button class="btn-hint" id="btn-hint">看提示 💡</button>
+        <div class="hint-box hidden" id="hint-box"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>杭州小学数学学习辅导 · 仅供学习练习使用 · 教材版本:人教版(PEP)</p>
+  </footer>
+
+  <script>
+/**
+ * 人教版小学数学课程数据(一年级 ~ 六年级,上/下册)
+ * 适用于杭州小学数学学习辅导网站
+ *
+ * 每个年级包含上册(volume: "上册")和下册(volume: "下册"),
+ * 每册由若干单元(units)组成,每个单元包含:
+ *   - title:  单元名称
+ *   - points: 该单元核心知识点(用于讲解)
+ *   - skill:  练习生成器的标识(对应 app.js 中的题目生成逻辑)
+ */
+const CURRICULUM = {
+  1: {
+    title: "一年级",
+    color: "#ff7e67",
+    icon: "🍎",
+    desc: "认识 20 以内的数,学会简单的加减法,认识图形、钟表和人民币。",
+    volumes: [
+      {
+        volume: "上册",
+        units: [
+          {
+            title: "1～5 的认识和加减法",
+            points: [
+              "认识 1~5 各数,会读、会写、会数。",
+              "理解加法是把两部分合起来,减法是从总数里去掉一部分。",
+              "掌握 5 以内数的加减法,如 2+3=5、4-1=3。",
+            ],
+            skill: "add_sub_5",
+          },
+          {
+            title: "6～10 的认识和加减法",
+            points: [
+              "认识 6~10,理解数的顺序和大小比较。",
+              "掌握 10 以内的加减法,熟记凑十数(如 6+4=10)。",
+              "学会看图列式解决简单问题。",
+            ],
+            skill: "add_sub_10",
+          },
+          {
+            title: "认识图形(一)",
+            points: [
+              "认识长方体、正方体、圆柱和球等立体图形。",
+              "能根据形状特征对物体进行分类。",
+            ],
+            skill: "shape3d",
+          },
+          {
+            title: "11～20 各数的认识",
+            points: [
+              "认识 11~20 各数,理解十位和个位的含义。",
+              "知道 1 个十和几个一组成十几。",
+            ],
+            skill: "place_value_20",
+          },
+          {
+            title: "20 以内的进位加法",
+            points: [
+              "掌握“凑十法”:如 9+5,把 5 分成 1 和 4,9+1=10,10+4=14。",
+              "熟练计算 20 以内的进位加法。",
+            ],
+            skill: "add_carry_20",
+          },
+        ],
+      },
+      {
+        volume: "下册",
+        units: [
+          {
+            title: "20 以内的退位减法",
+            points: [
+              "掌握“破十法”和“想加算减”:如 13-7,想 7+6=13,所以 13-7=6。",
+              "熟练计算 20 以内的退位减法。",
+            ],
+            skill: "sub_borrow_20",
+          },
+          {
+            title: "100 以内数的认识",
+            points: [
+              "认识 100 以内的数,会数数、读数、写数。",
+              "理解个位、十位的意义,会比较大小。",
+            ],
+            skill: "compare_100",
+          },
+          {
+            title: "认识人民币",
+            points: [
+              "认识元、角、分,知道 1 元 = 10 角,1 角 = 10 分。",
+              "会进行简单的人民币计算和购物找零。",
+            ],
+            skill: "money",
+          },
+          {
+            title: "100 以内的加法和减法(一)",
+            points: [
+              "掌握整十数加减整十数,如 30+40=70。",
+              "掌握两位数加减一位数、整十数(不进位/不退位)。",
+            ],
+            skill: "add_sub_100_simple",
+          },
+        ],
+      },
+    ],
+  },
+
+  2: {
+    title: "二年级",
+    color: "#ffa45c",
+    icon: "🦊",
+    desc: "学习 100 以内的加减法、表内乘除法,认识时间、角和长度单位。",
+    volumes: [
+      {
+        volume: "上册",
+        units: [
+          {
+            title: "长度单位",
+            points: [
+              "认识厘米(cm)和米(m),知道 1 米 = 100 厘米。",
+              "会用尺子测量物体长度。",
+            ],
+            skill: "length_unit",
+          },
+          {
+            title: "100 以内的加法和减法(二)",
+            points: [
+              "掌握两位数加减两位数(含进位、退位)的笔算。",
+              "理解“相同数位对齐,从个位算起”的竖式规则。",
+            ],
+            skill: "add_sub_100",
+          },
+          {
+            title: "表内乘法(一)(二)",
+            points: [
+              "理解乘法的意义:求几个相同加数的和。",
+              "熟记 1~9 的乘法口诀(九九乘法表)。",
+            ],
+            skill: "mul_table",
+          },
+          {
+            title: "认识时间",
+            points: [
+              "认识钟面,知道 1 时 = 60 分。",
+              "会读、写几时几分。",
+            ],
+            skill: "time",
+          },
+        ],
+      },
+      {
+        volume: "下册",
+        units: [
+          {
+            title: "表内除法(一)(二)",
+            points: [
+              "理解除法的意义:平均分。",
+              "用乘法口诀求商,如 24÷6,想 6×4=24,所以商是 4。",
+            ],
+            skill: "div_table",
+          },
+          {
+            title: "混合运算",
+            points: [
+              "掌握运算顺序:先乘除,后加减;有括号先算括号。",
+              "如 2+3×4=2+12=14。",
+            ],
+            skill: "mixed_simple",
+          },
+          {
+            title: "有余数的除法",
+            points: [
+              "理解余数的含义,余数一定比除数小。",
+              "如 17÷5=3……2。",
+            ],
+            skill: "div_remainder",
+          },
+          {
+            title: "万以内数的认识",
+            points: [
+              "认识千、万,理解数位顺序。",
+              "会读写万以内的数并比较大小。",
+            ],
+            skill: "compare_10000",
+          },
+        ],
+      },
+    ],
+  },
+
+  3: {
+    title: "三年级",
+    color: "#ffd35c",
+    icon: "🐯",
+    desc: "学习万以内加减法、多位数乘除法,初步认识分数与小数,学习面积。",
+    volumes: [
+      {
+        volume: "上册",
+        units: [
+          {
+            title: "时分秒",
+            points: [
+              "认识秒,知道 1 分 = 60 秒。",
+              "会进行简单的时间单位换算和经过时间的计算。",
+            ],
+            skill: "time_unit",
+          },
+          {
+            title: "万以内的加法和减法",
+            points: [
+              "掌握三位数加减三位数的笔算(连续进位、退位)。",
+              "学会用估算和验算检查结果。",
+            ],
+            skill: "add_sub_1000",
+          },
+          {
+            title: "多位数乘一位数",
+            points: [
+              "掌握两、三位数乘一位数的笔算。",
+              "注意进位的处理,如 26×3=78。",
+            ],
+            skill: "mul_one_digit",
+          },
+          {
+            title: "分数的初步认识",
+            points: [
+              "理解几分之一、几分之几的含义。",
+              "会比较同分母分数的大小,会做简单的同分母分数加减。",
+            ],
+            skill: "fraction_simple",
+          },
+        ],
+      },
+      {
+        volume: "下册",
+        units: [
+          {
+            title: "除数是一位数的除法",
+            points: [
+              "掌握两、三位数除以一位数的笔算。",
+              "理解“从高位除起,余数比除数小”。",
+            ],
+            skill: "div_one_digit",
+          },
+          {
+            title: "两位数乘两位数",
+            points: [
+              "掌握两位数乘两位数的笔算方法。",
+              "如 23×12 = 23×10 + 23×2 = 276。",
+            ],
+            skill: "mul_two_digit",
+          },
+          {
+            title: "面积",
+            points: [
+              "认识面积单位:平方厘米、平方分米、平方米。",
+              "掌握长方形面积 = 长×宽,正方形面积 = 边长×边长。",
+            ],
+            skill: "rect_area",
+          },
+          {
+            title: "小数的初步认识",
+            points: [
+              "结合元、角、分认识一位小数。",
+              "会比较简单小数的大小,会做一位小数的加减法。",
+            ],
+            skill: "decimal_simple",
+          },
+        ],
+      },
+    ],
+  },
+
+  4: {
+    title: "四年级",
+    color: "#a0e57c",
+    icon: "🐰",
+    desc: "学习大数、三位数乘两位数、运算定律,认识小数和三角形。",
+    volumes: [
+      {
+        volume: "上册",
+        units: [
+          {
+            title: "大数的认识",
+            points: [
+              "认识亿以内的数,理解数级和数位。",
+              "会读写大数,会用“万”“亿”作单位改写。",
+            ],
+            skill: "big_number",
+          },
+          {
+            title: "三位数乘两位数",
+            points: [
+              "掌握三位数乘两位数的笔算。",
+              "理解积的变化规律。",
+            ],
+            skill: "mul_three_two",
+          },
+          {
+            title: "除数是两位数的除法",
+            points: [
+              "掌握除数是两位数的笔算除法。",
+              "学会用“四舍五入”法试商。",
+            ],
+            skill: "div_two_digit",
+          },
+        ],
+      },
+      {
+        volume: "下册",
+        units: [
+          {
+            title: "四则运算",
+            points: [
+              "掌握加减乘除混合运算的顺序。",
+              "理解 0 的运算特性(0 不能作除数)。",
+            ],
+            skill: "mixed_four",
+          },
+          {
+            title: "运算定律",
+            points: [
+              "加法交换律、结合律;乘法交换律、结合律、分配律。",
+              "会用运算定律进行简便计算,如 25×4=100。",
+            ],
+            skill: "law_calc",
+          },
+          {
+            title: "小数的意义和性质 / 加减法",
+            points: [
+              "理解小数的意义和数位,小数的性质(末尾添去 0 大小不变)。",
+              "掌握小数加减法的笔算(小数点对齐)。",
+            ],
+            skill: "decimal_add_sub",
+          },
+          {
+            title: "三角形",
+            points: [
+              "认识三角形的特性(稳定性),内角和等于 180°。",
+              "按边和角对三角形分类。",
+            ],
+            skill: "triangle_angle",
+          },
+        ],
+      },
+    ],
+  },
+
+  5: {
+    title: "五年级",
+    color: "#5cc8ff",
+    icon: "🐬",
+    desc: "学习小数乘除法、简易方程、多边形面积,认识因数与倍数。",
+    volumes: [
+      {
+        volume: "上册",
+        units: [
+          {
+            title: "小数乘法",
+            points: [
+              "掌握小数乘小数的计算方法(先按整数算,再点小数点)。",
+              "积的小数位数等于两个因数小数位数之和。",
+            ],
+            skill: "decimal_mul",
+          },
+          {
+            title: "小数除法",
+            points: [
+              "掌握小数除法,除数是小数时要先转化为整数。",
+              "会取近似值和判断循环小数。",
+            ],
+            skill: "decimal_div",
+          },
+          {
+            title: "简易方程",
+            points: [
+              "理解用字母表示数,认识方程及其解。",
+              "会解形如 ax±b=c 的方程。",
+            ],
+            skill: "equation",
+          },
+          {
+            title: "多边形的面积",
+            points: [
+              "平行四边形面积 = 底×高;三角形面积 = 底×高÷2。",
+              "梯形面积 = (上底+下底)×高÷2。",
+            ],
+            skill: "polygon_area",
+          },
+        ],
+      },
+      {
+        volume: "下册",
+        units: [
+          {
+            title: "因数与倍数",
+            points: [
+              "理解因数、倍数、质数、合数的概念。",
+              "掌握 2、3、5 的倍数特征。",
+            ],
+            skill: "factor_multiple",
+          },
+          {
+            title: "长方体和正方体",
+            points: [
+              "掌握表面积和体积的计算。",
+              "长方体体积 = 长×宽×高;1 立方米 = 1000 立方分米。",
+            ],
+            skill: "cuboid_volume",
+          },
+          {
+            title: "分数的意义和加减法",
+            points: [
+              "理解分数的意义,掌握约分和通分。",
+              "掌握异分母分数加减法(先通分)。",
+            ],
+            skill: "fraction_add_sub",
+          },
+        ],
+      },
+    ],
+  },
+
+  6: {
+    title: "六年级",
+    color: "#b98cff",
+    icon: "🦉",
+    desc: "学习分数乘除法、比和百分数,认识圆、圆柱与圆锥,学习比例。",
+    volumes: [
+      {
+        volume: "上册",
+        units: [
+          {
+            title: "分数乘法",
+            points: [
+              "分数乘整数、分数乘分数:分子相乘作分子,分母相乘作分母。",
+              "能约分的先约分,结果化为最简分数。",
+            ],
+            skill: "fraction_mul",
+          },
+          {
+            title: "分数除法",
+            points: [
+              "除以一个数等于乘这个数的倒数。",
+              "如 ⅗ ÷ ⅖ = ⅗ × 5/2。",
+            ],
+            skill: "fraction_div",
+          },
+          {
+            title: "比",
+            points: [
+              "理解比的意义,会求比值和化简比。",
+              "掌握比、分数、除法之间的关系。",
+            ],
+            skill: "ratio",
+          },
+          {
+            title: "圆",
+            points: [
+              "认识圆的各部分,周长 C = 2πr = πd。",
+              "圆的面积 S = πr²(π 取 3.14)。",
+            ],
+            skill: "circle",
+          },
+          {
+            title: "百分数(一)",
+            points: [
+              "理解百分数的意义,会进行百分数与分数、小数的互化。",
+              "会解决简单的百分数实际问题。",
+            ],
+            skill: "percent",
+          },
+        ],
+      },
+      {
+        volume: "下册",
+        units: [
+          {
+            title: "负数",
+            points: [
+              "认识负数,理解正负数表示相反意义的量。",
+              "会比较正负数的大小,认识数轴。",
+            ],
+            skill: "negative",
+          },
+          {
+            title: "圆柱与圆锥",
+            points: [
+              "圆柱体积 = 底面积×高;圆锥体积 = ⅓×底面积×高。",
+              "掌握圆柱表面积的计算。",
+            ],
+            skill: "cylinder",
+          },
+          {
+            title: "比例",
+            points: [
+              "理解比例的意义和基本性质(内项积 = 外项积)。",
+              "认识正比例和反比例。",
+            ],
+            skill: "proportion",
+          },
+          {
+            title: "百分数(二)",
+            points: [
+              "解决折扣、成数、税率、利率等实际问题。",
+              "如打八折 = 按原价的 80% 出售。",
+            ],
+            skill: "percent_apply",
+          },
+        ],
+      },
+    ],
+  },
+};
+
+/* ============================================================
+ * 杭州小学数学辅导网站 —— 交互逻辑
+ * 包含:导航渲染、知识点展示、练习题生成与自动判分
+ * 依赖:curriculum.js (全局变量 CURRICULUM)
+ * ============================================================ */
+
+/* ----------------------- 工具函数 ----------------------- */
+const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+
+// 把答案统一成字符串便于比较;数字保留必要小数
+function fmt(n) {
+  if (typeof n === "number") {
+    return Number.isInteger(n) ? String(n) : String(Math.round(n * 100) / 100);
+  }
+  return String(n).trim();
+}
+
+/* -----------------------------------------------------------
+ * 题目生成器集合
+ * 每个生成器返回 { q: 题面字符串, a: 正确答案(字符串), hint?: 提示 }
+ * --------------------------------------------------------- */
+const GENERATORS = {
+  /* ---------- 一年级 ---------- */
+  add_sub_5() {
+    if (rand(0, 1)) {
+      const a = rand(1, 4), b = rand(1, 5 - a);
+      return { q: `${a} + ${b} = ?`, a: a + b };
+    }
+    const a = rand(2, 5), b = rand(1, a);
+    return { q: `${a} - ${b} = ?`, a: a - b };
+  },
+  add_sub_10() {
+    if (rand(0, 1)) {
+      const a = rand(1, 9), b = rand(0, 10 - a);
+      return { q: `${a} + ${b} = ?`, a: a + b };
+    }
+    const a = rand(2, 10), b = rand(0, a);
+    return { q: `${a} - ${b} = ?`, a: a - b };
+  },
+  shape3d() {
+    const items = [
+      { q: "篮球是什么立体图形?(球 / 正方体 / 圆柱)", a: "球" },
+      { q: "魔方是什么立体图形?(球 / 正方体 / 圆柱)", a: "正方体" },
+      { q: "易拉罐是什么立体图形?(球 / 正方体 / 圆柱)", a: "圆柱" },
+      { q: "牙膏盒(长长方方)是什么立体图形?(长方体 / 球)", a: "长方体" },
+    ];
+    return pick(items);
+  },
+  place_value_20() {
+    const t = rand(1, 1), o = rand(0, 9), n = 10 * t + o;
+    return { q: `${n} 是由 ${t} 个十和几个一组成的?`, a: o, hint: "看个位上的数。" };
+  },
+  add_carry_20() {
+    const a = rand(5, 9), b = rand(10 - a + 1, 9);
+    return { q: `${a} + ${b} = ?`, a: a + b, hint: "用凑十法:先把一个数凑成 10。" };
+  },
+
+  /* ---------- 二年级 ---------- */
+  sub_borrow_20() {
+    const a = rand(11, 18), b = rand(a - 9, 9);
+    return { q: `${a} - ${b} = ?`, a: a - b, hint: "用破十法或想加算减。" };
+  },
+  compare_100() {
+    const a = rand(10, 99), b = rand(10, 99);
+    const sym = a > b ? ">" : a < b ? "<" : "=";
+    return { q: `比较大小,填 > < =:${a} ___ ${b}`, a: sym };
+  },
+  money() {
+    const yuan = rand(1, 9), jiao = rand(1, 9);
+    return { q: `${yuan} 元 ${jiao} 角 = 多少角?`, a: yuan * 10 + jiao, hint: "1 元 = 10 角。" };
+  },
+  add_sub_100_simple() {
+    if (rand(0, 1)) {
+      const a = rand(1, 8) * 10, b = rand(1, 9 - a / 10) * 10;
+      return { q: `${a} + ${b} = ?`, a: a + b };
+    }
+    const a = rand(20, 99), b = rand(1, a % 10);
+    return { q: `${a} - ${b} = ?`, a: a - b };
+  },
+  length_unit() {
+    const m = rand(1, 9);
+    return { q: `${m} 米 = 多少厘米?`, a: m * 100, hint: "1 米 = 100 厘米。" };
+  },
+  add_sub_100() {
+    if (rand(0, 1)) {
+      const a = rand(11, 89), b = rand(11, 99 - a < 11 ? 11 : 99 - a);
+      return { q: `${a} + ${b} = ?`, a: a + b, hint: "列竖式,相同数位对齐。" };
+    }
+    const a = rand(30, 99), b = rand(11, a);
+    return { q: `${a} - ${b} = ?`, a: a - b, hint: "列竖式,不够减时向前一位借 1。" };
+  },
+  mul_table() {
+    const a = rand(2, 9), b = rand(2, 9);
+    return { q: `${a} × ${b} = ?`, a: a * b, hint: `背口诀:${a}×${b}。` };
+  },
+  time() {
+    const h = rand(1, 12), m = pick([0, 15, 30, 45]);
+    return { q: `${h} 时 ${m} 分,一共是多少分?(${h}时 = ${h * 60}分)`, a: h * 60 + m, hint: "1 时 = 60 分。" };
+  },
+  div_table() {
+    const b = rand(2, 9), c = rand(2, 9), a = b * c;
+    return { q: `${a} ÷ ${b} = ?`, a: c, hint: `想口诀:${b}×几=${a}。` };
+  },
+  mixed_simple() {
+    const a = rand(2, 9), b = rand(2, 9), c = rand(1, 9);
+    return { q: `${c} + ${a} × ${b} = ?`, a: c + a * b, hint: "先乘除,后加减。" };
+  },
+  div_remainder() {
+    const b = rand(3, 9);
+    const c = rand(2, 8), r = rand(1, b - 1);
+    const a = b * c + r;
+    return { q: `${a} ÷ ${b} = ?……?(请填 商……余数,如 3……2)`, a: `${c}……${r}`, hint: "余数一定比除数小。" };
+  },
+  compare_10000() {
+    const a = rand(1000, 9999), b = rand(1000, 9999);
+    const sym = a > b ? ">" : a < b ? "<" : "=";
+    return { q: `比较大小,填 > < =:${a} ___ ${b}`, a: sym };
+  },
+
+  /* ---------- 三年级 ---------- */
+  time_unit() {
+    const m = rand(1, 9);
+    return { q: `${m} 分 = 多少秒?`, a: m * 60, hint: "1 分 = 60 秒。" };
+  },
+  add_sub_1000() {
+    if (rand(0, 1)) {
+      const a = rand(100, 600), b = rand(100, 399);
+      return { q: `${a} + ${b} = ?`, a: a + b };
+    }
+    const a = rand(300, 999), b = rand(100, a);
+    return { q: `${a} - ${b} = ?`, a: a - b };
+  },
+  mul_one_digit() {
+    const a = rand(12, 99), b = rand(2, 9);
+    return { q: `${a} × ${b} = ?`, a: a * b, hint: "列竖式,注意进位。" };
+  },
+  fraction_simple() {
+    const d = rand(3, 9), a = rand(1, d - 2), b = rand(1, d - a - 1);
+    return { q: `${a}/${d} + ${b}/${d} = ?(写成 几/几)`, a: `${a + b}/${d}`, hint: "同分母分数相加,分母不变,分子相加。" };
+  },
+  div_one_digit() {
+    const b = rand(2, 9), c = rand(11, 99), a = b * c;
+    return { q: `${a} ÷ ${b} = ?`, a: c, hint: "从高位除起。" };
+  },
+  mul_two_digit() {
+    const a = rand(11, 99), b = rand(11, 99);
+    return { q: `${a} × ${b} = ?`, a: a * b, hint: "拆成整十和个位分别相乘再相加。" };
+  },
+  rect_area() {
+    const l = rand(2, 20), w = rand(2, 20);
+    return { q: `一个长方形,长 ${l} 厘米,宽 ${w} 厘米,面积是多少平方厘米?`, a: l * w, hint: "面积 = 长 × 宽。" };
+  },
+  decimal_simple() {
+    const a = (rand(1, 9) + rand(1, 9) / 10);
+    const b = (rand(1, 9) + rand(0, 9) / 10);
+    const sum = Math.round((a + b) * 10) / 10;
+    return { q: `${a.toFixed(1)} + ${b.toFixed(1)} = ?`, a: sum, hint: "小数点对齐再相加。" };
+  },
+
+  /* ---------- 四年级 ---------- */
+  big_number() {
+    const n = rand(1, 99) * 10000;
+    return { q: `${n} 改写成用“万”作单位的数(如 50000=5万):填几万?`, a: n / 10000, hint: "去掉末尾 4 个 0。" };
+  },
+  mul_three_two() {
+    const a = rand(100, 999), b = rand(11, 99);
+    return { q: `${a} × ${b} = ?`, a: a * b };
+  },
+  div_two_digit() {
+    const b = rand(11, 40), c = rand(3, 30), a = b * c;
+    return { q: `${a} ÷ ${b} = ?`, a: c, hint: "用四舍五入法试商。" };
+  },
+  mixed_four() {
+    const a = rand(2, 12), b = rand(2, 12), c = rand(2, 9), d = rand(2, 9);
+    return { q: `(${a} + ${b}) × ${c} - ${d} = ?`, a: (a + b) * c - d, hint: "先算括号,再乘除,最后加减。" };
+  },
+  law_calc() {
+    const variants = [
+      () => { const a = rand(2, 25); return { q: `用简便方法:25 × 4 × ${a} = ?`, a: 100 * a, hint: "25×4=100。" }; },
+      () => { const a = rand(2, 12); return { q: `用乘法分配律:${a} × 99 + ${a} = ?`, a: a * 100, hint: `${a}×99+${a}×1=${a}×100。` }; },
+      () => { const a = rand(2, 8); return { q: `用简便方法:125 × 8 × ${a} = ?`, a: 1000 * a, hint: "125×8=1000。" }; },
+    ];
+    return pick(variants)();
+  },
+  decimal_add_sub() {
+    const a = rand(10, 99) / 10, b = rand(10, 90) / 10;
+    if (rand(0, 1)) {
+      return { q: `${a.toFixed(1)} + ${b.toFixed(1)} = ?`, a: Math.round((a + b) * 10) / 10 };
+    }
+    const big = Math.max(a, b), small = Math.min(a, b);
+    return { q: `${big.toFixed(1)} - ${small.toFixed(1)} = ?`, a: Math.round((big - small) * 10) / 10 };
+  },
+  triangle_angle() {
+    const a = rand(30, 80), b = rand(30, 120 - a);
+    return { q: `三角形两个内角分别是 ${a}° 和 ${b}°,第三个角是多少度?`, a: 180 - a - b, hint: "三角形内角和 = 180°。" };
+  },
+
+  /* ---------- 五年级 ---------- */
+  decimal_mul() {
+    const a = rand(11, 99) / 10, b = rand(2, 9) / 10;
+    return { q: `${a.toFixed(1)} × ${b.toFixed(1)} = ?`, a: Math.round(a * b * 100) / 100, hint: "先按整数乘,再数小数位数点小数点。" };
+  },
+  decimal_div() {
+    const c = rand(2, 9) / 10, b = rand(2, 9), a = Math.round(c * b * 10) / 10;
+    return { q: `${a.toFixed(1)} ÷ ${b} = ?`, a: Math.round((a / b) * 100) / 100, hint: "商的小数点要和被除数对齐。" };
+  },
+  equation() {
+    const a = rand(2, 9), x = rand(2, 12), b = rand(1, 20);
+    return { q: `解方程:${a}x + ${b} = ${a * x + b},x = ?`, a: x, hint: `先两边减 ${b},再除以 ${a}。` };
+  },
+  polygon_area() {
+    const variants = [
+      () => { const b = rand(3, 20), h = rand(3, 20); return { q: `平行四边形,底 ${b}、高 ${h},面积是多少?`, a: b * h, hint: "底 × 高。" }; },
+      () => { const b = rand(4, 20), h = rand(2, 20); return { q: `三角形,底 ${b}、高 ${h},面积是多少?`, a: Math.round(b * h / 2 * 100) / 100, hint: "底 × 高 ÷ 2。" }; },
+      () => { const t = rand(2, 10), d = rand(t + 1, 20), h = rand(2, 10); return { q: `梯形,上底 ${t}、下底 ${d}、高 ${h},面积是多少?`, a: Math.round((t + d) * h / 2 * 100) / 100, hint: "(上底+下底)×高÷2。" }; },
+    ];
+    return pick(variants)();
+  },
+  factor_multiple() {
+    const variants = [
+      () => { const n = rand(10, 99); return { q: `${n} 是 2 的倍数吗?(是 / 不是)`, a: n % 2 === 0 ? "是" : "不是", hint: "个位是 0、2、4、6、8 就是 2 的倍数。" }; },
+      () => { const n = rand(10, 99); return { q: `${n} 是 3 的倍数吗?(是 / 不是)`, a: n % 3 === 0 ? "是" : "不是", hint: "各位数字之和是 3 的倍数即可。" }; },
+      () => { const n = rand(10, 99); return { q: `${n} 是 5 的倍数吗?(是 / 不是)`, a: n % 5 === 0 ? "是" : "不是", hint: "个位是 0 或 5。" }; },
+    ];
+    return pick(variants)();
+  },
+  cuboid_volume() {
+    const l = rand(2, 12), w = rand(2, 12), h = rand(2, 12);
+    return { q: `长方体,长 ${l}、宽 ${w}、高 ${h},体积是多少?`, a: l * w * h, hint: "体积 = 长 × 宽 × 高。" };
+  },
+  fraction_add_sub() {
+    let d1 = rand(2, 6), d2 = rand(2, 6);
+    while (d1 === d2) d2 = rand(2, 6);
+    const n1 = rand(1, d1 - 1), n2 = rand(1, d2 - 1);
+    const denom = d1 * d2 / gcd(d1, d2);
+    let num = n1 * (denom / d1) + n2 * (denom / d2);
+    const g = gcd(num, denom);
+    return { q: `${n1}/${d1} + ${n2}/${d2} = ?(化成最简分数 几/几)`, a: `${num / g}/${denom / g}`, hint: "先通分,再相加,最后约分。" };
+  },
+
+  /* ---------- 六年级 ---------- */
+  fraction_mul() {
+    const n1 = rand(1, 5), d1 = rand(n1 + 1, 8), n2 = rand(1, 5), d2 = rand(n2 + 1, 8);
+    let num = n1 * n2, den = d1 * d2;
+    const g = gcd(num, den);
+    return { q: `${n1}/${d1} × ${n2}/${d2} = ?(最简分数)`, a: `${num / g}/${den / g}`, hint: "分子相乘,分母相乘,再约分。" };
+  },
+  fraction_div() {
+    const n1 = rand(1, 5), d1 = rand(n1 + 1, 8), n2 = rand(1, 5), d2 = rand(n2 + 1, 8);
+    let num = n1 * d2, den = d1 * n2;
+    const g = gcd(num, den);
+    return { q: `${n1}/${d1} ÷ ${n2}/${d2} = ?(最简分数,可为假分数)`, a: `${num / g}/${den / g}`, hint: "除以一个数等于乘它的倒数。" };
+  },
+  ratio() {
+    const k = rand(2, 9), a = rand(2, 6) * k, b = rand(2, 6) * k;
+    const g = gcd(a, b);
+    return { q: `化简比:${a} : ${b} = ?(写成 几:几)`, a: `${a / g}:${b / g}`, hint: "同时除以最大公因数。" };
+  },
+  circle() {
+    const variants = [
+      () => { const r = rand(1, 10); return { q: `圆的半径是 ${r},周长是多少?(π取3.14)`, a: Math.round(2 * 3.14 * r * 100) / 100, hint: "C = 2πr。" }; },
+      () => { const r = rand(1, 10); return { q: `圆的半径是 ${r},面积是多少?(π取3.14)`, a: Math.round(3.14 * r * r * 100) / 100, hint: "S = πr²。" }; },
+    ];
+    return pick(variants)();
+  },
+  percent() {
+    const variants = [
+      () => { const n = rand(1, 9) / 10; return { q: `把小数 ${n} 化成百分数:填几%?`, a: n * 100, hint: "小数点向右移两位。" }; },
+      () => { const p = rand(1, 9) * 10; return { q: `${p}% 化成小数是多少?`, a: p / 100, hint: "去掉%,小数点向左移两位。" }; },
+    ];
+    return pick(variants)();
+  },
+  negative() {
+    const a = rand(-9, -1), b = rand(1, 9);
+    const sym = a > b ? ">" : "<";
+    return { q: `比较大小,填 > 或 <:${a} ___ ${b}`, a: sym, hint: "负数都比正数小。" };
+  },
+  cylinder() {
+    const variants = [
+      () => { const s = rand(5, 30), h = rand(2, 10); return { q: `圆柱底面积 ${s},高 ${h},体积是多少?`, a: s * h, hint: "V = 底面积 × 高。" }; },
+      () => { const s = rand(6, 30), h = rand(2, 12); return { q: `圆锥底面积 ${s},高 ${h},体积是多少?`, a: Math.round(s * h / 3 * 100) / 100, hint: "V = ⅓ × 底面积 × 高。" }; },
+    ];
+    return pick(variants)();
+  },
+  proportion() {
+    const k = rand(2, 6), a = rand(2, 9), b = a * k, c = rand(2, 9), d = c * k;
+    // a : b = c : x  =>  x = d
+    return { q: `比例 ${a} : ${b} = ${c} : x,x = ?`, a: d, hint: "内项积 = 外项积。" };
+  },
+  percent_apply() {
+    const price = rand(2, 20) * 10, discount = pick([5, 6, 7, 8, 9]);
+    return { q: `一件商品原价 ${price} 元,打 ${discount} 折出售,现价多少元?`, a: Math.round(price * discount / 10 * 100) / 100, hint: `打 ${discount} 折 = 按原价的 ${discount * 10}% 出售。` };
+  },
+};
+
+/* ----------------------- 状态 ----------------------- */
+let STATE = {
+  grade: null,
+  unit: null,      // 当前单元对象
+  current: null,   // 当前题目 {q,a,hint}
+  correct: 0,
+  total: 0,
+};
+
+/* ----------------------- 渲染:首页年级卡片 ----------------------- */
+function renderHome() {
+  const wrap = document.getElementById("grade-grid");
+  wrap.innerHTML = "";
+  Object.keys(CURRICULUM).forEach((g) => {
+    const data = CURRICULUM[g];
+    const card = document.createElement("button");
+    card.className = "grade-card";
+    card.style.setProperty("--card-color", data.color);
+    card.innerHTML = `
+      <div class="grade-icon">${data.icon}</div>
+      <div class="grade-name">${data.title}</div>
+      <div class="grade-desc">${data.desc}</div>
+    `;
+    card.onclick = () => openGrade(g);
+    wrap.appendChild(card);
+  });
+}
+
+/* ----------------------- 渲染:某年级单元列表 ----------------------- */
+function openGrade(g) {
+  STATE.grade = g;
+  const data = CURRICULUM[g];
+  document.documentElement.style.setProperty("--theme", data.color);
+
+  document.getElementById("view-home").classList.add("hidden");
+  document.getElementById("view-grade").classList.remove("hidden");
+  document.getElementById("view-practice").classList.add("hidden");
+  window.scrollTo(0, 0);
+
+  document.getElementById("grade-title").textContent = `${data.icon} ${data.title} · 人教版`;
+
+  const container = document.getElementById("unit-list");
+  container.innerHTML = "";
+  data.volumes.forEach((vol) => {
+    const sec = document.createElement("section");
+    sec.className = "volume";
+    const h = document.createElement("h3");
+    h.className = "volume-title";
+    h.textContent = vol.volume;
+    sec.appendChild(h);
+
+    vol.units.forEach((unit) => {
+      const card = document.createElement("div");
+      card.className = "unit-card";
+      const pts = unit.points.map((p) => `<li>${p}</li>`).join("");
+      const canPractice = GENERATORS[unit.skill];
+      card.innerHTML = `
+        <h4>${unit.title}</h4>
+        <ul class="points">${pts}</ul>
+        ${canPractice ? `<button class="btn-practice">开始练习 ✏️</button>` : `<span class="no-practice">知识讲解</span>`}
+      `;
+      if (canPractice) {
+        card.querySelector(".btn-practice").onclick = () => openPractice(unit);
+      }
+      sec.appendChild(card);
+    });
+    container.appendChild(sec);
+  });
+}
+
+/* ----------------------- 渲染:练习页 ----------------------- */
+function openPractice(unit) {
+  STATE.unit = unit;
+  STATE.correct = 0;
+  STATE.total = 0;
+
+  document.getElementById("view-grade").classList.add("hidden");
+  document.getElementById("view-practice").classList.remove("hidden");
+  window.scrollTo(0, 0);
+
+  document.getElementById("practice-title").textContent = unit.title;
+  updateScore();
+  nextQuestion();
+}
+
+// 从所有年级里随机抽一个有练习的单元,直接开始做题(“题目无限刷”入口)
+function startRandomPractice() {
+  const pool = [];
+  Object.keys(CURRICULUM).forEach((g) => {
+    CURRICULUM[g].volumes.forEach((vol) => {
+      vol.units.forEach((unit) => {
+        if (GENERATORS[unit.skill]) pool.push({ g, unit });
+      });
+    });
+  });
+  const choice = pool[Math.floor(Math.random() * pool.length)];
+  STATE.grade = choice.g;
+  document.documentElement.style.setProperty("--theme", CURRICULUM[choice.g].color);
+  openPractice(choice.unit);
+}
+
+// 平滑滚动到年级选择区
+function scrollToGrades() {
+  backToHome();
+  const grid = document.getElementById("grade-grid");
+  if (grid) grid.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function nextQuestion() {
+  const gen = GENERATORS[STATE.unit.skill];
+  STATE.current = gen();
+  document.getElementById("question").textContent = STATE.current.q;
+  const input = document.getElementById("answer");
+  input.value = "";
+  input.disabled = false;
+  input.focus();
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("btn-check").classList.remove("hidden");
+  document.getElementById("btn-next").classList.add("hidden");
+  // 提示按钮
+  const hintBtn = document.getElementById("btn-hint");
+  const hintBox = document.getElementById("hint-box");
+  hintBox.textContent = "";
+  hintBox.classList.add("hidden");
+  hintBtn.style.display = STATE.current.hint ? "inline-block" : "none";
+}
+
+function checkAnswer() {
+  const input = document.getElementById("answer");
+  const user = fmt(input.value);
+  if (user === "") {
+    input.focus();
+    return;
+  }
+  const correct = fmt(STATE.current.a);
+  const fb = document.getElementById("feedback");
+  STATE.total++;
+
+  // 允许分数/比的等价写法(去空格);数值容差
+  const isRight =
+    user === correct ||
+    user.replace(/\s/g, "") === correct.replace(/\s/g, "") ||
+    (!isNaN(parseFloat(user)) && !isNaN(parseFloat(correct)) &&
+      Math.abs(parseFloat(user) - parseFloat(correct)) < 0.01);
+
+  if (isRight) {
+    STATE.correct++;
+    fb.textContent = "✅ 答对了,真棒!";
+    fb.className = "feedback ok";
+  } else {
+    fb.textContent = `❌ 答案是 ${correct}。再接再厉!`;
+    fb.className = "feedback no";
+  }
+  input.disabled = true;
+  document.getElementById("btn-check").classList.add("hidden");
+  document.getElementById("btn-next").classList.remove("hidden");
+  updateScore();
+}
+
+function updateScore() {
+  document.getElementById("score").textContent = `答对 ${STATE.correct} / ${STATE.total} 题`;
+}
+
+/* ----------------------- 导航返回 ----------------------- */
+function backToHome() {
+  document.getElementById("view-home").classList.remove("hidden");
+  document.getElementById("view-grade").classList.add("hidden");
+  document.getElementById("view-practice").classList.add("hidden");
+  window.scrollTo(0, 0);
+}
+function backToGrade() {
+  openGrade(STATE.grade);
+}
+
+/* ----------------------- 初始化 ----------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  renderHome();
+
+  document.getElementById("btn-check").onclick = checkAnswer;
+  document.getElementById("btn-next").onclick = nextQuestion;
+  document.getElementById("nav-home").onclick = backToHome;
+  document.getElementById("back-grade").onclick = backToGrade;
+  document.getElementById("back-home").onclick = backToHome;
+
+  // 首页底部三张特点卡片:点击也有反应
+  document.getElementById("info-sync").onclick = scrollToGrades;
+  document.getElementById("info-grade").onclick = scrollToGrades;
+  document.getElementById("info-random").onclick = startRandomPractice;
+
+  document.getElementById("btn-hint").onclick = () => {
+    const box = document.getElementById("hint-box");
+    box.textContent = "💡 " + (STATE.current.hint || "");
+    box.classList.remove("hidden");
+  };
+
+  // 回车提交
+  document.getElementById("answer").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      if (!document.getElementById("btn-check").classList.contains("hidden")) {
+        checkAnswer();
+      } else {
+        nextQuestion();
+      }
+    }
+  });
+});
+
+</script>
+</body>
+</html>
