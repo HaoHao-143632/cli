@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"sort"
 	"strings"
 	"time"
@@ -18,6 +19,7 @@ import (
 	"github.com/larksuite/cli/internal/core"
 	"github.com/larksuite/cli/internal/output"
 	"github.com/larksuite/cli/internal/registry"
+	"github.com/larksuite/cli/internal/util"
 	"github.com/larksuite/cli/shortcuts"
 	"github.com/larksuite/cli/shortcuts/common"
 )
@@ -32,6 +34,7 @@ type LoginOptions struct {
 	Domains    []string
 	NoWait     bool
 	DeviceCode string
+	NoBrowser  bool
 }
 
 // NewCmdAuthLogin creates the auth login subcommand.
@@ -62,6 +65,7 @@ browser. Run it in the background and retrieve the verification URL from its out
 	cmd.Flags().BoolVar(&opts.JSON, "json", false, "structured JSON output")
 	cmd.Flags().BoolVar(&opts.NoWait, "no-wait", false, "initiate device authorization and return immediately; use --device-code to complete")
 	cmd.Flags().StringVar(&opts.DeviceCode, "device-code", "", "poll and complete authorization with a device code from a previous --no-wait call")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "no-browser", false, "do not automatically open the verification URL in a browser")
 
 	_ = cmd.RegisterFlagCompletionFunc("domain", func(_ *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return completeDomain(toComplete), cobra.ShellCompDirectiveNoFileComp
@@ -248,6 +252,7 @@ func authLoginRun(opts *LoginOptions) error {
 	} else {
 		fmt.Fprintf(f.IOStreams.ErrOut, msg.OpenURL)
 		fmt.Fprintf(f.IOStreams.ErrOut, "  %s\n\n", authResp.VerificationUriComplete)
+		maybeOpenBrowser(opts, f.IOStreams.ErrOut, authResp.VerificationUriComplete, msg)
 	}
 
 	// Step 3: Poll for token
@@ -391,6 +396,21 @@ func authLoginPollDeviceCode(opts *LoginOptions, config *core.CliConfig, msg *lo
 
 	output.PrintSuccess(f.IOStreams.ErrOut, fmt.Sprintf(msg.LoginSuccess, userName, openId))
 	return nil
+}
+
+// maybeOpenBrowser attempts to open the verification URL in the user's default
+// browser. It is best-effort: opting out (--no-browser) or a headless/remote
+// environment falls back silently to the printed URL, and any launch failure is
+// reported as a non-fatal hint so the user can open the link manually.
+func maybeOpenBrowser(opts *LoginOptions, errOut io.Writer, verificationURL string, msg *loginMsg) {
+	if opts.NoBrowser || !util.CanOpenBrowser() {
+		return
+	}
+	if err := util.OpenBrowser(verificationURL); err != nil {
+		fmt.Fprintf(errOut, msg.BrowserOpenFailed, err)
+		return
+	}
+	fmt.Fprintf(errOut, msg.BrowserOpened)
 }
 
 // collectScopesForDomains collects API scopes (from from_meta projects) and

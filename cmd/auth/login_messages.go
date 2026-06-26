@@ -20,11 +20,13 @@ type loginMsg struct {
 	ConfirmAuth     string
 
 	// Non-interactive prompts (login.go)
-	OpenURL       string
-	WaitingAuth   string
-	AuthSuccess   string
-	LoginSuccess  string
-	GrantedScopes string
+	OpenURL           string
+	BrowserOpened     string
+	BrowserOpenFailed string
+	WaitingAuth       string
+	AuthSuccess       string
+	LoginSuccess      string
+	GrantedScopes     string
 
 	// Non-interactive hint (no flags)
 	HintHeader  string
@@ -50,11 +52,13 @@ var loginMsgZh = &loginMsg{
 	ErrNoDomain:     "请至少选择一个业务域",
 	ConfirmAuth:     "确认授权?",
 
-	OpenURL:       "在浏览器中打开以下链接进行认证:\n\n",
-	WaitingAuth:   "等待用户授权...",
-	AuthSuccess:   "授权成功，正在获取用户信息...",
-	LoginSuccess:  "登录成功! 用户: %s (%s)",
-	GrantedScopes: "  已授权 scopes: %s\n",
+	OpenURL:           "在浏览器中打开以下链接进行认证:\n\n",
+	BrowserOpened:     "已自动在浏览器中打开上面的链接。\n\n",
+	BrowserOpenFailed: "无法自动打开浏览器 (%v)，请手动复制上面的链接。\n\n",
+	WaitingAuth:       "等待用户授权...",
+	AuthSuccess:       "授权成功，正在获取用户信息...",
+	LoginSuccess:      "登录成功! 用户: %s (%s)",
+	GrantedScopes:     "  已授权 scopes: %s\n",
 
 	HintHeader:  "请指定要授权的权限:\n",
 	HintCommon1: "  --recommend                     授权推荐权限",
@@ -79,11 +83,13 @@ var loginMsgEn = &loginMsg{
 	ErrNoDomain:     "please select at least one domain",
 	ConfirmAuth:     "Confirm authorization?",
 
-	OpenURL:       "Open this URL in your browser to authenticate:\n\n",
-	WaitingAuth:   "Waiting for user authorization...",
-	AuthSuccess:   "Authorization successful, fetching user info...",
-	LoginSuccess:  "Login successful! User: %s (%s)",
-	GrantedScopes: "  Granted scopes: %s\n",
+	OpenURL:           "Open this URL in your browser to authenticate:\n\n",
+	BrowserOpened:     "Opened the URL above in your default browser.\n\n",
+	BrowserOpenFailed: "Could not open a browser automatically (%v); please open the URL above manually.\n\n",
+	WaitingAuth:       "Waiting for user authorization...",
+	AuthSuccess:       "Authorization successful, fetching user info...",
+	LoginSuccess:      "Login successful! User: %s (%s)",
+	GrantedScopes:     "  Granted scopes: %s\n",
 
 	HintHeader:  "Please specify the scopes to authorize:\n",
 	HintCommon1: "  --recommend                     authorize recommended scopes",
