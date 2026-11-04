@@ -33,3 +33,6 @@ test_scripts/
 tests/mail/reports/
 
 /log/
+
+# verify-lark-cli skill evidence
+/artifacts/
