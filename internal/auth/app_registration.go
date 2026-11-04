@@ -41,10 +41,6 @@ type AppRegUserInfo struct {
 
 // RequestAppRegistration initiates the app registration device flow.
 func RequestAppRegistration(httpClient *http.Client, brand core.LarkBrand, errOut io.Writer) (*AppRegistrationResponse, error) {
-	if errOut == nil {
-		errOut = io.Discard
-	}
-
 	ep := core.ResolveEndpoints(brand)
 	regEp := core.ResolveEndpoints(core.BrandFeishu) // registration begin always uses feishu
 	endpoint := regEp.Accounts + "/oauth/v1/app/registration"

@@ -48,6 +48,7 @@ func fetchInstanceViewRange(ctx context.Context, runtime *common.RuntimeContext,
 		return append(left, right...), nil
 	}
 
+	//lint:ignore SA1019 relies on RawAPI's raw-result error handling; migrating to DoAPI is a separate behavior change
 	result, err := runtime.RawAPI("GET",
 		fmt.Sprintf("/open-apis/calendar/v4/calendars/%s/events/instance_view", validate.EncodePathSegment(calendarId)),
 		map[string]interface{}{

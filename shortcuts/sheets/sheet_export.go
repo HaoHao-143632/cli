@@ -90,6 +90,7 @@ var SheetExport = common.Shortcut{
 		var fileToken string
 		for i := 0; i < 50; i++ {
 			time.Sleep(600 * time.Millisecond)
+			//lint:ignore SA1019 relies on RawAPI's raw-result error handling; migrating to DoAPI is a separate behavior change
 			pollResult, err := runtime.RawAPI("GET", "/open-apis/drive/v1/export_tasks/"+ticket, map[string]interface{}{"token": token}, nil)
 			if err != nil {
 				continue

@@ -170,7 +170,6 @@ var DriveAddComment = common.Shortcut{
 		createDesc := "Create full comment"
 		if mode == commentModeLocal {
 			createDesc = "Create local comment"
-			step = "[2]"
 			if resolvedBy == "wiki" && strings.TrimSpace(selection) != "" {
 				step = "[3]"
 			} else if resolvedBy == "wiki" || strings.TrimSpace(selection) != "" {
@@ -457,23 +456,6 @@ func formatLocateCandidates(matches []locateDocMatch) string {
 		lines = append(lines, fmt.Sprintf("%d. anchor_block_id=%s", i+1, match.AnchorBlockID))
 	}
 	return strings.Join(lines, "\n")
-}
-
-func summarizeLocateMatch(match locateDocMatch) string {
-	if len(match.Blocks) == 0 {
-		return ""
-	}
-
-	parts := make([]string, 0, len(match.Blocks))
-	for _, block := range match.Blocks {
-		snippet := strings.TrimSpace(block.RawMarkdown)
-		if snippet == "" {
-			continue
-		}
-		snippet = strings.ReplaceAll(snippet, "\n", " ")
-		parts = append(parts, snippet)
-	}
-	return common.TruncateStr(strings.Join(parts, " | "), 120)
 }
 
 func parseCommentReplyElements(raw string) ([]map[string]interface{}, error) {

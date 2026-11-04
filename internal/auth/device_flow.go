@@ -61,10 +61,6 @@ func ResolveOAuthEndpoints(brand core.LarkBrand) OAuthEndpoints {
 
 // RequestDeviceAuthorization requests a device authorization code.
 func RequestDeviceAuthorization(httpClient *http.Client, appId, appSecret string, brand core.LarkBrand, scope string, errOut io.Writer) (*DeviceAuthResponse, error) {
-	if errOut == nil {
-		errOut = io.Discard
-	}
-
 	endpoints := ResolveOAuthEndpoints(brand)
 
 	if !strings.Contains(scope, "offline_access") {
@@ -96,12 +92,12 @@ func RequestDeviceAuthorization(httpClient *http.Client, appId, appSecret string
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("Device authorization failed: read body: %v", err)
+		return nil, fmt.Errorf("device authorization failed: read body: %v", err)
 	}
 
 	var data map[string]interface{}
 	if err := json.Unmarshal(body, &data); err != nil {
-		return nil, fmt.Errorf("Device authorization failed: HTTP %d – response not JSON", resp.StatusCode)
+		return nil, fmt.Errorf("device authorization failed: HTTP %d – response not JSON", resp.StatusCode)
 	}
 
 	_, hasError := data["error"]
@@ -113,7 +109,7 @@ func RequestDeviceAuthorization(httpClient *http.Client, appId, appSecret string
 		if msg == "" {
 			msg = "Unknown error"
 		}
-		return nil, fmt.Errorf("Device authorization failed: %s", msg)
+		return nil, fmt.Errorf("device authorization failed: %s", msg)
 	}
 
 	expiresIn := getInt(data, "expires_in", 240)
