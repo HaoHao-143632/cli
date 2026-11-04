@@ -419,10 +419,8 @@ var MailWatch = common.Shortcut{
 		}()
 
 		info("Connected. Waiting for mail events... (Ctrl+C to stop)")
-		if err := cli.Start(ctx); err != nil {
-			return output.ErrNetwork("WebSocket connection failed: %v", err)
-		}
-		return nil
+		// Start blocks forever on success, so it only ever returns a non-nil error.
+		return output.ErrNetwork("WebSocket connection failed: %v", cli.Start(ctx))
 	},
 }
 

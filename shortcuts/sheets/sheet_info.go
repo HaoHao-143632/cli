@@ -55,6 +55,7 @@ var SheetInfo = common.Shortcut{
 
 		// Get sheets info (best-effort)
 		var sheetsData interface{}
+		//lint:ignore SA1019 relies on RawAPI's raw-result error handling; migrating to DoAPI is a separate behavior change
 		sheetsResult, sheetsErr := runtime.RawAPI("GET", fmt.Sprintf("/open-apis/sheets/v3/spreadsheets/%s/sheets/query", validate.EncodePathSegment(token)), nil, nil)
 		if sheetsErr == nil {
 			if sheetsMap, ok := sheetsResult.(map[string]interface{}); ok {

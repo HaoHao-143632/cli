@@ -267,7 +267,7 @@ func doRefreshToken(httpClient *http.Client, opts UATCallOptions, stored *Stored
 
 	accessToken := getStr(data, "access_token")
 	if accessToken == "" {
-		return nil, fmt.Errorf("Token refresh returned no access_token")
+		return nil, fmt.Errorf("token refresh returned no access_token")
 	}
 
 	refreshToken := getStr(data, "refresh_token")

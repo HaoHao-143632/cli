@@ -98,7 +98,7 @@ func applyOp(snapshot *DraftSnapshot, op PatchOp, options PatchOptions) error {
 		if err != nil {
 			return fmt.Errorf("replace_inline: %w", err)
 		}
-		return replaceInline(snapshot, partID, op.Path, op.CID, op.FileName, op.ContentType)
+		return replaceInline(snapshot, partID, op.Path, op.CID, op.FileName)
 	case "remove_inline":
 		partID, err := resolveTarget(snapshot, op.Target)
 		if err != nil {
@@ -564,7 +564,7 @@ func addInline(snapshot *DraftSnapshot, path, cid, fileName, contentType string)
 	return nil
 }
 
-func replaceInline(snapshot *DraftSnapshot, partID, path, cid, fileName, contentType string) error {
+func replaceInline(snapshot *DraftSnapshot, partID, path, cid, fileName string) error {
 	part := findPart(snapshot.Body, partID)
 	if part == nil {
 		return fmt.Errorf("inline part %q not found", partID)
@@ -590,9 +590,6 @@ func replaceInline(snapshot *DraftSnapshot, partID, path, cid, fileName, content
 	if strings.TrimSpace(fileName) == "" {
 		fileName = part.FileName()
 	}
-	if strings.TrimSpace(contentType) == "" {
-		contentType = part.MediaType
-	}
 	if strings.TrimSpace(cid) == "" {
 		cid = part.ContentID
 	}
@@ -603,8 +600,7 @@ func replaceInline(snapshot *DraftSnapshot, partID, path, cid, fileName, content
 	if err != nil {
 		return err
 	}
-	contentType = detectedCT
-	contentType, mediaParams := normalizedDetectedMediaType(contentType)
+	contentType, mediaParams := normalizedDetectedMediaType(detectedCT)
 	finalCID := strings.Trim(strings.TrimSpace(cid), "<>")
 	if err := validate.RejectCRLF(finalCID, "inline cid"); err != nil {
 		return err

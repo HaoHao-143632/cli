@@ -929,7 +929,7 @@ func toAddressPairList(raw []mailAddressOutput) []mailAddressPair {
 	out := make([]mailAddressPair, 0, len(raw))
 	for _, addr := range raw {
 		if addr.Email != "" {
-			out = append(out, mailAddressPair{Email: addr.Email, Name: addr.Name})
+			out = append(out, mailAddressPair(addr))
 		}
 	}
 	return out
@@ -1425,13 +1425,7 @@ func toOriginalMessageForCompose(out normalizedMessageForCompose) originalMessag
 func toForwardSourceAttachments(out normalizedMessageForCompose) []forwardSourceAttachment {
 	atts := make([]forwardSourceAttachment, 0, len(out.Attachments))
 	for _, att := range out.Attachments {
-		atts = append(atts, forwardSourceAttachment{
-			ID:             att.ID,
-			Filename:       att.Filename,
-			ContentType:    att.ContentType,
-			AttachmentType: att.AttachmentType,
-			DownloadURL:    att.DownloadURL,
-		})
+		atts = append(atts, forwardSourceAttachment(att))
 	}
 	return atts
 }
@@ -1442,13 +1436,7 @@ func toInlineSourceParts(out normalizedMessageForCompose) []inlineSourcePart {
 		if img.CID == "" {
 			continue
 		}
-		parts = append(parts, inlineSourcePart{
-			ID:          img.ID,
-			Filename:    img.Filename,
-			ContentType: img.ContentType,
-			CID:         img.CID,
-			DownloadURL: img.DownloadURL,
-		})
+		parts = append(parts, inlineSourcePart(img))
 	}
 	return parts
 }
@@ -1626,15 +1614,6 @@ func toSecurityLevel(v interface{}) *mailSecurityLevelOutput {
 func boolVal(v interface{}) bool {
 	b, _ := v.(bool)
 	return b
-}
-
-func firstNonEmpty(values ...string) string {
-	for _, value := range values {
-		if value != "" {
-			return value
-		}
-	}
-	return ""
 }
 
 func resolveAttachmentContentType(att map[string]interface{}, filename string) string {

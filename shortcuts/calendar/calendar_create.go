@@ -219,6 +219,7 @@ var CalendarCreate = common.Shortcut{
 				})
 			if err != nil {
 				// Rollback: delete the event
+				//lint:ignore SA1019 relies on RawAPI's raw-result error handling; migrating to DoAPI is a separate behavior change
 				_, rollbackErr := runtime.RawAPI("DELETE",
 					fmt.Sprintf("/open-apis/calendar/v4/calendars/%s/events/%s", validate.EncodePathSegment(calendarId), validate.EncodePathSegment(eventId)),
 					map[string]interface{}{"need_notification": false}, nil)
