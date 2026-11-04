@@ -1,0 +1,14 @@
+run:
+  timeout: 5m
+
+linters:
+  disable:
+    # ~135 pre-existing unchecked errors (mostly in tests); re-enable once they are fixed.
+    - errcheck
+
+issues:
+  exclude-rules:
+    # golangci-lint does not honor staticcheck's //lint:ignore; the call sites carry the rationale.
+    - linters:
+        - staticcheck
+      text: "SA1019: runtime.RawAPI is deprecated"
