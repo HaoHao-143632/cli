@@ -22,7 +22,7 @@ Before running a command with side effects, a user adds `--dry-run` to see the e
 Preconditions:
 
 - Baseline launch and doctor done.
-- For `dry-config-gate`, the sandbox is fresh (no `config.json`). For everything else, run `$S placeholder-app` first; stdout shows `OK: Configuration saved to …/config.json` and `"appId": "cli_verify_placeholder"`.
+- For `dry-config-gate`, the sandbox is fresh (no `config.json`). For everything else, run `$S placeholder-app` first; it prints `exit=0`, and `setup/placeholder-app.stdout` has `"appId": "cli_verify_placeholder"` while `.stderr` has `OK: Configuration saved to …/config.json`.
 
 - **Config gate.** In a fresh sandbox run `$S run dry-run no-config --offline -- im +messages-send --chat-id oc_test --text hi --dry-run`. Exit `2`; stderr has `"identity": "bot"`, `"type": "config"`, `"message": "not configured"`.
 - **Shortcut send.** After `$S placeholder-app`, run `$S run dry-run im-send --offline -- im +messages-send --chat-id oc_test --text hi --dry-run`. Exit `0`; stderr is `=== Dry Run ===`; stdout JSON has `"method": "POST"`, `"url": "/open-apis/im/v1/messages"`, `"params": {"receive_id_type": "chat_id"}`, and a body with `"receive_id": "oc_test"`, `"msg_type": "text"`, `"content": "{\"text\":\"hi\"}"`.

@@ -91,10 +91,10 @@ cmd_run() {
   local feature="${1:-}" label="${2:-}"
   [[ -n "$feature" && -n "$label" ]] || die "usage: verify.sh run <feature> <label> [--offline] -- <lark-cli args...>"
   shift 2
-  local wrap=()
+  local wrap=() net=host
   if [[ "${1:-}" == "--offline" ]]; then
     unshare -rn true 2>/dev/null || die "--offline requested but 'unshare -rn' is unavailable"
-    wrap=(unshare -rn); shift
+    wrap=(unshare -rn) net="none (unshare -rn)"; shift
   fi
   [[ "${1:-}" == "--" ]] || die "missing -- before lark-cli args"
   shift
@@ -114,7 +114,7 @@ cmd_run() {
     echo
     echo '```'
     echo "\$ $(cat "$out/$label.cmd")"
-    echo "# exit=$rc  network=${wrap[*]:+none (unshare -rn)}${wrap[*]:-host}  build=$(sandbox_env "$BIN" --version | awk '{print $NF}')"
+    echo "# exit=$rc  network=$net  build=$(sandbox_env "$BIN" --version | awk '{print $NF}')"
     echo "# --- stdout ---"; cat "$out/$label.stdout"
     echo "# --- stderr ---"; cat "$out/$label.stderr"
     echo "# --- sandbox files after ---"; cat "$out/$label.fs.txt"
